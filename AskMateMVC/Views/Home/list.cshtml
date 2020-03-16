@@ -3,5 +3,10 @@
     ViewData["Title"] = "list";
 }
 
-<h1>list</h1>
-
+<h1>All questions:</h1>
+<br /><br />
+@foreach (var question in CsvDatabase.listOfQuestions)
+{
+    <li>@question.Title</li>
+}
+    
