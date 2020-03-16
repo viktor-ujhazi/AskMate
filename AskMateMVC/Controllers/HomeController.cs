@@ -22,9 +22,21 @@ namespace AskMateMVC.Controllers
         {
             return View();
         }
-
+        
         public IActionResult Privacy()
         {
+            return View();
+        }
+        public IActionResult NewQuestion()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult NewQuestion(QuestionModel model)
+        {
+
+            _logger.LogInformation($"{model.Title}\n{model.Message}\n{model.TimeOfQuestion}");
+
             return View();
         }
 
