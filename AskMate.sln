@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29905.134
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AskMateMVC", "AskMateMVC\AskMateMVC.csproj", "{E656BFD2-995F-4E52-961A-3EF59491B73B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E656BFD2-995F-4E52-961A-3EF59491B73B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E656BFD2-995F-4E52-961A-3EF59491B73B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E656BFD2-995F-4E52-961A-3EF59491B73B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E656BFD2-995F-4E52-961A-3EF59491B73B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {7DAFACBE-EF09-4FEA-B23D-18F45FC667D6}
+	EndGlobalSection
+EndGlobal
