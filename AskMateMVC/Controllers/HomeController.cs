@@ -6,16 +6,20 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using AskMateMVC.Models;
+using AskMateMVC.Services;
 
 namespace AskMateMVC.Controllers
 {
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private CsvHandler _csvHandler;
+        
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, CsvHandler csvHandler)
         {
             _logger = logger;
+            _csvHandler = csvHandler;
         }
 
         public IActionResult Index()
@@ -29,13 +33,17 @@ namespace AskMateMVC.Controllers
         }
         public IActionResult NewQuestion()
         {
+            
             return View();
         }
         [HttpPost]
         public IActionResult NewQuestion(QuestionModel model)
         {
 
-            _logger.LogInformation($"{model.Title}\n{model.Message}\n{model.TimeOfQuestion}");
+            _logger.LogInformation($"{model}");
+            
+            _csvHandler.SaveQuestions(model);
+            
 
             return View();
         }
