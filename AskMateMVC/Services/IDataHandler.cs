@@ -1,4 +1,5 @@
 ﻿using AskMateMVC.Models;
+using System;
 using System.Collections.Generic;
 
 namespace AskMateMVC.Services
@@ -11,6 +12,7 @@ namespace AskMateMVC.Services
         List<AnswerModel> GetAnswers();
         void SaveQuestions(QuestionModel model);
         void SaveAnswers(AnswerModel model);
+        QuestionModel GetQuestionByID(Guid id);
 
 
     }

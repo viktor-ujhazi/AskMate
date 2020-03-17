@@ -133,5 +133,9 @@ namespace AskMateMVC.Services
             File.WriteAllText(answersFileName, csv.ToString());
 
         }
+        public QuestionModel GetQuestionByID(Guid id)
+        {
+            return Questions.Where(q => q.ID == id).FirstOrDefault();
+        }
     }
 }

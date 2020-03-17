@@ -46,24 +46,21 @@ namespace AskMateMVC.Controllers
         {
             return View();
         }
-
-        public IActionResult QuestionDetails(Guid id)
+        [HttpGet(Name ="/list")]
+        public IActionResult QuestionDetails(QuestionModel q)
         {
-            QuestionModel q=new QuestionModel();
-            foreach(var i in _datahandler.GetQuestions())
-            {
-                if(i.ID.Equals(id))
-                {
-                    q = i;
-                }
-            }
-            Console.WriteLine(id+"--------"+q.Title);
             return View(q);
         }
 
         public IActionResult List()
         {
             return View(_datahandler.GetQuestions());
+        }
+        [HttpPost]
+        public IActionResult List([FromForm(Name = "id")] Guid id)
+        {
+            QuestionModel q = _datahandler.GetQuestionByID(id);
+            return View("QuestionDetails",q);
         }
 
         [HttpPost]
