@@ -13,11 +13,11 @@ namespace AskMateMVC.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly IDataLoader _dataloader;
+        private readonly IDataHandler _dataloader;
         //private CsvHandler _csvHandler;
         
 
-        public HomeController(ILogger<HomeController> logger, CsvHandler csvHandler, IDataLoader dataloader)
+        public HomeController(ILogger<HomeController> logger, CsvHandler_old csvHandler, IDataHandler dataloader)
         {
             _logger = logger;
             //_csvHandler = csvHandler;

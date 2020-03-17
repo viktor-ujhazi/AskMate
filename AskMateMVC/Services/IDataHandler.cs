@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace AskMateMVC.Services
 {
-    public interface IDataLoader
+    public interface IDataHandler
     {
         List<QuestionModel> LoadQuestion();
         void LoadAnswers();
