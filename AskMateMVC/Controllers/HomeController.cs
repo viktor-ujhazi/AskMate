@@ -45,7 +45,7 @@ namespace AskMateMVC.Controllers
             _csvHandler.SaveQuestions(model);
             
 
-            return View();
+            return View("list");
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

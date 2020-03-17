@@ -36,6 +36,7 @@ namespace AskMateMVC.Services
             }
             //after your loop
             File.WriteAllText(CsvFileName, csv.ToString());
+            
         }
     }
 }
