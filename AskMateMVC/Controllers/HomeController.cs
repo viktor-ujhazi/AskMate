@@ -15,14 +15,14 @@ namespace AskMateMVC.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IDataHandler _datahandler;
         //private CsvHandler _csvHandler;
-        
+
 
         public HomeController(ILogger<HomeController> logger, IDataHandler datahandler)
         {
             _logger = logger;
             //_csvHandler = csvHandler;
             _datahandler = datahandler;
-            
+
         }
 
         public IActionResult Index()
@@ -37,7 +37,7 @@ namespace AskMateMVC.Controllers
 
             return View(_datahandler.GetQuestions());
         }
-        
+
         public IActionResult Privacy()
         {
             return View();
@@ -50,25 +50,29 @@ namespace AskMateMVC.Controllers
         public IActionResult QuestionDetails(Guid id)
         {
             QuestionModel q = _datahandler.GetQuestionByID(id);
-            return View("QuestionDetails",q);
+            return View("QuestionDetails", q);
         }
-
+        public IActionResult EditQuestion(Guid id)
+        {
+            QuestionModel q = _datahandler.GetQuestionByID(id);
+            return View("EditQuestion", q);
+        }
         public IActionResult List()
         {
             return View(_datahandler.GetQuestions());
         }
-        
+
 
         [HttpPost]
         public IActionResult NewQuestion(QuestionModel model)
         {
 
             _logger.LogInformation($"{model}");
-            
-            _datahandler.SaveQuestions(model);
-            
 
-            return View("list",_datahandler.GetQuestions());
+            _datahandler.SaveQuestions(model);
+
+
+            return View("list", _datahandler.GetQuestions());
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
