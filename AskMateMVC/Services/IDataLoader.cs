@@ -5,7 +5,13 @@ namespace AskMateMVC.Services
 {
     public interface IDataLoader
     {
+        List<QuestionModel> LoadQuestion();
         void LoadAnswers();
-        void LoadQuestion();
+        List<QuestionModel> GetQuestions();
+        List<AnswerModel> GetAnswers();
+        void SaveQuestions(QuestionModel model);
+        void SaveAnswers(AnswerModel model);
+
+
     }
 }
