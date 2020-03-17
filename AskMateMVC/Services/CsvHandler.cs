@@ -21,11 +21,11 @@ namespace AskMateMVC.Services
         //IWebHostEnvironment WebHostEnvironment { get; }
         
         
-        //public CsvLoader()
-        //{
-        //    LoadQuestion();
+        public CsvHandler()
+        {
+           LoadQuestion();
 
-        //}
+        }
         public List<QuestionModel> GetQuestions()
         {
             return Questions;

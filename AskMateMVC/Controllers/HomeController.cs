@@ -17,11 +17,11 @@ namespace AskMateMVC.Controllers
         //private CsvHandler _csvHandler;
         
 
-        public HomeController(ILogger<HomeController> logger, IDataHandler dataloader)
+        public HomeController(ILogger<HomeController> logger, IDataHandler datahandler)
         {
             _logger = logger;
             //_csvHandler = csvHandler;
-            _datahandler = dataloader;
+            _datahandler = datahandler;
             
         }
 
@@ -35,7 +35,7 @@ namespace AskMateMVC.Controllers
             //q2.Title = "masodik";
             //CsvDatabase.listOfQuestions.Add(q2);
 
-            return View(_datahandler.LoadQuestion());
+            return View(_datahandler.GetQuestions());
         }
         
         public IActionResult Privacy()
@@ -46,22 +46,18 @@ namespace AskMateMVC.Controllers
         {
             return View();
         }
-        [HttpGet(Name ="/list")]
-        public IActionResult QuestionDetails(QuestionModel q)
+        //[HttpGet("{ID}")]
+        public IActionResult QuestionDetails(Guid id)
         {
-            return View(q);
+            QuestionModel q = _datahandler.GetQuestionByID(id);
+            return View("QuestionDetails",q);
         }
 
         public IActionResult List()
         {
             return View(_datahandler.GetQuestions());
         }
-        [HttpPost]
-        public IActionResult List([FromForm(Name = "id")] Guid id)
-        {
-            QuestionModel q = _datahandler.GetQuestionByID(id);
-            return View("QuestionDetails",q);
-        }
+        
 
         [HttpPost]
         public IActionResult NewQuestion(QuestionModel model)

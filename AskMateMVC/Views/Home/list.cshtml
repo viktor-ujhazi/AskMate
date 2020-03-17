@@ -15,9 +15,11 @@
 <li>
     @question.Title
     <form action="QuestionDetails">
-        <label for="id">
-        <button type="submit"> See answers</button>
-        </label>
+        <div>
+
+            <button type="submit"> See answers</button>
+            @Html.ActionLink("Details", "QuestionDetails", new { id = question.ID }, null)
+        </div>
     </form>
 
     <form action="Privacy">
