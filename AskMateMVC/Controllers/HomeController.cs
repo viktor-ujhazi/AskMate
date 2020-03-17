@@ -26,13 +26,12 @@ namespace AskMateMVC.Controllers
         {
             QuestionModel q1 = new QuestionModel();
             q1.Title = "elso";
-            CsvDatabase cs = new CsvDatabase();
-            cs.listOfQuestions.Add(q1);
+            CsvDatabase.listOfQuestions.Add(q1);
 
             QuestionModel q2 = new QuestionModel();
             q2.Title = "masodik";
-            cs.listOfQuestions.Add(q2);
-            return View("list",cs);
+            CsvDatabase.listOfQuestions.Add(q2);
+            return View("list");
         }
         
         public IActionResult Privacy()
