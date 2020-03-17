@@ -25,9 +25,10 @@ namespace AskMateMVC
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+            services.AddSingleton(typeof(IDataLoader), new CsvLoader());
             services.AddTransient<CsvHandler>();
             //services.AddSingleton<CsvLoader>();
-            CsvLoader.LoadQuestion();
+            //CsvLoader.LoadQuestion();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

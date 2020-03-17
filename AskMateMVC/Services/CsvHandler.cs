@@ -18,25 +18,45 @@ namespace AskMateMVC.Services
         {
             WebHostEnvironment = webHostEnvironment;
         }
-        private string CsvFileName
+        private string CsvQuestionsFileName
         {
             get 
             {
                 return Path.Combine(WebHostEnvironment.WebRootPath, "data", "Questions.csv");
             } 
         }
+        private string CsvAnswersFileName
+        {
+            get
+            {
+                return Path.Combine(WebHostEnvironment.WebRootPath, "data", "Answers.csv");
+            }
+        }
         public void SaveQuestions(QuestionModel model)
         {
             CsvDatabase.listOfQuestions.Add(model);
             var csv = new StringBuilder();
-            //in your loop
+            
             foreach (var item in CsvDatabase.listOfQuestions)
             {
                 csv.AppendLine(item.ToString());
             }
-            //after your loop
-            File.WriteAllText(CsvFileName, csv.ToString());
             
+            File.WriteAllText(CsvQuestionsFileName, csv.ToString());
+            
+        }
+        public void SaveAnswers(QuestionModel model)
+        {
+            CsvDatabase.listOfQuestions.Add(model);
+            var csv = new StringBuilder();
+            
+            foreach (var item in CsvDatabase.listOfQuestions)
+            {
+                csv.AppendLine(item.ToString());
+            }
+            
+            File.WriteAllText(CsvAnswersFileName, csv.ToString());
+
         }
     }
 }
