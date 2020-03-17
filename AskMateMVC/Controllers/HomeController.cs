@@ -24,14 +24,7 @@ namespace AskMateMVC.Controllers
 
         public IActionResult Index()
         {
-            QuestionModel q1 = new QuestionModel();
-            q1.Title = "elso";
-            CsvDatabase.listOfQuestions.Add(q1);
-
-            QuestionModel q2 = new QuestionModel();
-            q2.Title = "masodik";
-            CsvDatabase.listOfQuestions.Add(q2);
-            return View("list");
+            return View();
         }
         
         public IActionResult Privacy()
@@ -44,8 +37,20 @@ namespace AskMateMVC.Controllers
             return View();
         }
 
-        public IActionResult DisplayQuestion()
+        public IActionResult DisplayQuestion(QuestionModel q)
         {
+            return View();
+        }
+
+        public IActionResult List()
+        {
+            QuestionModel q1 = new QuestionModel();
+            q1.Title = "elso";
+            CsvDatabase.listOfQuestions.Add(q1);
+
+            QuestionModel q2 = new QuestionModel();
+            q2.Title = "masodik";
+            CsvDatabase.listOfQuestions.Add(q2);
             return View();
         }
 

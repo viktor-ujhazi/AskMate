@@ -1,6 +1,6 @@
 ﻿
 @{
-    ViewData["Title"] = "list";
+    ViewData["Title"] = "List";
 }
 
 
@@ -14,11 +14,11 @@
 {
 <li>
     @question.Title
-    <form action="Home/DisplayQuestion">
-        <button  type="submit">See answers</button>
+    <form action="DisplayQuestion">
+        <button  type="submit" >See answers</button>
     </form>
 
-    <form action="Home/Privacy">
+    <form action="Privacy">
         <button action="Privacy" type="submit">Edit</button>
     </form>
 
