@@ -9,21 +9,22 @@ using System.Threading.Tasks;
 
 namespace AskMateMVC.Services
 {
-    public class CsvLoader
+    public class CsvLoader : IDataLoader
     {
 
-        static string filename = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/data", "Questions.csv");
+        static string questionsFileName = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/data", "Questions.csv");
+        static string answersFileName = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/data", "Answers.csv");
+
         public CsvLoader()
         {
-           
             LoadQuestion();
-
+            
         }
-        
-        
-        public static void LoadQuestion()
+
+
+        public void LoadQuestion()
         {
-            string[] lines = System.IO.File.ReadAllLines(filename);
+            string[] lines = System.IO.File.ReadAllLines(questionsFileName);
             Regex CSVParser = new Regex(",(?=(?:[^\"]*\"[^\"]*\")*(?![^\"]*\"))");
 
             foreach (var row in lines)
@@ -48,21 +49,51 @@ namespace AskMateMVC.Services
                 };
                 CsvDatabase.listOfQuestions.Add(model);
             }
-            foreach (var item in CsvDatabase.listOfQuestions)
-            {
-                Console.WriteLine($"ID: {item.ID}");
-                Console.WriteLine($"TimeOfQuestion: {item.TimeOfQuestion}");
-                Console.WriteLine($"ViewNumber: {item.ViewNumber}");
-                Console.WriteLine($"VoteNumber: {item.VoteNumber}");
-                Console.WriteLine($"Title: {item.Title}");
-                Console.WriteLine($"Message: {item.Message}");
-                Console.WriteLine($"Image: {item.Image}");
-                Console.WriteLine();
-
-            }
-
             
+        }
+        public void LoadAnswers()
+        {
+            string[] lines = System.IO.File.ReadAllLines(answersFileName);
+            Regex CSVParser = new Regex(",(?=(?:[^\"]*\"[^\"]*\")*(?![^\"]*\"))");
+            
+            try
+            {
+                foreach (var row in lines)
+                {
+                    String[] Fields = CSVParser.Split(row);
+                    // clean up the fields (remove " and leading spaces)
+                    for (int i = 0; i < Fields.Length; i++)
+                    {
+                        Fields[i] = Fields[i].TrimStart(' ', '"');
+                        Fields[i] = Fields[i].TrimEnd('"');
 
+                    }
+                    AnswerModel model = new AnswerModel
+                    {
+                        ID = Guid.Parse(Fields[0]),
+                        TimeOfAnswer = DateTime.Parse(Fields[1]),
+                        VoteNumber = int.Parse(Fields[2]),
+                        QuestionID = Guid.Parse(Fields[3]),
+                        Message = Fields[4],
+                        Image = Fields[5]
+                    };
+                    CsvDatabase.listOfAnswers.Add(model);
+                }
+                foreach (var item in CsvDatabase.listOfAnswers)
+                {
+                    Console.WriteLine($"ID: {item.ID}");
+                    Console.WriteLine($"TimeOfAnswer: {item.TimeOfAnswer}");
+                    Console.WriteLine($"VoteNumber: {item.VoteNumber}");
+                    Console.WriteLine($"QuestionID: {item.QuestionID}");
+                    Console.WriteLine($"Message: {item.Message}");
+                    Console.WriteLine($"Image: {item.Image}");
+                    Console.WriteLine();
+                }
+            }
+            catch (Exception)
+            {
+                Console.WriteLine();
+            }
         }
     }
 }

@@ -13,6 +13,7 @@ namespace AskMateMVC.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        //private readonly IDataLoader _dataloader;
         private CsvHandler _csvHandler;
         
 
@@ -20,10 +21,20 @@ namespace AskMateMVC.Controllers
         {
             _logger = logger;
             _csvHandler = csvHandler;
+            
+            
         }
 
         public IActionResult Index()
         {
+            //QuestionModel q1 = new QuestionModel();
+            //q1.Title = "elso";
+            //CsvDatabase.listOfQuestions.Add(q1);
+
+            //QuestionModel q2 = new QuestionModel();
+            //q2.Title = "masodik";
+            //CsvDatabase.listOfQuestions.Add(q2);
+
             return View();
         }
         

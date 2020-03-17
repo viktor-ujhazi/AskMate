@@ -24,7 +24,6 @@ namespace AskMateMVC.Models
 
         public override string ToString()
         {
-
             return ID+","+TimeOfQuestion+","+ViewNumber+","+VoteNumber+","+"\""+Title+"\""+","+"\""+Message+"\"" + "," + Image;
         }
 
