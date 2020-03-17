@@ -7,7 +7,7 @@ namespace AskMateMVC.Models
 {
     public class CsvDatabase
     {
-        public static List<AnswerModel> listOfAnswers=new List<AnswerModel>();
-        public static List<QuestionModel> listOfQuestions=new List<QuestionModel>();
+        public List<AnswerModel> listOfAnswers=new List<AnswerModel>();
+        public List<QuestionModel> listOfQuestions=new List<QuestionModel>();
     }
 }

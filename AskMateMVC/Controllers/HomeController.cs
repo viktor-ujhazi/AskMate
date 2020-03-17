@@ -20,7 +20,15 @@ namespace AskMateMVC.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            QuestionModel q1 = new QuestionModel();
+            q1.Title = "elso";
+            CsvDatabase cs = new CsvDatabase();
+            cs.listOfQuestions.Add(q1);
+
+            QuestionModel q2 = new QuestionModel();
+            q2.Title = "masodik";
+            cs.listOfQuestions.Add(q2);
+            return View("list",cs);
         }
         
         public IActionResult Privacy()
@@ -31,10 +39,15 @@ namespace AskMateMVC.Controllers
         {
             return View();
         }
+
+        public IActionResult DisplayQuestion()
+        {
+            return View();
+        }
+
         [HttpPost]
         public IActionResult NewQuestion(QuestionModel model)
         {
-
             _logger.LogInformation($"{model.Title}\n{model.Message}\n{model.TimeOfQuestion}");
 
             return View();

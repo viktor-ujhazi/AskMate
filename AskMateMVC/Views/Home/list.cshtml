@@ -2,11 +2,29 @@
 @{
     ViewData["Title"] = "list";
 }
+@model CsvDatabase
 
 <h1>All questions:</h1>
 <br /><br />
-@foreach (var question in CsvDatabase.listOfQuestions)
+@if(Model.listOfQuestions.Count==0)
 {
-    <li>@question.Title</li>
+    <a>Currently no questions on the page!</a>
+}
+@foreach (var question in Model.listOfQuestions)
+{
+<li>
+    @question.Title
+    <form action="Home/DisplayQuestion">
+        <button  type="submit">See answers</button>
+    </form>
+
+    <form>
+        <button action="Privacy" type="submit">Edit</button>
+    </form>
+
+    <form>
+        <button type="submit">Delete</button>
+    </form>
+</li>
 }
     
