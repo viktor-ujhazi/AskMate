@@ -44,24 +44,25 @@ namespace AskMateMVC.Controllers
         }
         public IActionResult NewQuestion()
         {
-            
             return View();
         }
 
-        public IActionResult DisplayQuestion(QuestionModel q)
+        public IActionResult QuestionDetails(Guid id)
         {
-            return View();
+            QuestionModel q=new QuestionModel();
+            foreach(var i in CsvDatabase.listOfQuestions)
+            {
+                if(i.ID.Equals(id))
+                {
+                    q = i;
+                }
+            }
+            Console.WriteLine(id+"--------"+q.Title);
+            return View(q);
         }
 
         public IActionResult List()
         {
-            QuestionModel q1 = new QuestionModel();
-            q1.Title = "elso";
-            CsvDatabase.listOfQuestions.Add(q1);
-
-            QuestionModel q2 = new QuestionModel();
-            q2.Title = "masodik";
-            CsvDatabase.listOfQuestions.Add(q2);
             return View();
         }
 
