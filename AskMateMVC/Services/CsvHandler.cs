@@ -21,11 +21,11 @@ namespace AskMateMVC.Services
         //IWebHostEnvironment WebHostEnvironment { get; }
         
         
-        //public CsvLoader()
-        //{
-        //    LoadQuestion();
+        public CsvHandler()
+        {
+           LoadQuestion();
 
-        //}
+        }
         public List<QuestionModel> GetQuestions()
         {
             return Questions;
@@ -132,6 +132,10 @@ namespace AskMateMVC.Services
 
             File.WriteAllText(answersFileName, csv.ToString());
 
+        }
+        public QuestionModel GetQuestionByID(Guid id)
+        {
+            return Questions.Where(q => q.ID == id).FirstOrDefault();
         }
     }
 }

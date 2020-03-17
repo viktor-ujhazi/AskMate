@@ -13,16 +13,16 @@ namespace AskMateMVC.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly IDataHandler _dataloader;
+        private readonly IDataHandler _datahandler;
         //private CsvHandler _csvHandler;
-        
 
-        public HomeController(ILogger<HomeController> logger, CsvHandler_old csvHandler, IDataHandler dataloader)
+
+        public HomeController(ILogger<HomeController> logger, IDataHandler datahandler)
         {
             _logger = logger;
             //_csvHandler = csvHandler;
-            _dataloader = dataloader;
-            
+            _datahandler = datahandler;
+
         }
 
         public IActionResult Index()
@@ -35,9 +35,9 @@ namespace AskMateMVC.Controllers
             //q2.Title = "masodik";
             //CsvDatabase.listOfQuestions.Add(q2);
 
-            return View(_dataloader.LoadQuestion());
+            return View(_datahandler.GetQuestions());
         }
-        
+
         public IActionResult Privacy()
         {
             return View();
@@ -46,36 +46,33 @@ namespace AskMateMVC.Controllers
         {
             return View();
         }
-
+        //[HttpGet("{ID}")]
         public IActionResult QuestionDetails(Guid id)
         {
-            QuestionModel q=new QuestionModel();
-            foreach(var i in CsvDatabase.listOfQuestions)
-            {
-                if(i.ID.Equals(id))
-                {
-                    q = i;
-                }
-            }
-            Console.WriteLine(id+"--------"+q.Title);
-            return View(q);
+            QuestionModel q = _datahandler.GetQuestionByID(id);
+            return View("QuestionDetails", q);
         }
-
+        public IActionResult EditQuestion(Guid id)
+        {
+            QuestionModel q = _datahandler.GetQuestionByID(id);
+            return View("EditQuestion", q);
+        }
         public IActionResult List()
         {
-            return View();
+            return View(_datahandler.GetQuestions());
         }
+
 
         [HttpPost]
         public IActionResult NewQuestion(QuestionModel model)
         {
 
             _logger.LogInformation($"{model}");
-            
-            _dataloader.SaveQuestions(model);
-            
 
-            return View("list",_dataloader.GetQuestions());
+            _datahandler.SaveQuestions(model);
+
+
+            return View("list", _datahandler.GetQuestions());
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
