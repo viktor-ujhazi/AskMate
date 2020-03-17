@@ -1,0 +1,15 @@
+﻿
+@{
+    ViewData["Title"] = "AnswersForQuestion";
+}
+
+<h1>AnswersForQuestion</h1>
+
+<h2>@ViewBag.Question.Title</h2>
+
+@foreach (var item in ViewBag.Ans)
+{
+    <div>
+        <h4>@item.Message</h4>
+    </div>
+}

@@ -13,6 +13,7 @@ namespace AskMateMVC.Services
         void SaveQuestions(QuestionModel model);
         void SaveAnswers(AnswerModel model);
         QuestionModel GetQuestionByID(Guid id);
+        public List<AnswerModel> GetAnswersForQuestion(Guid id);
 
 
     }

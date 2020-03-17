@@ -24,6 +24,7 @@ namespace AskMateMVC.Services
         public CsvHandler()
         {
            LoadQuestion();
+           LoadAnswers();
 
         }
         public List<QuestionModel> GetQuestions()
@@ -136,6 +137,19 @@ namespace AskMateMVC.Services
         public QuestionModel GetQuestionByID(Guid id)
         {
             return Questions.Where(q => q.ID == id).FirstOrDefault();
+        }
+        public List<AnswerModel> GetAnswersForQuestion(Guid id)
+        {
+            List<AnswerModel> ResultAnswers = new List<AnswerModel>();
+            foreach (var item in Answers)
+            {
+                if (item.QuestionID.Equals(id))
+                {
+                    ResultAnswers.Add(item);
+                }
+            }
+            //ResultAnswers.AddRange(Answers.Where(a => a.QuestionID == id));
+            return ResultAnswers;
         }
     }
 }

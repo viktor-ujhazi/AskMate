@@ -12,15 +12,18 @@
 }*@
 @foreach (var question in Model)
 {
-<li>
-    @question.Title
-    <form action="QuestionDetails">
-        <div>
+<div style="border:solid">
+    <h2>     @Html.ActionLink(@question.Title, "AnswersForQuestion", new { id = question.ID }, null)</h2>
+    <div>
+        <h3>@question.Message</h3>
+
+        <form action="QuestionDetails">
+
             <button type="submit"> See answers</button>
             @Html.ActionLink("Details", "QuestionDetails", new { id = question.ID }, null)
-        </div>
-    </form>
 
+        </form>
+    </div>
     <form action="EditQuestion">
         <button type="submit">Edit</button>
         @Html.ActionLink("Edit", "EditQuestion", new { id = question.ID }, null)
@@ -28,7 +31,13 @@
 
     <form>
         <button type="submit">Delete</button>
+
     </form>
-</li>
+    <form>
+        @Html.ActionLink("Write answer", "NewAnswer", new { id = question.ID }, null)
+
+    </form>
+
+</div>
 }
     

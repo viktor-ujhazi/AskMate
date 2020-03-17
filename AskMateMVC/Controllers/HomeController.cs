@@ -46,6 +46,43 @@ namespace AskMateMVC.Controllers
         {
             return View();
         }
+        [HttpPost]
+        public IActionResult NewQuestion(QuestionModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                _datahandler.SaveQuestions(model);
+                return RedirectToAction("list", _datahandler.GetQuestions());
+            }
+            else
+            {
+                return View("NewQuestion");
+            }
+            
+        }
+        
+        public IActionResult NewAnswer(Guid id)
+        {
+            
+            return View();
+        }
+        [HttpPost]
+        public IActionResult NewAnswer(AnswerModel model,Guid id)
+        {
+            model.ID = Guid.NewGuid();
+            model.QuestionID = id;
+            if (ModelState.IsValid)
+            {
+                
+                _datahandler.SaveAnswers(model);
+                return RedirectToAction("AnswersForQuestion", id);
+
+            }
+            else
+            {
+                return View("NewAnswer",);
+            }
+        }
         //[HttpGet("{ID}")]
         public IActionResult QuestionDetails(Guid id)
         {
@@ -61,20 +98,16 @@ namespace AskMateMVC.Controllers
         {
             return View(_datahandler.GetQuestions());
         }
-
-
-        [HttpPost]
-        public IActionResult NewQuestion(QuestionModel model)
+        public IActionResult AnswersForQuestion(Guid id)
         {
-
-            _logger.LogInformation($"{model}");
-
-            _datahandler.SaveQuestions(model);
-
-
-            return View("list", _datahandler.GetQuestions());
+            ViewBag.Question = _datahandler.GetQuestionByID(id);
+            ViewBag.Ans = _datahandler.GetAnswersForQuestion(id);
+            return View();
         }
 
+        
+        
+        
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
