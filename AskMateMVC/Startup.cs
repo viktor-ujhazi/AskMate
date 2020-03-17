@@ -28,7 +28,7 @@ namespace AskMateMVC
             
             services.AddControllersWithViews();
             services.AddSingleton(typeof(IDataHandler), new CsvHandler());
-            services.AddTransient<CsvHandler_old>();
+            //services.AddTransient<CsvHandler_old>();
             //services.AddSingleton<CsvLoader>();
             //CsvLoader.LoadQuestion();
         }

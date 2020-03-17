@@ -13,15 +13,15 @@ namespace AskMateMVC.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-        private readonly IDataHandler _dataloader;
+        private readonly IDataHandler _datahandler;
         //private CsvHandler _csvHandler;
         
 
-        public HomeController(ILogger<HomeController> logger, CsvHandler_old csvHandler, IDataHandler dataloader)
+        public HomeController(ILogger<HomeController> logger, IDataHandler dataloader)
         {
             _logger = logger;
             //_csvHandler = csvHandler;
-            _dataloader = dataloader;
+            _datahandler = dataloader;
             
         }
 
@@ -35,7 +35,7 @@ namespace AskMateMVC.Controllers
             //q2.Title = "masodik";
             //CsvDatabase.listOfQuestions.Add(q2);
 
-            return View(_dataloader.LoadQuestion());
+            return View(_datahandler.LoadQuestion());
         }
         
         public IActionResult Privacy()
@@ -50,7 +50,7 @@ namespace AskMateMVC.Controllers
         public IActionResult QuestionDetails(Guid id)
         {
             QuestionModel q=new QuestionModel();
-            foreach(var i in CsvDatabase.listOfQuestions)
+            foreach(var i in _datahandler.GetQuestions())
             {
                 if(i.ID.Equals(id))
                 {
@@ -63,7 +63,7 @@ namespace AskMateMVC.Controllers
 
         public IActionResult List()
         {
-            return View();
+            return View(_datahandler.GetQuestions());
         }
 
         [HttpPost]
@@ -72,10 +72,10 @@ namespace AskMateMVC.Controllers
 
             _logger.LogInformation($"{model}");
             
-            _dataloader.SaveQuestions(model);
+            _datahandler.SaveQuestions(model);
             
 
-            return View("list",_dataloader.GetQuestions());
+            return View("list",_datahandler.GetQuestions());
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
