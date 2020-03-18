@@ -70,7 +70,8 @@ namespace AskMateMVC.Controllers
             {
                 _datahandler.SaveAnswers(model);
                 
-                return RedirectToAction("AnswersForQuestion", new RouteValueDictionary(new { action = "AnswersForQuestion", Id = model.QuestionID }) );
+                return RedirectToAction("AnswersForQuestion", new RouteValueDictionary(new 
+                { action = "AnswersForQuestion", Id = model.QuestionID }) );
             }
             else
             {
