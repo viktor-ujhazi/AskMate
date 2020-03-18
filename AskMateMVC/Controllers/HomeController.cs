@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 using AskMateMVC.Models;
 using AskMateMVC.Services;
 using Microsoft.AspNetCore.Http;
-
+using Microsoft.AspNetCore.Routing;
 
 namespace AskMateMVC.Controllers
 {
@@ -63,18 +63,18 @@ namespace AskMateMVC.Controllers
         }
 
         [HttpPost]
-        public IActionResult NewAnswer(AnswerModel ans,string Message)
+        public IActionResult NewAnswer(Guid id, AnswerModel model)
         {
-            ans.ID = Guid.NewGuid();
+            model.QuestionID = id;
+            model.ID = Guid.NewGuid();
             if (ModelState.IsValid)
             {
-                _datahandler.SaveAnswers(ans);
-                Console.WriteLine(ans.QuestionID+ "-------");
-                return RedirectToAction("AnswersForQuestion", ans.QuestionID);
+                _datahandler.SaveAnswers(model);
+                return RedirectToAction("AnswersForQuestion", new RouteValueDictionary(new { action = "AnswersForQuestion", Id = id }) );
             }
             else
             {
-                return View("NewAnswer", ans.QuestionID);
+                return View("NewAnswer");
             }
         }
        
