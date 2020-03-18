@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 using AskMateMVC.Models;
 using AskMateMVC.Services;
 using Microsoft.AspNetCore.Http;
-
+using Microsoft.AspNetCore.Routing;
 
 namespace AskMateMVC.Controllers
 {
@@ -70,9 +70,7 @@ namespace AskMateMVC.Controllers
             {
                 _datahandler.SaveAnswers(model);
                 
-                string a = $"AnswersForQuestion/{model.QuestionID}";
-                
-                return RedirectToAction(a, "Home");
+                return RedirectToAction("AnswersForQuestion", new RouteValueDictionary(new { action = "AnswersForQuestion", Id = model.QuestionID }) );
             }
             else
             {
