@@ -5,38 +5,55 @@
 @model List<QuestionModel>
 
 <h1>All questions:</h1>
-<br /><br />
-@*@if(Model.Count==0)
-{
-    <a>Currently no questions on the page!</a>
-}*@
-@foreach (var question in Model)
-{
-<div style="border:solid">
-    <h2>     @Html.ActionLink(@question.Title, "AnswersForQuestion", new { id = question.ID }, null)</h2>
-    <div>
-        <h3>@question.Message</h3>
+<br />
 
-        <form action="QuestionDetails">
+<form action="List" method="get">
 
-            @Html.ActionLink("Details", "QuestionDetails", new { id = question.ID }, null)
+    <fieldset>
+        <select id="asd" name="asd">
 
-        </form>
-    </div>
-    <form action="EditQuestion">
-        <button type="submit">Edit</button>
-        @Html.ActionLink("Edit", "EditQuestion", new { id = question.ID }, null)
-    </form>
+            <option value=""></option>
 
-    <form>
-        <button type="submit">Delete</button>
+            <option selected="selected" value="0">Title</option>
 
-    </form>
-    <form>
-        @Html.ActionLink("Write answer", "NewAnswer", new { id = question.ID }, null)
+            <option value="1">Vote </option>
 
-    </form>
+        </select>
+            @Html.ActionLink("Title", "SortingByTitle",new {Model})
+        
+    </fieldset>
 
-</div>
-}
-    
+</form>
+
+
+
+
+
+
+    @foreach (var question in Model)
+    {
+        <div style="border:solid">
+            <h2>     @Html.ActionLink(@question.Title, "AnswersForQuestion", new { id = question.ID }, null)</h2>
+            <div>
+                <h3>@question.Message</h3>
+
+                <form action="QuestionDetails">
+                    @Html.ActionLink("Details", "QuestionDetails", new { id = question.ID }, null)
+                </form>
+            </div>
+
+            <form action="EditQuestion">
+                @Html.ActionLink("Edit", "EditQuestion", new { id = question.ID }, null)
+            </form>
+
+            <form>
+                <button type="submit">Delete</button>
+            </form>
+
+            <form>
+                @Html.ActionLink("Write answer", "NewAnswer", new { id = question.ID }, null)
+            </form>
+
+        </div>
+    }
+

@@ -46,7 +46,7 @@ namespace AskMateMVC.Controllers
             if (ModelState.IsValid)
             {
                 _datahandler.SaveQuestions(model);
-                return RedirectToAction("list", _datahandler.GetQuestions());
+                return RedirectToAction("List", _datahandler.GetQuestions());
             }
             else
             {
@@ -108,26 +108,44 @@ namespace AskMateMVC.Controllers
                 return View("EditQuestion", q);
             }
         }
-        public IActionResult List()
+        public IActionResult List(List<QuestionModel> questions)
         {
-            return View(_datahandler.GetQuestions());
+            if (questions.Count==0)
+                questions = _datahandler.GetQuestions();
+            return View(questions);
         }
 
         public IActionResult AnswersForQuestion(Guid id)
         {
-            Console.WriteLine("-------" + id);
             ViewBag.Question = _datahandler.GetQuestionByID(id);
             ViewBag.Ans = _datahandler.GetAnswersForQuestion(id);
             return View();
         }
 
-        //[HttpPost]
-        //public IActionResult AnswersForQuestion([FromForm(Name = "QuestionID")] Guid id)
+        public ActionResult SortingByTitle()
+        {
+            List<QuestionModel> list=_datahandler.GetQuestions();
+            list=list.OrderBy(o => o.Title).ToList();
+            return View("List",list);
+    }
+
+        //public ActionResult SelectCategory()
         //{
-        //    Console.WriteLine("-------" + id);
-        //    ViewBag.Question = _datahandler.GetQuestionByID(id);
-        //    ViewBag.Ans = _datahandler.GetAnswersForQuestion(id);
+        //    List<Dictionary<string, string>> a = new List<Dictionary<string, string>>();
+        ////    List<SelectedListItem> items
+
+        ////    items.Add(new SelectListItem { Text = "Action", Value = "0" });
+
+        ////    items.Add(new SelectListItem { Text = "Drama", Value = "1" });
+
+        ////    items.Add(new SelectListItem { Text = "Comedy", Value = "2", Selected = true });
+
+        ////    items.Add(new SelectListItem { Text = "Science Fiction", Value = "3" });
+
+        ////    ViewBag.MovieType = items;
+
         //    return View();
+
         //}
 
 
