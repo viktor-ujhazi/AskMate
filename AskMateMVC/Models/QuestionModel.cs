@@ -8,8 +8,9 @@ namespace AskMateMVC.Models
 {
     public class QuestionModel
     {
-        
-        public Guid ID{ get; set; } = Guid.NewGuid();    //id: A unique identifier for the question
+
+        public Guid ID { get; set; } = Guid.NewGuid();    //id: A unique identifier for the question
+        [Display(Name = "Posted: ")]
         public DateTime TimeOfQuestion { get; set; } = DateTime.Now; //submission_time: The UNIX timestamp when the question was posted
         public int ViewNumber { get; set; } = 0; //view_number: How many times this question was displayed in the single question view
         public int VoteNumber { get; set; } = 0;//vote_number: The sum of votes this question has received
@@ -24,7 +25,7 @@ namespace AskMateMVC.Models
 
         public override string ToString()
         {
-            return ID+","+TimeOfQuestion+","+ViewNumber+","+VoteNumber+","+"\""+Title+"\""+","+"\""+Message+"\"" + "," + Image;
+            return ID + "," + TimeOfQuestion + "," + ViewNumber + "," + VoteNumber + "," + "\"" + Title + "\"" + "," + "\"" + Message + "\"" + "," + Image;
         }
 
     }

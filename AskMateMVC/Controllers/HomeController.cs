@@ -45,7 +45,7 @@ namespace AskMateMVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                _datahandler.SaveQuestions(model);
+                _datahandler.AddQuestion(model);
                 return RedirectToAction("list", _datahandler.GetQuestions());
             }
             else
@@ -63,15 +63,15 @@ namespace AskMateMVC.Controllers
         }
 
         [HttpPost]
-        public IActionResult NewAnswer(AnswerModel model)
+        public IActionResult NewAnswer(Guid id, AnswerModel model)
         {
+            model.QuestionID = id;
             model.ID = Guid.NewGuid();
             if (ModelState.IsValid)
             {
-                _datahandler.SaveAnswers(model);
-                
-                return RedirectToAction("AnswersForQuestion", new RouteValueDictionary(new 
-                { action = "AnswersForQuestion", Id = model.QuestionID }) );
+                _datahandler.AddAnswer(model);
+
+                return RedirectToAction("AnswersForQuestion", new RouteValueDictionary(new { action = "AnswersForQuestion", Id = model.QuestionID }));
             }
             else
             {
@@ -90,7 +90,7 @@ namespace AskMateMVC.Controllers
             QuestionModel q = _datahandler.GetQuestionByID(id);
             return View("EditQuestion", q);
         }
-
+        
         [HttpPost]
 
         public ActionResult EditQuestion(Guid id, [FromForm(Name = "Title")] string title, [FromForm(Name = "Message")] string message)
@@ -101,7 +101,7 @@ namespace AskMateMVC.Controllers
                 q.Title = title;
                 q.Message = message;
                 _datahandler.RemoveQuestionById(id);
-                _datahandler.SaveQuestions(q);
+                _datahandler.AddQuestion(q);
                 return RedirectToAction("Index");
             }
             catch
@@ -116,27 +116,38 @@ namespace AskMateMVC.Controllers
 
         public IActionResult AnswersForQuestion(Guid id)
         {
-            Console.WriteLine("-------" + id);
             ViewBag.Question = _datahandler.GetQuestionByID(id);
             ViewBag.Ans = _datahandler.GetAnswersForQuestion(id);
             return View();
         }
-
-        //[HttpPost]
-        //public IActionResult AnswersForQuestion([FromForm(Name = "QuestionID")] Guid id)
-        //{
-        //    Console.WriteLine("-------" + id);
-        //    ViewBag.Question = _datahandler.GetQuestionByID(id);
-        //    ViewBag.Ans = _datahandler.GetAnswersForQuestion(id);
-        //    return View();
-        //}
-
 
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        public IActionResult DeleteQuestion(Guid id)
+        {
+            QuestionModel q = _datahandler.GetQuestionByID(id);
+            return View("DeleteQuestion", q);
+        }
+        [HttpPost]
+        public ActionResult DeleteQuestion(QuestionModel q)
+        {
+            try
+            {
+                _datahandler.RemoveQuestionById(q.ID);
+                _datahandler.RemoveAnswersForQuestin(q.ID);
+                _datahandler.SaveAnswers();
+                _datahandler.SaveQuestions();
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                return View("EditQuestion", q);
+            }
         }
     }
 }
