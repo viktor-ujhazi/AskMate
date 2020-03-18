@@ -77,7 +77,7 @@ namespace AskMateMVC.Controllers
                 return View("NewAnswer");
             }
         }
-       
+
 
         public IActionResult QuestionDetails(Guid id)
         {
@@ -97,8 +97,11 @@ namespace AskMateMVC.Controllers
             QuestionModel q = _datahandler.GetQuestionByID(id);
             try
             {
-                Console.WriteLine();
-                return RedirectToAction();
+                q.Title = title;
+                q.Message = message;
+                _datahandler.RemoveQuestionById(id);
+                _datahandler.SaveQuestions(q);
+                return View("Index");
             }
             catch
             {
@@ -112,7 +115,7 @@ namespace AskMateMVC.Controllers
 
         public IActionResult AnswersForQuestion(Guid id)
         {
-            Console.WriteLine("-------"+id);
+            Console.WriteLine("-------" + id);
             ViewBag.Question = _datahandler.GetQuestionByID(id);
             ViewBag.Ans = _datahandler.GetAnswersForQuestion(id);
             return View();
