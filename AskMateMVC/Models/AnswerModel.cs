@@ -8,7 +8,7 @@ namespace AskMateMVC.Models
 {
     public class AnswerModel
     {
-        public Guid ID { get; set; }     //id: A unique identifier for the answer
+        public Guid ID { get; set; }  //id: A unique identifier for the answer
         public DateTime TimeOfAnswer { get; set; } = DateTime.Now; //submission_time: The UNIX timestamp when the answer was posted
 
         public int VoteNumber { get; set; } = 0; //vote_number: The sum of votes this answer has received

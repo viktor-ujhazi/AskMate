@@ -52,18 +52,20 @@ namespace AskMateMVC.Controllers
             {
                 return View("NewQuestion");
             }
-
         }
 
         public IActionResult NewAnswer(Guid id)
         {
-            return View();
+            AnswerModel ans = new AnswerModel();
+            ans.QuestionID = id;
+
+            return View(ans);
         }
+
         [HttpPost]
-        public IActionResult NewAnswer(AnswerModel model, Guid id)
+        public IActionResult NewAnswer(AnswerModel ans)
         {
-            model.ID = Guid.NewGuid();
-            model.QuestionID = id;
+            ans.ID = Guid.NewGuid();
             if (ModelState.IsValid)
             {
                 _datahandler.SaveAnswers(model);
@@ -74,9 +76,10 @@ namespace AskMateMVC.Controllers
             }
             else
             {
-                return View("NewAnswer");
+                return View("NewAnswer", ans.QuestionID);
             }
         }
+       
 
         public IActionResult QuestionDetails(Guid id)
         {
@@ -108,13 +111,23 @@ namespace AskMateMVC.Controllers
         {
             return View(_datahandler.GetQuestions());
         }
+
         public IActionResult AnswersForQuestion(Guid id)
         {
+            Console.WriteLine("-------"+id);
             ViewBag.Question = _datahandler.GetQuestionByID(id);
             ViewBag.Ans = _datahandler.GetAnswersForQuestion(id);
             return View();
         }
 
+        //[HttpPost]
+        //public IActionResult AnswersForQuestion([FromForm(Name = "QuestionID")] Guid id)
+        //{
+        //    Console.WriteLine("-------" + id);
+        //    ViewBag.Question = _datahandler.GetQuestionByID(id);
+        //    ViewBag.Ans = _datahandler.GetAnswersForQuestion(id);
+        //    return View();
+        //}
 
 
 
