@@ -10,6 +10,11 @@
 @foreach (var item in ViewBag.Ans)
 {
     <div>
-        <h4>@item.Message</h4>
+        <form>
+            <h4>
+                @item.Message
+                @Html.ActionLink("Delete", "DeleteAnswer", new { id = item.ID, qid = ViewBag.Question.ID })
+            </h4>
+        </form>
     </div>
 }

@@ -175,5 +175,10 @@ namespace AskMateMVC.Services
                 }
             }
         }
+        public void RemoveAnswer(Guid id)
+        {
+            var answerToRemove = Answers.Where(q => q.ID == id).FirstOrDefault();
+            Answers.Remove(answerToRemove);
+        }
     }
 }

@@ -80,17 +80,12 @@ namespace AskMateMVC.Controllers
         }
 
 
-        public IActionResult QuestionDetails(Guid id)
-        {
-            QuestionModel q = _datahandler.GetQuestionByID(id);
-            return View("QuestionDetails", q);
-        }
         public IActionResult EditQuestion(Guid id)
         {
             QuestionModel q = _datahandler.GetQuestionByID(id);
             return View("EditQuestion", q);
         }
-        
+
         [HttpPost]
 
         public ActionResult EditQuestion(Guid id, [FromForm(Name = "Title")] string title, [FromForm(Name = "Message")] string message)
@@ -119,6 +114,13 @@ namespace AskMateMVC.Controllers
             ViewBag.Question = _datahandler.GetQuestionByID(id);
             ViewBag.Ans = _datahandler.GetAnswersForQuestion(id);
             return View();
+        }
+
+        public IActionResult DeleteAnswer(Guid id, Guid qid)
+        {
+            _datahandler.RemoveAnswer(id);
+            _datahandler.SaveAnswers();
+            return Redirect($"../AnswersForQuestion/{qid}");
         }
 
 
