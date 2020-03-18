@@ -12,22 +12,17 @@
 }*@
 @foreach (var question in Model)
 {
-<div style="border:solid">
+<div class="card">
+    <p><div>@question.TimeOfQuestion</div><div>Views: @question.ViewNumber</div><div>Votes: @question.VoteNumber</div></p>
     <h2>     @Html.ActionLink(@question.Title, "AnswersForQuestion", new { id = question.ID }, null)</h2>
     <div>
-        <h3>@question.Message</h3>
-
-        <form action="QuestionDetails">
-
-            <button type="submit"> See answers</button>
-            @Html.ActionLink("Details", "QuestionDetails", new { id = question.ID }, null)
-
+        <p>  @question.Message</p>
+        <form action="EditQuestion">
+            <button type="submit">Edit</button>
+            @Html.ActionLink("Edit", "EditQuestion", new { id = question.ID }, null)
         </form>
     </div>
-    <form action="EditQuestion">
-        <button type="submit">Edit</button>
-        @Html.ActionLink("Edit", "EditQuestion", new { id = question.ID }, null)
-    </form>
+    
 
     <form>
         <button type="submit">Delete</button>

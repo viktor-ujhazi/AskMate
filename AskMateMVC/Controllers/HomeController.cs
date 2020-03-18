@@ -102,7 +102,7 @@ namespace AskMateMVC.Controllers
                 q.Message = message;
                 _datahandler.RemoveQuestionById(id);
                 _datahandler.SaveQuestions(q);
-                return View("Index");
+                return RedirectToAction("Index");
             }
             catch
             {
