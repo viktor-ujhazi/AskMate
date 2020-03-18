@@ -63,20 +63,20 @@ namespace AskMateMVC.Controllers
         }
 
         [HttpPost]
-        public IActionResult NewAnswer(AnswerModel ans)
+        public IActionResult NewAnswer(AnswerModel model)
         {
-            ans.ID = Guid.NewGuid();
+            model.ID = Guid.NewGuid();
             if (ModelState.IsValid)
             {
                 _datahandler.SaveAnswers(model);
                 
-                string a = $"AnswersForQuestion/{id}";
+                string a = $"AnswersForQuestion/{model.QuestionID}";
                 
-                return RedirectToAction(a, "Home",id);
+                return RedirectToAction(a, "Home");
             }
             else
             {
-                return View("NewAnswer", ans.QuestionID);
+                return View("NewAnswer");
             }
         }
        
