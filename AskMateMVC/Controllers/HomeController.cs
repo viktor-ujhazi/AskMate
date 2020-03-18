@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using AskMateMVC.Models;
 using AskMateMVC.Services;
+using Microsoft.AspNetCore.Http;
+
 
 namespace AskMateMVC.Controllers
 {
@@ -27,14 +29,6 @@ namespace AskMateMVC.Controllers
 
         public IActionResult Index()
         {
-            //QuestionModel q1 = new QuestionModel();
-            //q1.Title = "elso";
-            //CsvDatabase.listOfQuestions.Add(q1);
-
-            //QuestionModel q2 = new QuestionModel();
-            //q2.Title = "masodik";
-            //CsvDatabase.listOfQuestions.Add(q2);
-
             return View(_datahandler.GetQuestions());
         }
 
@@ -94,6 +88,22 @@ namespace AskMateMVC.Controllers
         {
             QuestionModel q = _datahandler.GetQuestionByID(id);
             return View("EditQuestion", q);
+        }
+
+        [HttpPost]
+
+        public ActionResult EditQuestion(Guid id, [FromForm(Name = "Title")] string title, [FromForm(Name = "Message")] string message)
+        {
+            QuestionModel q = _datahandler.GetQuestionByID(id);
+            try
+            {
+                Console.WriteLine();
+                return RedirectToAction();
+            }
+            catch
+            {
+                return View("EditQuestion", q);
+            }
         }
         public IActionResult List()
         {
