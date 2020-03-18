@@ -67,7 +67,10 @@ namespace AskMateMVC.Controllers
             if (ModelState.IsValid)
             {
                 _datahandler.SaveAnswers(model);
-                return RedirectToAction("AnswersForQuestion", id);
+                
+                string a = $"AnswersForQuestion/{id}";
+                
+                return RedirectToAction(a, "Home",id);
             }
             else
             {
