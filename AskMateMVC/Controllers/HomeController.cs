@@ -58,32 +58,33 @@ namespace AskMateMVC.Controllers
             {
                 return View("NewQuestion");
             }
-            
         }
-        
+
         public IActionResult NewAnswer(Guid id)
         {
-            
-            return View();
+            AnswerModel ans = new AnswerModel();
+            ans.QuestionID = id;
+
+            return View(ans);
         }
+
         [HttpPost]
-        public IActionResult NewAnswer(AnswerModel model,Guid id)
+        public IActionResult NewAnswer(AnswerModel ans)
         {
-            model.ID = Guid.NewGuid();
-            model.QuestionID = id;
+            ans.ID = Guid.NewGuid();
             if (ModelState.IsValid)
             {
-                
-                _datahandler.SaveAnswers(model);
-                return RedirectToAction("AnswersForQuestion", id);
-
+                _datahandler.SaveAnswers(ans);
+                Console.WriteLine(ans.QuestionID+ "-------");
+                return RedirectToAction("AnswersForQuestion", ans.QuestionID);
             }
             else
             {
-                return View("NewAnswer",);
+                return View("NewAnswer", ans.QuestionID);
             }
         }
-        //[HttpGet("{ID}")]
+       
+
         public IActionResult QuestionDetails(Guid id)
         {
             QuestionModel q = _datahandler.GetQuestionByID(id);
@@ -98,16 +99,26 @@ namespace AskMateMVC.Controllers
         {
             return View(_datahandler.GetQuestions());
         }
+
         public IActionResult AnswersForQuestion(Guid id)
         {
+            Console.WriteLine("-------"+id);
             ViewBag.Question = _datahandler.GetQuestionByID(id);
             ViewBag.Ans = _datahandler.GetAnswersForQuestion(id);
             return View();
         }
 
-        
-        
-        
+        //[HttpPost]
+        //public IActionResult AnswersForQuestion([FromForm(Name = "QuestionID")] Guid id)
+        //{
+        //    Console.WriteLine("-------" + id);
+        //    ViewBag.Question = _datahandler.GetQuestionByID(id);
+        //    ViewBag.Ans = _datahandler.GetAnswersForQuestion(id);
+        //    return View();
+        //}
+
+
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
