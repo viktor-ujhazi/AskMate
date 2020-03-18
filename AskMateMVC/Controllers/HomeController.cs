@@ -73,14 +73,12 @@ namespace AskMateMVC.Controllers
             model.QuestionID = id;
             if (ModelState.IsValid)
             {
-                
                 _datahandler.SaveAnswers(model);
                 return RedirectToAction("AnswersForQuestion", id);
-
             }
             else
             {
-                return View("NewAnswer",);
+                return View("NewAnswer");
             }
         }
         //[HttpGet("{ID}")]
