@@ -21,7 +21,6 @@
 
             <button type="submit"> See answers</button>
             @Html.ActionLink("Details", "QuestionDetails", new { id = question.ID }, null)
-
         </form>
     </div>
     <form action="EditQuestion">
@@ -31,7 +30,7 @@
 
     <form>
         <button type="submit">Delete</button>
-
+        @Html.ActionLink("Delete", "DeleteQuestion", new { id = question.ID }, null)
     </form>
     <form>
         @Html.ActionLink("Write answer", "NewAnswer", new { id = question.ID }, null)
