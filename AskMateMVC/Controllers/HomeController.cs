@@ -63,7 +63,7 @@ namespace AskMateMVC.Controllers
         }
 
         [HttpPost]
-        public IActionResult NewAnswer(AnswerModel ans)
+        public IActionResult NewAnswer(AnswerModel ans,string Message)
         {
             ans.ID = Guid.NewGuid();
             if (ModelState.IsValid)
@@ -89,7 +89,7 @@ namespace AskMateMVC.Controllers
             QuestionModel q = _datahandler.GetQuestionByID(id);
             return View("EditQuestion", q);
         }
-
+        
         [HttpPost]
 
         public ActionResult EditQuestion(Guid id, [FromForm(Name = "Title")] string title, [FromForm(Name = "Message")] string message)
