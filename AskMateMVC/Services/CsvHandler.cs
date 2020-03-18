@@ -19,12 +19,12 @@ namespace AskMateMVC.Services
         List<AnswerModel> Answers { get; set; } = new List<AnswerModel>();
 
         //IWebHostEnvironment WebHostEnvironment { get; }
-        
-        
+
+
         public CsvHandler()
         {
-           LoadQuestion();
-           LoadAnswers();
+            LoadQuestion();
+            LoadAnswers();
 
         }
         public List<QuestionModel> GetQuestions()
@@ -45,7 +45,7 @@ namespace AskMateMVC.Services
                 foreach (var row in lines)
                 {
                     String[] Fields = CSVParser.Split(row);
-                    
+
                     for (int i = 0; i < Fields.Length; i++)
                     {
                         Fields[i] = Fields[i].TrimStart(' ', '"');
@@ -70,13 +70,13 @@ namespace AskMateMVC.Services
                 return new List<QuestionModel>();
             }
             return Questions;
-            
+
         }
         public void LoadAnswers()
         {
             string[] lines = System.IO.File.ReadAllLines(answersFileName);
             Regex CSVParser = new Regex(",(?=(?:[^\"]*\"[^\"]*\")*(?![^\"]*\"))");
-            
+
             try
             {
                 foreach (var row in lines)
@@ -100,7 +100,7 @@ namespace AskMateMVC.Services
                     };
                     Answers.Add(model);
                 }
-                
+
             }
             catch (Exception)
             {
@@ -150,6 +150,11 @@ namespace AskMateMVC.Services
             }
             //ResultAnswers.AddRange(Answers.Where(a => a.QuestionID == id));
             return ResultAnswers;
+        }
+        public void RemoveQuestionById(Guid id)
+        {
+            var questionToRemove = GetQuestionByID(id);
+            Questions.Remove(questionToRemove);
         }
     }
 }
