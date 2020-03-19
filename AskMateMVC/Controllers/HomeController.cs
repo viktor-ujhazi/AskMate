@@ -118,6 +118,13 @@ namespace AskMateMVC.Controllers
             return View();
         }
 
+        public IActionResult DeleteAnswer(Guid id, Guid qid)
+        {
+            _datahandler.RemoveAnswer(id);
+            _datahandler.SaveAnswers();
+            return Redirect($"../AnswersForQuestion/{qid}");
+        }
+
         public ActionResult SortingByTitle()
         {
             List<QuestionModel> list=_datahandler.GetQuestions();
