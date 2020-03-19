@@ -104,6 +104,30 @@ namespace AskMateMVC.Controllers
                 return View("EditQuestion", q);
             }
         }
+        public IActionResult EditAnswer(Guid id)
+        {
+            AnswerModel q = _datahandler.GetAnswerByID(id);
+            return View("EditAnswer", q);
+        }
+
+        [HttpPost]
+
+        public ActionResult EditAnswer(Guid id, [FromForm(Name = "Message")] string message)
+        {
+            AnswerModel q = _datahandler.GetAnswerByID(id);
+            try
+            {
+
+                q.Message = message;
+                _datahandler.RemoveAnswer(id);
+                _datahandler.AddAnswer(q);
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                return View("EditAnswer", q);
+            }
+        }
         public IActionResult List(List<QuestionModel> questions)
         {
             if (questions.Count == 0)
