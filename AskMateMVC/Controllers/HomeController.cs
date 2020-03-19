@@ -61,7 +61,7 @@ namespace AskMateMVC.Controllers
 
             return View(ans);
         }
-
+        
         [HttpPost]
         public IActionResult NewAnswer(Guid id, AnswerModel model)
         {
@@ -80,17 +80,12 @@ namespace AskMateMVC.Controllers
         }
 
 
-        public IActionResult QuestionDetails(Guid id)
-        {
-            QuestionModel q = _datahandler.GetQuestionByID(id);
-            return View("QuestionDetails", q);
-        }
         public IActionResult EditQuestion(Guid id)
         {
             QuestionModel q = _datahandler.GetQuestionByID(id);
             return View("EditQuestion", q);
         }
-        
+
         [HttpPost]
 
         public ActionResult EditQuestion(Guid id, [FromForm(Name = "Title")] string title, [FromForm(Name = "Message")] string message)
@@ -109,9 +104,11 @@ namespace AskMateMVC.Controllers
                 return View("EditQuestion", q);
             }
         }
-        public IActionResult List()
+        public IActionResult List(List<QuestionModel> questions)
         {
-            return View(_datahandler.GetQuestions());
+            if (questions.Count==0)
+                questions = _datahandler.GetQuestions();
+            return View(questions);
         }
 
         public IActionResult AnswersForQuestion(Guid id)
@@ -121,6 +118,26 @@ namespace AskMateMVC.Controllers
             return View();
         }
 
+        public ActionResult SortingByTitle()
+        {
+            List<QuestionModel> list=_datahandler.GetQuestions();
+            list=list.OrderBy(o => o.Title).ToList();
+            return View("List",list);
+        }
+
+        public ActionResult SortingByTime()
+        {
+            List<QuestionModel> list = _datahandler.GetQuestions();
+            list = list.OrderBy(o => o.TimeOfQuestion).ToList();
+            return View("List", list);
+        }
+
+        public ActionResult SortingByVote()
+        {
+            List<QuestionModel> list = _datahandler.GetQuestions();
+            list = list.OrderBy(o => o.VoteNumber).ToList();
+            return View("List", list);
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
@@ -134,6 +151,7 @@ namespace AskMateMVC.Controllers
             
             return View("DeleteQuestion", q);
         }
+
         [HttpPost]
         public ActionResult DeleteQuestion(QuestionModel q)
         {

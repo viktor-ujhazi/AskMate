@@ -41,16 +41,13 @@ namespace AskMateMVC.Services
             {
                 string[] lines = System.IO.File.ReadAllLines(questionsFileName);
                 Regex CSVParser = new Regex(",(?=(?:[^\"]*\"[^\"]*\")*(?![^\"]*\"))");
-
                 foreach (var row in lines)
                 {
                     String[] Fields = CSVParser.Split(row);
-
                     for (int i = 0; i < Fields.Length; i++)
                     {
                         Fields[i] = Fields[i].TrimStart(' ', '"');
                         Fields[i] = Fields[i].TrimEnd('"');
-
                     }
                     QuestionModel model = new QuestionModel
                     {
@@ -174,6 +171,11 @@ namespace AskMateMVC.Services
                     Answers.Remove(answer);
                 }
             }
+        }
+        public void RemoveAnswer(Guid id)
+        {
+            var answerToRemove = Answers.Where(q => q.ID == id).FirstOrDefault();
+            Answers.Remove(answerToRemove);
         }
     }
 }

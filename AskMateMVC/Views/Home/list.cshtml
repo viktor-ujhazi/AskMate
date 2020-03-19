@@ -5,40 +5,66 @@
 @model List<QuestionModel>
 
 <h1>All questions:</h1>
-<br /><br />
-@*@if(Model.Count==0)
+<br />
+
+<table class="table table-bordered table-responsive table-hover">
+    <tr>
+        <th>@Html.ActionLink("Title", "SortingByTitle", new { Model })</th>
+        <th>@Html.ActionLink("Time", "SortingByTime", new { Model })</th>
+        <th>@Html.ActionLink("Vote", "SortingByVote", new { Model })</th>
+    </tr>
+
+    <tr>
+        <th>Title</th>
+        <th>Time</th>
+        <th>Vote number</th>
+    </tr>
+
+
+    @foreach (var question in Model)
+    {
+<tr>
+    <td>@Html.ActionLink(@question.Title, "AnswersForQuestion", new { id = question.ID }, null)</td>
+    <td>@question.TimeOfQuestion</td>
+    <td>@question.VoteNumber</td>
+    <td>@Html.ActionLink("Edit", "EditQuestion", new { id = question.ID }, null)</td>
+    <td> @Html.ActionLink("Write answer", "NewAnswer", new { id = question.ID }, null)</td>
+    <td>@Html.ActionLink("Delete","DeleteQuestion",new { id = question.ID }, null)</td>
+</tr>
+    }
+    </table>
+
+
+
+
+
+
+@*<td>@Html.ActionLink("Details", "QuestionDetails", new { id = question.ID }, null)</td>*@
+
+
+
+@*@foreach (var question in Model)
 {
-    <a>Currently no questions on the page!</a>
-}*@
-@foreach (var question in Model)
-{
-<div class="card">
-    <p><div>@question.TimeOfQuestion</div><div>Views: @question.ViewNumber</div><div>Votes: @question.VoteNumber</div></p>
-    <h2>     @Html.ActionLink(@question.Title, "AnswersForQuestion", new { id = question.ID }, null)</h2>
-    <div>
-        <h3>@question.Message</h3>
+    <div style="border:solid">
+        <h2>     @Html.ActionLink(@question.Title, "AnswersForQuestion", new { id = question.ID }, null)</h2>
+        <div>
+            <h3>@question.Message</h3>
 
-        <form action="QuestionDetails">
+            <form action="QuestionDetails">
+                @Html.ActionLink("Details", "QuestionDetails", new { id = question.ID }, null)
+            </form>
+        </div>
 
-            <button type="submit"> See answers</button>
-            @Html.ActionLink("Details", "QuestionDetails", new { id = question.ID }, null)
+        <form action="EditQuestion">
+            @Html.ActionLink("Edit", "EditQuestion", new { id = question.ID }, null)
+        </form>
 
+        <form>
+            <button type="submit">Delete</button>
+        </form>
+
+        <form>
+            @Html.ActionLink("Write answer", "NewAnswer", new { id = question.ID }, null)
         </form>
     </div>
-    <form action="EditQuestion">
-        <button type="submit">Edit</button>
-        @Html.ActionLink("Edit", "EditQuestion", new { id = question.ID }, null)
-    </form>
-
-    <form>
-        <button type="submit">Delete</button>
-        @Html.ActionLink("Delete", "DeleteQuestion", new { id = question.ID }, null)
-    </form>
-    <form>
-        @Html.ActionLink("Write answer", "NewAnswer", new { id = question.ID }, null)
-
-    </form>
-
-</div>
-}
-    
+}*@
