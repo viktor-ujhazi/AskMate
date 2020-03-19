@@ -244,5 +244,4 @@ namespace AskMateMVC.Controllers
             return Redirect($"../AnswersForQuestion/{answerToVote.QuestionID}");
         }
     }
-
 }
