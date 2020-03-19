@@ -29,7 +29,9 @@ namespace AskMateMVC.Controllers
 
         public IActionResult Index()
         {
-            return View(_datahandler.MostViewedQuestions());
+            ViewBag.Answers = _datahandler.GetAnswers();
+            ViewBag.Questions = _datahandler.MostViewedQuestions();
+            return View();
         }
 
         public IActionResult Privacy()
