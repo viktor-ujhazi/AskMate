@@ -25,7 +25,7 @@
             @foreach (var question in Model)
             {
                 <tr>
-                    <td>@Html.ActionLink(@question.Title, "AnswersForQuestion", new { id = question.ID }, null)</td>
+                    <td style="word-break:break-word">@Html.ActionLink(@question.Title, "AnswersForQuestion", new { id = question.ID }, null)</td>
                     <td>@question.TimeOfQuestion</td>
                     <td>@question.VoteNumber</td>
                     <td>@question.ViewNumber</td>
