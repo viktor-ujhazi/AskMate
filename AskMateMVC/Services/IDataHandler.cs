@@ -15,6 +15,7 @@ namespace AskMateMVC.Services
         void SaveQuestions();
         void SaveAnswers();
         QuestionModel GetQuestionByID(Guid id);
+        AnswerModel GetAnswerByID(Guid id);
         public List<AnswerModel> GetAnswersForQuestion(Guid id);
         public void RemoveQuestionById(Guid id);
         public void RemoveAnswersForQuestin(Guid id);
