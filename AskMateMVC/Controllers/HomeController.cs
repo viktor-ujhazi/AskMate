@@ -131,6 +131,7 @@ namespace AskMateMVC.Controllers
         public IActionResult DeleteQuestion(Guid id)
         {
             QuestionModel q = _datahandler.GetQuestionByID(id);
+            
             return View("DeleteQuestion", q);
         }
         [HttpPost]

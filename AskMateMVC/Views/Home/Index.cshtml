@@ -9,10 +9,28 @@
 <div>
     @foreach (var item in Model)
     {
-    <ul>
-        <li>
-            @item.Title @item.Message
-        </li>
-    </ul>
+    <div class="card">
+        <table>
+            <caption>Vote: @item.VoteNumber</caption>
+            <thead>
+                <tr>
+                    <th>@item.TimeOfQuestion</th>
+                    <th colspan="2">Views: @item.ViewNumber </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>@item.Title</td> </tr>
+                <tr><td>@item.Message</td> </tr>
+            </tbody>
+            <tfoot>
+
+            </tfoot>
+            
+        </table>
+        
+        
+        
+        
+    </div>
     }
 </div>
