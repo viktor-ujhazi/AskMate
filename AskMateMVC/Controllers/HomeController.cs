@@ -147,6 +147,13 @@ namespace AskMateMVC.Controllers
             return View("List", list);
         }
 
+        public ActionResult SortingByView()
+        {
+            List<QuestionModel> list = _datahandler.GetQuestions();
+            list = list.OrderBy(o => o.ViewNumber).ToList();
+            return View("List", list);
+        }
+
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
