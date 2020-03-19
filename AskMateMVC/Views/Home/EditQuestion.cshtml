@@ -14,12 +14,12 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" />
+                <input asp-for="Title" class="form-control" required pattern=".*\S+.*" />
                 <span asp-validation-for="Title" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Message" class="control-label"></label>
-                <input asp-for="Message" class="form-control" />
+                <input asp-for="Message" class="form-control" required pattern=".*\S+.*" />
                 <span asp-validation-for="Message" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -27,9 +27,9 @@
                 <input asp-for="Image" class="form-control" />
                 <span asp-validation-for="Image" class="text-danger"></span>
             </div>
-            <div class="form-group" >
+            <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" formmethod="post" />
-                
+
             </div>
         </form>
     </div>

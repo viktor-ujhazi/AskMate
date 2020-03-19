@@ -45,8 +45,8 @@ namespace AskMateMVC.Controllers
         {
             if (ModelState.IsValid)
             {
-                _datahandler.SaveQuestions(model);
-                return RedirectToAction("List", _datahandler.GetQuestions());
+                _datahandler.AddQuestion(model);
+                return RedirectToAction("list", _datahandler.GetQuestions());
             }
             else
             {
@@ -61,7 +61,7 @@ namespace AskMateMVC.Controllers
 
             return View(ans);
         }
-
+        
         [HttpPost]
         public IActionResult NewAnswer(Guid id, AnswerModel model)
         {
@@ -69,8 +69,9 @@ namespace AskMateMVC.Controllers
             model.ID = Guid.NewGuid();
             if (ModelState.IsValid)
             {
-                _datahandler.SaveAnswers(model);
-                return RedirectToAction("AnswersForQuestion", new RouteValueDictionary(new { action = "AnswersForQuestion", Id = id }) );
+                _datahandler.AddAnswer(model);
+
+                return RedirectToAction("AnswersForQuestion", new RouteValueDictionary(new { action = "AnswersForQuestion", Id = model.QuestionID }));
             }
             else
             {
@@ -79,17 +80,12 @@ namespace AskMateMVC.Controllers
         }
 
 
-        public IActionResult QuestionDetails(Guid id)
-        {
-            QuestionModel q = _datahandler.GetQuestionByID(id);
-            return View("QuestionDetails", q);
-        }
         public IActionResult EditQuestion(Guid id)
         {
             QuestionModel q = _datahandler.GetQuestionByID(id);
             return View("EditQuestion", q);
         }
-        
+
         [HttpPost]
 
         public ActionResult EditQuestion(Guid id, [FromForm(Name = "Title")] string title, [FromForm(Name = "Message")] string message)
@@ -100,8 +96,8 @@ namespace AskMateMVC.Controllers
                 q.Title = title;
                 q.Message = message;
                 _datahandler.RemoveQuestionById(id);
-                _datahandler.SaveQuestions(q);
-                return View("Index");
+                _datahandler.AddQuestion(q);
+                return RedirectToAction("Index");
             }
             catch
             {
@@ -127,33 +123,49 @@ namespace AskMateMVC.Controllers
             List<QuestionModel> list=_datahandler.GetQuestions();
             list=list.OrderBy(o => o.Title).ToList();
             return View("List",list);
-    }
+        }
 
-        //public ActionResult SelectCategory()
-        //{
-        //    List<Dictionary<string, string>> a = new List<Dictionary<string, string>>();
-        ////    List<SelectedListItem> items
+        public ActionResult SortingByTime()
+        {
+            List<QuestionModel> list = _datahandler.GetQuestions();
+            list = list.OrderBy(o => o.TimeOfQuestion).ToList();
+            return View("List", list);
+        }
 
-        ////    items.Add(new SelectListItem { Text = "Action", Value = "0" });
-
-        ////    items.Add(new SelectListItem { Text = "Drama", Value = "1" });
-
-        ////    items.Add(new SelectListItem { Text = "Comedy", Value = "2", Selected = true });
-
-        ////    items.Add(new SelectListItem { Text = "Science Fiction", Value = "3" });
-
-        ////    ViewBag.MovieType = items;
-
-        //    return View();
-
-        //}
-
-
+        public ActionResult SortingByVote()
+        {
+            List<QuestionModel> list = _datahandler.GetQuestions();
+            list = list.OrderBy(o => o.VoteNumber).ToList();
+            return View("List", list);
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        public IActionResult DeleteQuestion(Guid id)
+        {
+            QuestionModel q = _datahandler.GetQuestionByID(id);
+            return View("DeleteQuestion", q);
+        }
+
+        [HttpPost]
+        public ActionResult DeleteQuestion(QuestionModel q)
+        {
+            try
+            {
+                _datahandler.RemoveQuestionById(q.ID);
+                _datahandler.RemoveAnswersForQuestin(q.ID);
+                _datahandler.SaveAnswers();
+                _datahandler.SaveQuestions();
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                return View("EditQuestion", q);
+            }
         }
     }
 }

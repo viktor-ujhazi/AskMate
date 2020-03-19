@@ -41,16 +41,13 @@ namespace AskMateMVC.Services
             {
                 string[] lines = System.IO.File.ReadAllLines(questionsFileName);
                 Regex CSVParser = new Regex(",(?=(?:[^\"]*\"[^\"]*\")*(?![^\"]*\"))");
-
                 foreach (var row in lines)
                 {
                     String[] Fields = CSVParser.Split(row);
-
                     for (int i = 0; i < Fields.Length; i++)
                     {
                         Fields[i] = Fields[i].TrimStart(' ', '"');
                         Fields[i] = Fields[i].TrimEnd('"');
-
                     }
                     QuestionModel model = new QuestionModel
                     {
@@ -107,10 +104,13 @@ namespace AskMateMVC.Services
                 Console.WriteLine();
             }
         }
-        public void SaveQuestions(QuestionModel model)
+        public void AddQuestion(QuestionModel model)
         {
-
             Questions.Add(model);
+            SaveQuestions();
+        }
+        public void SaveQuestions()
+        {
             var csv = new StringBuilder();
 
             foreach (var item in GetQuestions())
@@ -121,9 +121,14 @@ namespace AskMateMVC.Services
             File.WriteAllText(questionsFileName, csv.ToString());
 
         }
-        public void SaveAnswers(AnswerModel model)
+        public void AddAnswer(AnswerModel model)
         {
             Answers.Add(model);
+            SaveAnswers();
+        }
+        public void SaveAnswers()
+        {
+
             var csv = new StringBuilder();
 
             foreach (var item in GetAnswers())
@@ -155,6 +160,22 @@ namespace AskMateMVC.Services
         {
             var questionToRemove = GetQuestionByID(id);
             Questions.Remove(questionToRemove);
+        }
+        public void RemoveAnswersForQuestin(Guid id)
+        {
+            var answersToRemove = GetAnswersForQuestion(id);
+            if (answersToRemove.Count > 0)
+            {
+                foreach (var answer in answersToRemove)
+                {
+                    Answers.Remove(answer);
+                }
+            }
+        }
+        public void RemoveAnswer(Guid id)
+        {
+            var answerToRemove = Answers.Where(q => q.ID == id).FirstOrDefault();
+            Answers.Remove(answerToRemove);
         }
     }
 }
