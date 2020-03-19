@@ -116,18 +116,18 @@ namespace AskMateMVC.Controllers
 
         public IActionResult EditAnswer(Guid id, [FromForm(Name = "Message")] string message)
         {
-            AnswerModel q = _datahandler.GetAnswerByID(id);
+            AnswerModel ans = _datahandler.GetAnswerByID(id);
             try
             {
 
-                q.Message = message;
+                ans.Message = message;
                 _datahandler.RemoveAnswer(id);
-                _datahandler.AddAnswer(q);
-                return RedirectToAction("Index");
+                _datahandler.AddAnswer(ans);
+                return Redirect($"../AnswersForQuestion/{ans.QuestionID}");
             }
             catch
             {
-                return View("EditAnswer", q);
+                return View("EditAnswer", ans);
             }
         }
         public IActionResult List(List<QuestionModel> questions)
@@ -142,6 +142,7 @@ namespace AskMateMVC.Controllers
             var questionView = _datahandler.GetQuestionByID(id);
             questionView.IncreaseViews();
             _datahandler.SaveQuestions();
+
             ViewBag.Question = questionView;
             ViewBag.Ans = _utility.GetAnswersForQuestion(id);
             return View();
