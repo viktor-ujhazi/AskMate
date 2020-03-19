@@ -27,6 +27,9 @@ namespace AskMateMVC.Models
         {
             return ID + "," + TimeOfQuestion + "," + ViewNumber + "," + VoteNumber + "," + "\"" + Title + "\"" + "," + "\"" + Message + "\"" + "," + Image;
         }
-
+        public void IncreaseViews()
+        {
+            ViewNumber++;
+        }
     }
 }
