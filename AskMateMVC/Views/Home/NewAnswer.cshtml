@@ -4,9 +4,8 @@
     ViewData["Title"] = "NewAnswer";
 }
 
-<h1>NewAnswer</h1>
+<h1>New Answer</h1>
 
-<h4>AnswerModel</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -19,12 +18,12 @@
                 <span asp-validation-for="Message" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Image" class="control-label" ></label>
+                <label asp-for="Image" class="control-label"></label>
                 <input asp-for="Image" class="form-control" />
                 <span asp-validation-for="Image" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary"/>
+                <input type="submit" value="Create" class="btn btn-primary" />
             </div>
         </form>
     </div>
@@ -53,6 +52,6 @@
     }*@
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="list">Back to the Questions</a>
 </div>
 

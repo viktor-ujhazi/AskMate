@@ -1,25 +1,21 @@
-﻿@model AskMateMVC.Models.QuestionModel
+﻿@model AskMateMVC.Models.AnswerModel
 
 @{
-    ViewData["Title"] = "EditQuestion";
+    ViewData["Title"] = "EditAnswer";
+    Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Edit Question</h1>
+<h1>EditAnswer</h1>
 
-
+<h4>AnswerModel</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="EditQuestion">
+        <form asp-action="EditAnswer">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Title" class="control-label"></label>
-                <input asp-for="Title" class="form-control" required pattern=".*\S+.*" />
-                <span asp-validation-for="Title" class="text-danger"></span>
-            </div>
-            <div class="form-group">
                 <label asp-for="Message" class="control-label"></label>
-                <input asp-for="Message" class="form-control" required pattern=".*\S+.*" />
+                <input asp-for="Message" class="form-control" />
                 <span asp-validation-for="Message" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -28,14 +24,13 @@
                 <span asp-validation-for="Image" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" formmethod="post" />
-
+                <input type="submit" value="Save" class="btn btn-primary" formmethod="post" action="AnswersForQuestion" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="list">Back to the Questions</a>
+    <a> @Html.ActionLink("Go back to Question page","AnswersForQuestion",new { id = Model.QuestionID})</a>
 </div>
 

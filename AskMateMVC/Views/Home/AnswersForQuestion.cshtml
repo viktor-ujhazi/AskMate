@@ -7,14 +7,29 @@
 <h2>AnswersForQuestion</h2>
 
 <h2 style="width:1000px;word-break:break-word;color:mediumseagreen">Topic: @ViewBag.Question.Title</h2>
-<h1 style="width:1000px;word-break:break-word;color:mediumseagreen">@ViewBag.Question.Message</h1>
+<h1 style="width:1000px;word-break:break-word;color:mediumseagreen;">@ViewBag.Question.Message</h1>
 
 <table style="border-top:groove;border-top-width:5px;border-top-color:black;">
+    <tr>
+        <th>
+            <a style="padding:0px 800px 0px 0px;">@Html.ActionLink("Add new answer","NewAnswer",new { id =ViewBag.Question.ID})<br /><br /><br /></a>
+        </th>
+    </tr>
     @foreach (var item in ViewBag.Ans)
     {
         <tr>
+            <th>
+                <a style="padding: 0px 0px 0px 700px;color:cornflowerblue">@item.TimeOfAnswer</a>
+            </th>
+        </tr>
+        <tr>
+            <th>
+                <a style="padding:0px 0px 0px 700px;color:cornflowerblue">Vote rank:  @item.VoteNumber <br /><br /></a>
+            </th>
+        </tr>
+        <tr>
             <th style="width:1000px;word-break:break-word">
-                <div>@item.Message</div>
+                <a style="font-size:30px">@item.Message</a>
             </th>
         </tr>
 

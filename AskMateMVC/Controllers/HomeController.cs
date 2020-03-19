@@ -29,7 +29,9 @@ namespace AskMateMVC.Controllers
 
         public IActionResult Index()
         {
-            return View(_datahandler.MostViewedQuestions());
+            ViewBag.Answers = _datahandler.GetAnswers();
+            ViewBag.Questions = _datahandler.MostViewedQuestions();
+            return View();
         }
 
         public IActionResult Privacy()
@@ -97,7 +99,7 @@ namespace AskMateMVC.Controllers
                 q.Message = message;
                 _datahandler.RemoveQuestionById(id);
                 _datahandler.AddQuestion(q);
-                return RedirectToAction("Index");
+                return RedirectToAction("list");
             }
             catch
             {
@@ -114,18 +116,18 @@ namespace AskMateMVC.Controllers
 
         public ActionResult EditAnswer(Guid id, [FromForm(Name = "Message")] string message)
         {
-            AnswerModel q = _datahandler.GetAnswerByID(id);
+            AnswerModel ans = _datahandler.GetAnswerByID(id);
             try
             {
 
-                q.Message = message;
+                ans.Message = message;
                 _datahandler.RemoveAnswer(id);
-                _datahandler.AddAnswer(q);
-                return RedirectToAction("Index");
+                _datahandler.AddAnswer(ans);
+                return Redirect($"../AnswersForQuestion/{ans.QuestionID}");
             }
             catch
             {
-                return View("EditAnswer", q);
+                return View("EditAnswer", ans);
             }
         }
         public IActionResult List(List<QuestionModel> questions)
@@ -204,7 +206,7 @@ namespace AskMateMVC.Controllers
                 _datahandler.RemoveAnswersForQuestin(q.ID);
                 _datahandler.SaveAnswers();
                 _datahandler.SaveQuestions();
-                return RedirectToAction("Index");
+                return RedirectToAction("list");
             }
             catch
             {
