@@ -3,25 +3,42 @@
     ViewData["Title"] = "AnswersForQuestion";
 }
 
-<h1>AnswersForQuestion</h1>
 
-<h2>@ViewBag.Question.Title</h2>
+<h2>AnswersForQuestion</h2>
 
-@foreach (var item in ViewBag.Ans)
-{
-    <div>
-        <form>
-            <h4>
-                @item.Message
+<h2 style="width:1000px;word-break:break-word;color:mediumseagreen">Topic: @ViewBag.Question.Title</h2>
+<h1 style="width:1000px;word-break:break-word;color:mediumseagreen">@ViewBag.Question.Message</h1>
+
+<table style="border-top:groove;border-top-width:5px;border-top-color:black;">
+    @foreach (var item in ViewBag.Ans)
+    {
+        <tr>
+            <th style="width:1000px;word-break:break-word">
+                <div>@item.Message</div>
+            </th>
+        </tr>
+
+        <tr>
+            <th>
                 <a href="@Url.Action("AnswerVote", "Home",new { id = item.ID, voteValue = 1 })">
                     <img src="~/images/upvote.png" style="width: 15px; height:15px" />
                 </a>
                 <a href="@Url.Action("AnswerVote", "Home",new { id = item.ID, voteValue = 0 })">
-                    <img src="~/images/downvote.png" style="width: 18px; height:18px" />
+                    <img src="~/images/downvote.png" style="width: 18px;height: 18px" />
                 </a>
-                @Html.ActionLink("Delete", "DeleteAnswer", new { id = item.ID, qid = ViewBag.Question.ID })
-                @Html.ActionLink("Edit", "EditAnswer", new { id = item.ID }, null)
-            </h4>
-        </form>
-    </div>
-}
+            </th>
+        </tr>
+        <tr style="border-bottom:groove;border-bottom-color:black;">
+            <th>
+                <a style="padding:0px 300px 0px 0px;">@Html.ActionLink("Delete", "DeleteAnswer", new { id = item.ID, qid = ViewBag.Question.ID })</a>
+                <a style="padding:0px 300px 0px 0px;">@Html.ActionLink("Edit", "EditAnswer", new { id = item.ID }, null)</a>
+            </th>
+        </tr>
+        <tr>
+            <th>
+                <br />
+                <br />
+            </th>
+        </tr>
+    }
+</table>
