@@ -20,5 +20,6 @@ namespace AskMateMVC.Services
         public void RemoveQuestionById(Guid id);
         public void RemoveAnswersForQuestin(Guid id);
         public void RemoveAnswer(Guid id);
+        List<QuestionModel> MostViewedQuestions();
     }
 }
