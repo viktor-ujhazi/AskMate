@@ -123,6 +123,7 @@ namespace AskMateMVC.Services
         }
         public void AddAnswer(AnswerModel model)
         {
+            
             Answers.Add(model);
             SaveAnswers();
         }
@@ -147,60 +148,60 @@ namespace AskMateMVC.Services
         {
             return Answers.Where(q => q.ID == id).FirstOrDefault();
         }
-        public List<AnswerModel> GetAnswersForQuestion(Guid id)
-        {
-            List<AnswerModel> ResultAnswers = new List<AnswerModel>();
-            foreach (var item in Answers)
-            {
-                if (item.QuestionID.Equals(id))
-                {
-                    ResultAnswers.Add(item);
-                }
-            }
-            //ResultAnswers.AddRange(Answers.Where(a => a.QuestionID == id));
-            return ResultAnswers;
-        }
+        //public List<AnswerModel> GetAnswersForQuestion(Guid id)
+        //{
+        //    List<AnswerModel> ResultAnswers = new List<AnswerModel>();
+        //    foreach (var item in Answers)
+        //    {
+        //        if (item.QuestionID.Equals(id))
+        //        {
+        //            ResultAnswers.Add(item);
+        //        }
+        //    }
+        //    //ResultAnswers.AddRange(Answers.Where(a => a.QuestionID == id));
+        //    return ResultAnswers;
+        //}
         public void RemoveQuestionById(Guid id)
         {
             var questionToRemove = GetQuestionByID(id);
             Questions.Remove(questionToRemove);
         }
-        public void RemoveAnswersForQuestin(Guid id)
-        {
-            var answersToRemove = GetAnswersForQuestion(id);
-            if (answersToRemove.Count > 0)
-            {
-                foreach (var answer in answersToRemove)
-                {
-                    Answers.Remove(answer);
-                }
-            }
-        }
+        //public void RemoveAnswersForQuestion(Guid id)
+        //{
+        //    var answersToRemove = GetAnswersForQuestion(id);
+        //    if (answersToRemove.Count > 0)
+        //    {
+        //        foreach (var answer in answersToRemove)
+        //        {
+        //            Answers.Remove(answer);
+        //        }
+        //    }
+        //}
         public void RemoveAnswer(Guid id)
         {
             var answerToRemove = Answers.Where(q => q.ID == id).FirstOrDefault();
             Answers.Remove(answerToRemove);
         }
-        public List<QuestionModel> MostViewedQuestions()
-        {
-            List<QuestionModel> list = GetQuestions();
-            List<QuestionModel> resultList = new List<QuestionModel>();
-            list = list.OrderBy(o => o.ViewNumber).ToList();
-            if (list.Count > 10)
-            {
-                for (int i = 0; i < 10; i++)
-                {
-                    resultList.Add(list[i]);
-                }
-                resultList.Reverse();
-                return resultList;
-            }
-            else
-            {
-                list.Reverse();
-                return list;
-            }
+        //public List<QuestionModel> MostViewedQuestions()
+        //{
+        //    List<QuestionModel> list = GetQuestions();
+        //    List<QuestionModel> resultList = new List<QuestionModel>();
+        //    list = list.OrderBy(o => o.ViewNumber).ToList();
+        //    if (list.Count > 10)
+        //    {
+        //        for (int i = 0; i < 10; i++)
+        //        {
+        //            resultList.Add(list[i]);
+        //        }
+        //        resultList.Reverse();
+        //        return resultList;
+        //    }
+        //    else
+        //    {
+        //        list.Reverse();
+        //        return list;
+        //    }
 
-        }
+        //}
     }
 }
