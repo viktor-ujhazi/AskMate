@@ -136,6 +136,7 @@ namespace AskMateMVC.Controllers
         {
             List<QuestionModel> list = _datahandler.GetQuestions();
             list = list.OrderBy(o => o.TimeOfQuestion).ToList();
+            list.Reverse();
             return View("List", list);
         }
 
@@ -143,6 +144,13 @@ namespace AskMateMVC.Controllers
         {
             List<QuestionModel> list = _datahandler.GetQuestions();
             list = list.OrderBy(o => o.VoteNumber).ToList();
+            return View("List", list);
+        }
+
+        public ActionResult SortingByView()
+        {
+            List<QuestionModel> list = _datahandler.GetQuestions();
+            list = list.OrderBy(o => o.ViewNumber).ToList();
             return View("List", list);
         }
 
