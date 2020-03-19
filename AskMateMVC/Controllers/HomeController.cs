@@ -97,7 +97,7 @@ namespace AskMateMVC.Controllers
                 q.Message = message;
                 _datahandler.RemoveQuestionById(id);
                 _datahandler.AddQuestion(q);
-                return RedirectToAction("Index");
+                return RedirectToAction("list");
             }
             catch
             {
@@ -203,7 +203,7 @@ namespace AskMateMVC.Controllers
                 _datahandler.RemoveAnswersForQuestin(q.ID);
                 _datahandler.SaveAnswers();
                 _datahandler.SaveQuestions();
-                return RedirectToAction("Index");
+                return RedirectToAction("list");
             }
             catch
             {

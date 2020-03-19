@@ -4,11 +4,10 @@
     ViewData["Title"] = "DeleteQuestion";
 }
 
-<h1>DeleteQuestion</h1>
+<h1>Delete Question</h1>
 
 <h3>Are you sure you want to delete this?</h3>
 <div>
-    <h4>QuestionModel</h4>
     <hr />
     <dl class="row">
         <dt class="col-sm-2">
@@ -18,17 +17,17 @@
             @Html.DisplayFor(model => model.TimeOfQuestion)
         </dd>
         @*<dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ViewNumber)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ViewNumber)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.VoteNumber)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.VoteNumber)
-        </dd>*@
+                @Html.DisplayNameFor(model => model.ViewNumber)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.ViewNumber)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.VoteNumber)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.VoteNumber)
+            </dd>*@
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Title)
         </dt>
@@ -42,15 +41,15 @@
             @Html.DisplayFor(model => model.Message)
         </dd>
         @*<dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Image)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Image)
-        </dd>*@
+                @Html.DisplayNameFor(model => model.Image)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Image)
+            </dd>*@
     </dl>
 
     <form asp-action="DeleteQuestion">
         <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
+        <a asp-action="list">Back to the Questions</a>
     </form>
 </div>
