@@ -28,6 +28,7 @@
                     <td>@Html.ActionLink(@question.Title, "AnswersForQuestion", new { id = question.ID }, null)</td>
                     <td>@question.TimeOfQuestion</td>
                     <td>@question.VoteNumber</td>
+                    <td>@question.ViewNumber</td>
                     <td>@Html.ActionLink("Edit", "EditQuestion", new { id = question.ID }, null)</td>
                     <td> @Html.ActionLink("Write answer", "NewAnswer", new { id = question.ID }, null)</td>
                     <td>@Html.ActionLink("Delete", "DeleteQuestion", new { id = question.ID }, null)</td>
