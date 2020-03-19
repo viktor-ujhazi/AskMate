@@ -177,5 +177,24 @@ namespace AskMateMVC.Services
             var answerToRemove = Answers.Where(q => q.ID == id).FirstOrDefault();
             Answers.Remove(answerToRemove);
         }
+        public List<QuestionModel> MostViewedQuestions()
+        {
+            List<QuestionModel> list = GetQuestions();
+            List<QuestionModel> resultList = new List<QuestionModel>();
+            list = list.OrderBy(o => o.ViewNumber).ToList();
+            if (list.Count > 10)
+            {
+                for (int i = 0; i < 10; i++)
+                {
+                    resultList.Add(list[i]);
+                }
+                return resultList;
+            }
+            else
+            {
+                return list;
+            }
+            
+        }
     }
 }

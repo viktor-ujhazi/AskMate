@@ -2,33 +2,31 @@
     ViewData["Title"] = "Home Page";
 }
 @model List<QuestionModel>
-
-
     <div>
-        @foreach (var item in Model)
-        {
-            <div>
-                <table>
-                    <caption>Vote: @item.VoteNumber</caption>
-                    <thead>
-                        <tr>
-                            <th>@item.TimeOfQuestion</th>
-                            <th colspan="2">Views: @item.ViewNumber </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr><td><h2>@item.Title</h2></td> </tr>
-                        <tr><td><h4>@item.Message</h4></td> </tr>
-                    </tbody>
-                    <tfoot>
+        <h2>Most viewed questions</h2>
 
-                    </tfoot>
-
-                </table>
-
-
+        <div>
+            @foreach (var item in Model)
+            {
+                <div class="am-card">
+                    <form method="get" action="/Home/AnswersForQuestion/@item.ID">
+                        <button class="am-button" type="submit">
+                            <div class="container">
+                                <div style="overflow: hidden;">
+                                    <p style="float: left;">@item.TimeOfQuestion</p>
+                                    <p style="float: right;">Views: @item.ViewNumber</p>
+                                </div>
+                                <h5 style="word-break:break-word">@item.Title </h5>
+                                <p class="text-content">@item.Message </p>
+                                
+                                <p class="am-leftalign">Vote: @item.VoteNumber</p>
+                            </div>
+                        </button>
+                    </form>
 
 
-            </div>
-        }
+
+                </div>
+            }
+        </div>
     </div>

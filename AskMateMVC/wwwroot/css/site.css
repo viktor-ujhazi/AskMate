@@ -5,9 +5,12 @@ a.navbar-brand {
     white-space: normal;
     text-align: center;
     word-break: break-all;
-    background-color: aquamarine;
 }
 
+.box-shadow
+{
+    background-color:aquamarine;
+}
 
 /* Provide sufficient contrast against white background */
 a {
@@ -45,7 +48,7 @@ html {
 }
 
 .box-shadow {
-  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+  box-shadow: 0 .25rem .75rem rgba(5, 3, 0, .05);
 }
 
 button.accept-policy {
@@ -65,9 +68,34 @@ body {
   margin-bottom: 60px;
 }
 .footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  white-space: nowrap;
-  line-height: 60px; /* Vertically center the text there */
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    white-space: nowrap;
+    line-height: 60px; /* Vertically center the text there */
+}
+.am-card {
+    
+    text-wrap:normal;
+    border-style: double;
+    border-width: 5px;
+    
+    margin-bottom:30px;
+}
+
+.am-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 20px rgba(37,33,82,.12), 0 4px 8px rgba(37,33,82,.06);
+}
+.am-button{
+    width:100%;
+}
+.text-content {
+    text-wrap: normal;
+}
+.am-leftalign{
+    text-align:left
+}
+.am-rightalign{
+    text-align:right
 }
