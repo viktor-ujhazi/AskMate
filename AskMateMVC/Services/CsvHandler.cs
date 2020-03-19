@@ -143,6 +143,10 @@ namespace AskMateMVC.Services
         {
             return Questions.Where(q => q.ID == id).FirstOrDefault();
         }
+        public AnswerModel GetAnswerByID(Guid id)
+        {
+            return Answers.Where(q => q.ID == id).FirstOrDefault();
+        }
         public List<AnswerModel> GetAnswersForQuestion(Guid id)
         {
             List<AnswerModel> ResultAnswers = new List<AnswerModel>();
@@ -188,13 +192,15 @@ namespace AskMateMVC.Services
                 {
                     resultList.Add(list[i]);
                 }
+                resultList.Reverse();
                 return resultList;
             }
             else
             {
+                list.Reverse();
                 return list;
             }
-            
+
         }
     }
 }

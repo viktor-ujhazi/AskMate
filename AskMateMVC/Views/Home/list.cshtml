@@ -19,7 +19,7 @@
                 <th>@Html.ActionLink("Title", "SortingByTitle", new { Model })</th>
                 <th>@Html.ActionLink("Time", "SortingByTime", new { Model })</th>
                 <th>@Html.ActionLink("Vote", "SortingByVote", new { Model })</th>
-                <th>@Html.ActionLink("View number","SortingByView", new { Model })</th>
+                <th>@Html.ActionLink("View number", "SortingByView", new { Model })</th>
             </tr>
 
             @foreach (var question in Model)
@@ -29,6 +29,20 @@
                     <td>@question.TimeOfQuestion</td>
                     <td>@question.VoteNumber</td>
                     <td>@question.ViewNumber</td>
+
+
+                    <td>
+                        <a href="@Url.Action("QuestionVote", "Home",new { id = question.ID, voteValue = 1 })">
+                            <img src="~/images/upvote.png" style="width: 15px; height:15px" />
+                        </a>
+                    </td>
+                    <td>
+                        <a href="@Url.Action("QuestionVote", "Home",new { id = question.ID, voteValue = 0 })">
+                            <img src="~/images/downvote.png" style="width: 18px; height:18px" />
+                        </a>
+
+                    </td>
+
                     <td>@Html.ActionLink("Edit", "EditQuestion", new { id = question.ID }, null)</td>
                     <td> @Html.ActionLink("Write answer", "NewAnswer", new { id = question.ID }, null)</td>
                     <td>@Html.ActionLink("Delete", "DeleteQuestion", new { id = question.ID }, null)</td>

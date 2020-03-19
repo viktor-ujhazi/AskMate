@@ -61,7 +61,7 @@ namespace AskMateMVC.Controllers
 
             return View(ans);
         }
-        
+
         [HttpPost]
         public IActionResult NewAnswer(Guid id, AnswerModel model)
         {
@@ -104,16 +104,43 @@ namespace AskMateMVC.Controllers
                 return View("EditQuestion", q);
             }
         }
+        public IActionResult EditAnswer(Guid id)
+        {
+            AnswerModel q = _datahandler.GetAnswerByID(id);
+            return View("EditAnswer", q);
+        }
+
+        [HttpPost]
+
+        public ActionResult EditAnswer(Guid id, [FromForm(Name = "Message")] string message)
+        {
+            AnswerModel q = _datahandler.GetAnswerByID(id);
+            try
+            {
+
+                q.Message = message;
+                _datahandler.RemoveAnswer(id);
+                _datahandler.AddAnswer(q);
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                return View("EditAnswer", q);
+            }
+        }
         public IActionResult List(List<QuestionModel> questions)
         {
-            if (questions.Count==0)
+            if (questions.Count == 0)
                 questions = _datahandler.GetQuestions();
             return View(questions);
         }
 
         public IActionResult AnswersForQuestion(Guid id)
         {
-            ViewBag.Question = _datahandler.GetQuestionByID(id);
+            var questionView = _datahandler.GetQuestionByID(id);
+            questionView.IncreaseViews();
+            _datahandler.SaveQuestions();
+            ViewBag.Question = questionView;
             ViewBag.Ans = _datahandler.GetAnswersForQuestion(id);
             return View();
         }
@@ -127,9 +154,9 @@ namespace AskMateMVC.Controllers
 
         public ActionResult SortingByTitle()
         {
-            List<QuestionModel> list=_datahandler.GetQuestions();
-            list=list.OrderBy(o => o.Title).ToList();
-            return View("List",list);
+            List<QuestionModel> list = _datahandler.GetQuestions();
+            list = list.OrderBy(o => o.Title).ToList();
+            return View("List", list);
         }
 
         public ActionResult SortingByTime()
@@ -163,7 +190,7 @@ namespace AskMateMVC.Controllers
         public IActionResult DeleteQuestion(Guid id)
         {
             QuestionModel q = _datahandler.GetQuestionByID(id);
-            
+
             return View("DeleteQuestion", q);
         }
 
@@ -183,5 +210,36 @@ namespace AskMateMVC.Controllers
                 return View("EditQuestion", q);
             }
         }
+        public ActionResult QuestionVote(Guid id, int voteValue)
+        {
+            var questionToVote = _datahandler.GetQuestionByID(id);
+
+            if (voteValue == 1)
+            {
+                questionToVote.VoteNumber++;
+            }
+            if (voteValue == 0)
+            {
+                questionToVote.VoteNumber--;
+            }
+            _datahandler.SaveQuestions();
+            return Redirect($"../List/");
+        }
+        public ActionResult AnswerVote(Guid id, int voteValue)
+        {
+            var answerToVote = _datahandler.GetAnswerByID(id);
+
+            if (voteValue == 1)
+            {
+                answerToVote.VoteNumber++;
+            }
+            if (voteValue == 0)
+            {
+                answerToVote.VoteNumber--;
+            }
+            _datahandler.SaveAnswers();
+            return Redirect($"../AnswersForQuestion/{answerToVote.QuestionID}");
+        }
     }
+
 }
