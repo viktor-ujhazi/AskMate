@@ -192,13 +192,15 @@ namespace AskMateMVC.Services
                 {
                     resultList.Add(list[i]);
                 }
+                resultList.Reverse();
                 return resultList;
             }
             else
             {
+                list.Reverse();
                 return list;
             }
-            
+
         }
     }
 }

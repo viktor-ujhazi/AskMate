@@ -113,7 +113,10 @@ namespace AskMateMVC.Controllers
 
         public IActionResult AnswersForQuestion(Guid id)
         {
-            ViewBag.Question = _datahandler.GetQuestionByID(id);
+            var questionView = _datahandler.GetQuestionByID(id);
+            questionView.IncreaseViews();
+            _datahandler.SaveQuestions();
+            ViewBag.Question = questionView;
             ViewBag.Ans = _datahandler.GetAnswersForQuestion(id);
             return View();
         }
