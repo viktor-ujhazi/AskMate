@@ -29,7 +29,7 @@ namespace AskMateMVC.Services
 
         public List<QuestionModel> GetQuestions()
         {
-
+            Questions.Clear();
             var sql = "SELECT * FROM questions";
             using (var conn = new NpgsqlConnection(cs))
             {
@@ -68,6 +68,27 @@ namespace AskMateMVC.Services
 
         public void AddQuestion(QuestionModel model)
         {
+            using (var conn = new NpgsqlConnection(cs))
+            {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand("INSERT INTO questions " +
+                    "(question_time, " +
+                    "question_viewnumber, " +
+                    "question_votenumber, " +
+                    "question_title, " +
+                    "question_message, " +
+                    "question_imageurl ) Values (@time, @view, @vote, @title, @message, @image)", conn))
+                {
+                    cmd.Parameters.AddWithValue("time", model.TimeOfQuestion);
+                    cmd.Parameters.AddWithValue("view", model.ViewNumber);
+                    cmd.Parameters.AddWithValue("vote", model.VoteNumber);
+                    cmd.Parameters.AddWithValue("title", model.Title);
+                    cmd.Parameters.AddWithValue("message", model.Message);
+                    cmd.Parameters.AddWithValue("image", model.Image);
+
+                    cmd.ExecuteNonQuery();
+                };
+            };
             
         }
 
