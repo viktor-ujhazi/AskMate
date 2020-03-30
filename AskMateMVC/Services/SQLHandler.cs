@@ -22,14 +22,7 @@ namespace AskMateMVC.Services
 
         public SQLHandler()
         {
-            NpgsqlConnection con = new NpgsqlConnection(cs);
-            con.Open();
-            var sql = "SELECT version()";
 
-            using var cmd = new NpgsqlCommand(sql, con);
-
-            var version = cmd.ExecuteScalar().ToString();
-            Console.WriteLine($"PostgreSQL version: {version}");
 
 
 
@@ -39,17 +32,46 @@ namespace AskMateMVC.Services
 
         public List<QuestionModel> GetQuestions()
         {
-            throw new NotImplementedException();
+
+            var sql = "SELECT * FROM questions";
+            using (var conn = new NpgsqlConnection(cs))
+            {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand(sql, conn))
+                {
+                    var reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        var a = reader["question_id"];
+                        QuestionModel q = new QuestionModel
+                        {
+                            ID = (int)reader["question_id"],
+                            TimeOfQuestion = (DateTime)reader["question_time"],
+                            ViewNumber = (int)reader["question_viewnumber"],
+                            VoteNumber = (int)reader["question_votenumber"],
+                            Title = (string)reader["question_title"],
+                            Message = (string)reader["question_message"],
+                            Image = (string)reader["question_imageurl"]
+                        };
+                        Questions.Add(q);
+                    }
+
+                };
+            };
+            return Questions;
         }
+
+
 
         public List<AnswerModel> GetAnswers()
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
+            return null;
         }
 
         public void AddQuestion(QuestionModel model)
         {
-            throw new NotImplementedException();
+            
         }
 
         public void AddAnswer(AnswerModel model, int id)
@@ -109,7 +131,8 @@ namespace AskMateMVC.Services
 
         public List<QuestionModel> MostViewedQuestions()
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
+            return new List<QuestionModel>();
         }
     }
 }
