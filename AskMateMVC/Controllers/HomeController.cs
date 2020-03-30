@@ -56,7 +56,7 @@ namespace AskMateMVC.Controllers
             }
         }
 
-        public IActionResult NewAnswer(Guid id)
+        public IActionResult NewAnswer(int id)
         {
             AnswerModel ans = new AnswerModel();
             ans.QuestionID = id;
@@ -65,7 +65,7 @@ namespace AskMateMVC.Controllers
         }
 
         [HttpPost]
-        public IActionResult NewAnswer(Guid id, AnswerModel model)
+        public IActionResult NewAnswer(int id, AnswerModel model)
         {
             model=_utility.CreateAnswer(id, model);
             
@@ -82,7 +82,7 @@ namespace AskMateMVC.Controllers
         }
 
 
-        public IActionResult EditQuestion(Guid id)
+        public IActionResult EditQuestion(int id)
         {
             QuestionModel q = _datahandler.GetQuestionByID(id);
             return View("EditQuestion", q);
@@ -90,7 +90,7 @@ namespace AskMateMVC.Controllers
 
         [HttpPost]
 
-        public IActionResult EditQuestion(Guid id, [FromForm(Name = "Title")] string title, [FromForm(Name = "Message")] string message)
+        public IActionResult EditQuestion(int id, [FromForm(Name = "Title")] string title, [FromForm(Name = "Message")] string message)
         {
             QuestionModel q = _datahandler.GetQuestionByID(id);
             try
@@ -106,7 +106,7 @@ namespace AskMateMVC.Controllers
                 return View("EditQuestion", q);
             }
         }
-        public IActionResult EditAnswer(Guid id)
+        public IActionResult EditAnswer(int id)
         {
             AnswerModel q = _datahandler.GetAnswerByID(id);
             return View("EditAnswer", q);
@@ -114,7 +114,7 @@ namespace AskMateMVC.Controllers
 
         [HttpPost]
 
-        public IActionResult EditAnswer(Guid id, [FromForm(Name = "Message")] string message)
+        public IActionResult EditAnswer(int id, [FromForm(Name = "Message")] string message)
         {
             AnswerModel ans = _datahandler.GetAnswerByID(id);
             try
@@ -137,7 +137,7 @@ namespace AskMateMVC.Controllers
             return View(questions);
         }
 
-        public IActionResult AnswersForQuestion(Guid id)
+        public IActionResult AnswersForQuestion(int id)
         {
             var questionView = _datahandler.GetQuestionByID(id);
             questionView.IncreaseViews();
@@ -148,7 +148,7 @@ namespace AskMateMVC.Controllers
             return View();
         }
 
-        public IActionResult DeleteAnswer(Guid id, Guid qid)
+        public IActionResult DeleteAnswer(int id, int qid)
         {
             _datahandler.RemoveAnswer(id);
             _datahandler.SaveAnswers();
@@ -190,7 +190,7 @@ namespace AskMateMVC.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
-        public IActionResult DeleteQuestion(Guid id)
+        public IActionResult DeleteQuestion(int id)
         {
             QuestionModel q = _datahandler.GetQuestionByID(id);
 
@@ -213,7 +213,7 @@ namespace AskMateMVC.Controllers
                 return View("EditQuestion", q);
             }
         }
-        public IActionResult QuestionVote(Guid id, int voteValue)
+        public IActionResult QuestionVote(int id, int voteValue)
         {
             var questionToVote = _datahandler.GetQuestionByID(id);
 
@@ -228,7 +228,7 @@ namespace AskMateMVC.Controllers
             _datahandler.SaveQuestions();
             return Redirect($"../List/");
         }
-        public IActionResult AnswerVote(Guid id, int voteValue)
+        public IActionResult AnswerVote(int id, int voteValue)
         {
             var answerToVote = _datahandler.GetAnswerByID(id);
 

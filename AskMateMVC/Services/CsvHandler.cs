@@ -51,7 +51,7 @@ namespace AskMateMVC.Services
                     }
                     QuestionModel model = new QuestionModel
                     {
-                        ID = Guid.Parse(Fields[0]),
+                        ID = Int32.Parse(Fields[0]),
                         TimeOfQuestion = DateTime.Parse(Fields[1]),
                         ViewNumber = int.Parse(Fields[2]),
                         VoteNumber = int.Parse(Fields[3]),
@@ -88,10 +88,10 @@ namespace AskMateMVC.Services
                     }
                     AnswerModel model = new AnswerModel
                     {
-                        ID = Guid.Parse(Fields[0]),
+                        ID = Int32.Parse(Fields[0]),
                         TimeOfAnswer = DateTime.Parse(Fields[1]),
                         VoteNumber = int.Parse(Fields[2]),
-                        QuestionID = Guid.Parse(Fields[3]),
+                        QuestionID = Int32.Parse(Fields[3]),
                         Message = Fields[4],
                         Image = Fields[5]
                     };
@@ -140,15 +140,15 @@ namespace AskMateMVC.Services
             File.WriteAllText(answersFileName, csv.ToString());
 
         }
-        public QuestionModel GetQuestionByID(Guid id)
+        public QuestionModel GetQuestionByID(int id)
         {
             return Questions.Where(q => q.ID == id).FirstOrDefault();
         }
-        public AnswerModel GetAnswerByID(Guid id)
+        public AnswerModel GetAnswerByID(int id)
         {
             return Answers.Where(q => q.ID == id).FirstOrDefault();
         }
-        //public List<AnswerModel> GetAnswersForQuestion(Guid id)
+        //public List<AnswerModel> GetAnswersForQuestion(int id)
         //{
         //    List<AnswerModel> ResultAnswers = new List<AnswerModel>();
         //    foreach (var item in Answers)
@@ -161,12 +161,12 @@ namespace AskMateMVC.Services
         //    //ResultAnswers.AddRange(Answers.Where(a => a.QuestionID == id));
         //    return ResultAnswers;
         //}
-        public void RemoveQuestionById(Guid id)
+        public void RemoveQuestionById(int id)
         {
             var questionToRemove = GetQuestionByID(id);
             Questions.Remove(questionToRemove);
         }
-        //public void RemoveAnswersForQuestion(Guid id)
+        //public void RemoveAnswersForQuestion(int id)
         //{
         //    var answersToRemove = GetAnswersForQuestion(id);
         //    if (answersToRemove.Count > 0)
@@ -177,7 +177,7 @@ namespace AskMateMVC.Services
         //        }
         //    }
         //}
-        public void RemoveAnswer(Guid id)
+        public void RemoveAnswer(int id)
         {
             var answerToRemove = Answers.Where(q => q.ID == id).FirstOrDefault();
             Answers.Remove(answerToRemove);

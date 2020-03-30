@@ -14,12 +14,12 @@ namespace AskMateMVC.Services
         public void AddAnswer(AnswerModel model);
         void SaveQuestions();
         void SaveAnswers();
-        QuestionModel GetQuestionByID(Guid id);
-        AnswerModel GetAnswerByID(Guid id);
-        //public List<AnswerModel> GetAnswersForQuestion(Guid id);
-        public void RemoveQuestionById(Guid id);
-        //public void RemoveAnswersForQuestion(Guid id);
-        public void RemoveAnswer(Guid id);
+        QuestionModel GetQuestionByID(int id);
+        AnswerModel GetAnswerByID(int id);
+        //public List<AnswerModel> GetAnswersForQuestion(int id);
+        public void RemoveQuestionById(int id);
+        //public void RemoveAnswersForQuestion(int id);
+        public void RemoveAnswer(int id);
         //List<QuestionModel> MostViewedQuestions();
     }
 }

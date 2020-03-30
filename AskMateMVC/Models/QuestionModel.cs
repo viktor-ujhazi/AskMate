@@ -9,7 +9,7 @@ namespace AskMateMVC.Models
     public class QuestionModel
     {
 
-        public Guid ID { get; set; } = Guid.NewGuid();    //id: A unique identifier for the question
+        public int ID { get; set; }   //id: A unique identifier for the question
         [Display(Name = "Posted: ")]
         public DateTime TimeOfQuestion { get; set; } = DateTime.Now; //submission_time: The UNIX timestamp when the question was posted
         public int ViewNumber { get; set; } = 0; //view_number: How many times this question was displayed in the single question view

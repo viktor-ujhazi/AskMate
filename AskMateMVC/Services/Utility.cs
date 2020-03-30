@@ -14,13 +14,13 @@ namespace AskMateMVC.Services
         {
             _dataHandler = datahandler;
         }
-        public AnswerModel CreateAnswer(Guid id, AnswerModel model)
+        public AnswerModel CreateAnswer(int id, AnswerModel model)
         {
             model.QuestionID = id;
-            model.ID = Guid.NewGuid();
+            //model.ID = Guid.NewGuid();
             return model;
         }
-        public List<AnswerModel> GetAnswersForQuestion(Guid id)
+        public List<AnswerModel> GetAnswersForQuestion(int id)
         {
             List<AnswerModel> ResultAnswers = new List<AnswerModel>();
             foreach (var item in _dataHandler.GetAnswers())
@@ -32,7 +32,7 @@ namespace AskMateMVC.Services
             }
             return ResultAnswers;
         }
-        public void RemoveAnswersForQuestion(Guid id)
+        public void RemoveAnswersForQuestion(int id)
         {
             var answersToRemove = GetAnswersForQuestion(id);
             if (answersToRemove.Count > 0)
