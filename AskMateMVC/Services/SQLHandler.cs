@@ -37,16 +37,6 @@ namespace AskMateMVC.Services
             //LoadAnswers();
         }
 
-        public List<QuestionModel> LoadQuestion()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void LoadAnswers()
-        {
-            throw new NotImplementedException();
-        }
-
         public List<QuestionModel> GetQuestions()
         {
             throw new NotImplementedException();
@@ -62,17 +52,7 @@ namespace AskMateMVC.Services
             throw new NotImplementedException();
         }
 
-        public void AddAnswer(AnswerModel model)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void SaveQuestions()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void SaveAnswers()
+        public void AddAnswer(AnswerModel model, int id)
         {
             throw new NotImplementedException();
         }
@@ -87,7 +67,22 @@ namespace AskMateMVC.Services
             throw new NotImplementedException();
         }
 
+        public List<AnswerModel> GetAnswersForQuestion(int id)
+        {
+            throw new NotImplementedException();
+        }
+
         public void RemoveQuestionById(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void EditQuestion(int id, QuestionModel question)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void EditAnswer(int id, AnswerModel answer)
         {
             throw new NotImplementedException();
         }
@@ -96,5 +91,24 @@ namespace AskMateMVC.Services
         {
             throw new NotImplementedException();
         }
+
+        public void ModifyQuestionVote(int id, int voteValue)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ModifyAnswerVote(int id, int voteValue)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void IncreaseViews(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<QuestionModel> MostViewedQuestions()
+        {
+            throw new NotImplementedException();
+        }
     }
-}
