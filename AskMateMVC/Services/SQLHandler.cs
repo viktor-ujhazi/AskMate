@@ -24,7 +24,7 @@ namespace AskMateMVC.Services
         {
             NpgsqlConnection con = new NpgsqlConnection(cs);
             con.Open();
-            var sql = "SELECT * FROM Questions";
+            var sql = "SELECT version()";
 
             using var cmd = new NpgsqlCommand(sql, con);
 
@@ -112,3 +112,4 @@ namespace AskMateMVC.Services
             throw new NotImplementedException();
         }
     }
+}
