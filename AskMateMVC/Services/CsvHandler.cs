@@ -12,28 +12,14 @@ namespace AskMateMVC.Services
 {
     public class CsvHandler : IDataHandler
     {
-
         static string questionsFileName = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/data", "Questions.csv");
         static string answersFileName = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/data", "Answers.csv");
         List<QuestionModel> Questions { get; set; } = new List<QuestionModel>();
         List<AnswerModel> Answers { get; set; } = new List<AnswerModel>();
-
-        //IWebHostEnvironment WebHostEnvironment { get; }
-
-
         public CsvHandler()
         {
             LoadQuestion();
             LoadAnswers();
-
-        }
-        public List<QuestionModel> GetQuestions()
-        {
-            return Questions;
-        }
-        public List<AnswerModel> GetAnswers()
-        {
-            return Answers;
         }
         public List<QuestionModel> LoadQuestion()
         {
@@ -51,7 +37,7 @@ namespace AskMateMVC.Services
                     }
                     QuestionModel model = new QuestionModel
                     {
-                        ID = Int32.Parse(Fields[0]),
+                        ID = int.Parse(Fields[0]),
                         TimeOfQuestion = DateTime.Parse(Fields[1]),
                         ViewNumber = int.Parse(Fields[2]),
                         VoteNumber = int.Parse(Fields[3]),
@@ -88,10 +74,10 @@ namespace AskMateMVC.Services
                     }
                     AnswerModel model = new AnswerModel
                     {
-                        ID = Int32.Parse(Fields[0]),
+                        ID = int.Parse(Fields[0]),
                         TimeOfAnswer = DateTime.Parse(Fields[1]),
                         VoteNumber = int.Parse(Fields[2]),
-                        QuestionID = Int32.Parse(Fields[3]),
+                        QuestionID = int.Parse(Fields[3]),
                         Message = Fields[4],
                         Image = Fields[5]
                     };
@@ -104,11 +90,22 @@ namespace AskMateMVC.Services
                 Console.WriteLine();
             }
         }
+        public List<QuestionModel> GetQuestions()
+        {
+            return Questions;
+        }
+        public List<AnswerModel> GetAnswers()
+        {
+            return Answers;
+        }
+        
         public void AddQuestion(QuestionModel model)
         {
+            model.ID = CreateQuestionID();
             Questions.Add(model);
             SaveQuestions();
         }
+        
         public void SaveQuestions()
         {
             var csv = new StringBuilder();
@@ -121,9 +118,10 @@ namespace AskMateMVC.Services
             File.WriteAllText(questionsFileName, csv.ToString());
 
         }
-        public void AddAnswer(AnswerModel model)
+        public void AddAnswer(AnswerModel model, int id)
         {
-            
+            model.ID = CreateAnswerID();
+            model.QuestionID = id;
             Answers.Add(model);
             SaveAnswers();
         }
@@ -148,60 +146,151 @@ namespace AskMateMVC.Services
         {
             return Answers.Where(q => q.ID == id).FirstOrDefault();
         }
-        //public List<AnswerModel> GetAnswersForQuestion(int id)
-        //{
-        //    List<AnswerModel> ResultAnswers = new List<AnswerModel>();
-        //    foreach (var item in Answers)
-        //    {
-        //        if (item.QuestionID.Equals(id))
-        //        {
-        //            ResultAnswers.Add(item);
-        //        }
-        //    }
-        //    //ResultAnswers.AddRange(Answers.Where(a => a.QuestionID == id));
-        //    return ResultAnswers;
-        //}
+        public List<AnswerModel> GetAnswersForQuestion(int id)
+        {
+            List<AnswerModel> ResultAnswers = new List<AnswerModel>();
+            foreach (var item in Answers)
+            {
+                if (item.QuestionID.Equals(id))
+                {
+                    ResultAnswers.Add(item);
+                }
+            }
+            
+            return ResultAnswers;
+        }
+        public void EditQuestion(int id, QuestionModel question)
+        {
+            RemoveQuestionById(id);
+            AddQuestion(question);
+        }
+        public void EditAnswer(int id, AnswerModel answer)
+        {
+            RemoveAnswer(id);
+            AddAnswer(answer,id);
+        }
         public void RemoveQuestionById(int id)
         {
             var questionToRemove = GetQuestionByID(id);
             Questions.Remove(questionToRemove);
+            RemoveAnswersForQuestion(id);
+            SaveAnswers();
+            SaveQuestions();
         }
-        //public void RemoveAnswersForQuestion(int id)
-        //{
-        //    var answersToRemove = GetAnswersForQuestion(id);
-        //    if (answersToRemove.Count > 0)
-        //    {
-        //        foreach (var answer in answersToRemove)
-        //        {
-        //            Answers.Remove(answer);
-        //        }
-        //    }
-        //}
+        private void RemoveAnswersForQuestion(int id)
+        {
+            var answersToRemove = GetAnswersForQuestion(id);
+            if (answersToRemove.Count > 0)
+            {
+                foreach (var answer in answersToRemove)
+                {
+                    Answers.Remove(answer);
+                }
+            }
+        }
         public void RemoveAnswer(int id)
         {
             var answerToRemove = Answers.Where(q => q.ID == id).FirstOrDefault();
             Answers.Remove(answerToRemove);
+            SaveAnswers();
         }
-        //public List<QuestionModel> MostViewedQuestions()
-        //{
-        //    List<QuestionModel> list = GetQuestions();
-        //    List<QuestionModel> resultList = new List<QuestionModel>();
-        //    list = list.OrderBy(o => o.ViewNumber).ToList();
-        //    if (list.Count > 10)
-        //    {
-        //        for (int i = 0; i < 10; i++)
-        //        {
-        //            resultList.Add(list[i]);
-        //        }
-        //        resultList.Reverse();
-        //        return resultList;
-        //    }
-        //    else
-        //    {
-        //        list.Reverse();
-        //        return list;
-        //    }
+        public List<QuestionModel> MostViewedQuestions()
+        {
+            List<QuestionModel> list = GetQuestions();
+            List<QuestionModel> resultList = new List<QuestionModel>();
+            list = list.OrderBy(o => o.ViewNumber).ToList();
+            if (list.Count > 10)
+            {
+                for (int i = 0; i < 10; i++)
+                {
+                    resultList.Add(list[i]);
+                }
+                resultList.Reverse();
+                return resultList;
+            }
+            else
+            {
+                list.Reverse();
+                return list;
+            }
 
-        //}
+        }
+        public void ModifyQuestionVote(int id, int voteValue) 
+        {
+            var questionToVote = GetQuestionByID(id);
+
+            if (voteValue == 1)
+            {
+                questionToVote.VoteNumber++;
+            }
+            if (voteValue == 0)
+            {
+                questionToVote.VoteNumber--;
+            }
+            SaveQuestions();
+        }
+
+        public void ModifyAnswerVote(int id, int voteValue)
+        {
+            var answerToVote = GetAnswerByID(id);
+
+            if (voteValue == 1)
+            {
+                answerToVote.VoteNumber++;
+            }
+            if (voteValue == 0)
+            {
+                answerToVote.VoteNumber--;
+            }
+            SaveAnswers();
+        }
+        public void IncreaseViews(int id)
+        {
+            var question = GetQuestionByID(id);
+            question.IncreaseViews();
+            SaveQuestions();
+        }
+        private int CreateAnswerID()
+        {
+            List<AnswerModel> sortedList = GetAnswers();
+            sortedList.Sort(delegate (AnswerModel a1, AnswerModel a2)
+            {
+                int compareID = a1.ID.CompareTo(a2.ID);
+                if (compareID == 0)
+                {
+                    return a2.ID.CompareTo(a1.ID);
+                }
+                return compareID;
+            });
+            for (int i = 0; i < sortedList.Count; i++)
+            {
+                if (sortedList[i].ID != i)
+                {
+                    return i;
+                }
+            }
+            return sortedList.Count;
+        }
+        private int CreateQuestionID()
+        {
+            List<QuestionModel> sortedList = GetQuestions();
+            sortedList.Sort(delegate (QuestionModel q1, QuestionModel q2)
+            {
+                int compareID = q1.ID.CompareTo(q2.ID);
+                if (compareID == 0)
+                {
+                    return q2.ID.CompareTo(q1.ID);
+                }
+                return compareID;
+            });
+            for (int i = 0; i < sortedList.Count; i++)
+            {
+                if (sortedList[i].ID != i)
+                {
+                    return i;
+                }
+            }
+            return sortedList.Count;
+        }
     }
 }
