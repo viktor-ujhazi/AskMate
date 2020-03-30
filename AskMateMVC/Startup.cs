@@ -30,7 +30,6 @@ namespace AskMateMVC
             //services.AddSingleton(typeof(IDataHandler), new CsvHandler());
             services.AddSingleton(typeof(IDataHandler), new SQLHandler());
 
-            services.AddTransient<Utility>();
             //services.AddSingleton<CsvLoader>();
             //CsvLoader.LoadQuestion();
         }
