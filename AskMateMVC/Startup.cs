@@ -14,7 +14,7 @@ namespace AskMateMVC
 {
     public class Startup
     {
-        
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -25,7 +25,7 @@ namespace AskMateMVC
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            
+
             services.AddControllersWithViews();
             //services.AddSingleton(typeof(IDataHandler), new CsvHandler());
             services.AddSingleton(typeof(IDataHandler), new SQLHandler());
@@ -60,7 +60,7 @@ namespace AskMateMVC
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
-            
+
         }
     }
 }
