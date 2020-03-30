@@ -51,7 +51,7 @@ namespace AskMateMVC.Services
                     }
                     QuestionModel model = new QuestionModel
                     {
-                        ID = Guid.Parse(Fields[0]),
+                        ID = int.Parse(Fields[0]),
                         TimeOfQuestion = DateTime.Parse(Fields[1]),
                         ViewNumber = int.Parse(Fields[2]),
                         VoteNumber = int.Parse(Fields[3]),
@@ -88,10 +88,10 @@ namespace AskMateMVC.Services
                     }
                     AnswerModel model = new AnswerModel
                     {
-                        ID = Guid.Parse(Fields[0]),
+                        ID = int.Parse(Fields[0]),
                         TimeOfAnswer = DateTime.Parse(Fields[1]),
                         VoteNumber = int.Parse(Fields[2]),
-                        QuestionID = Guid.Parse(Fields[3]),
+                        QuestionID = int.Parse(Fields[3]),
                         Message = Fields[4],
                         Image = Fields[5]
                     };
@@ -106,6 +106,7 @@ namespace AskMateMVC.Services
         }
         public void AddQuestion(QuestionModel model)
         {
+            model.ID = CreateQuestionID();
             Questions.Add(model);
             SaveQuestions();
         }
@@ -121,9 +122,10 @@ namespace AskMateMVC.Services
             File.WriteAllText(questionsFileName, csv.ToString());
 
         }
-        public void AddAnswer(AnswerModel model)
+        public void AddAnswer(AnswerModel model, int id)
         {
-            
+            model.ID = CreateAnswerID();
+            model.QuestionID = id;
             Answers.Add(model);
             SaveAnswers();
         }
@@ -140,11 +142,11 @@ namespace AskMateMVC.Services
             File.WriteAllText(answersFileName, csv.ToString());
 
         }
-        public QuestionModel GetQuestionByID(Guid id)
+        public QuestionModel GetQuestionByID(int id)
         {
             return Questions.Where(q => q.ID == id).FirstOrDefault();
         }
-        public AnswerModel GetAnswerByID(Guid id)
+        public AnswerModel GetAnswerByID(int id)
         {
             return Answers.Where(q => q.ID == id).FirstOrDefault();
         }
@@ -161,7 +163,7 @@ namespace AskMateMVC.Services
         //    //ResultAnswers.AddRange(Answers.Where(a => a.QuestionID == id));
         //    return ResultAnswers;
         //}
-        public void RemoveQuestionById(Guid id)
+        public void RemoveQuestionById(int id)
         {
             var questionToRemove = GetQuestionByID(id);
             Questions.Remove(questionToRemove);
@@ -177,7 +179,7 @@ namespace AskMateMVC.Services
         //        }
         //    }
         //}
-        public void RemoveAnswer(Guid id)
+        public void RemoveAnswer(int id)
         {
             var answerToRemove = Answers.Where(q => q.ID == id).FirstOrDefault();
             Answers.Remove(answerToRemove);
@@ -203,5 +205,48 @@ namespace AskMateMVC.Services
         //    }
 
         //}
+
+        private int CreateAnswerID()
+        {
+            List<AnswerModel> sortedList = GetAnswers();
+            sortedList.Sort(delegate (AnswerModel a1, AnswerModel a2)
+            {
+                int compareID = a1.ID.CompareTo(a2.ID);
+                if (compareID == 0)
+                {
+                    return a2.ID.CompareTo(a1.ID);
+                }
+                return compareID;
+            });
+            for (int i = 0; i < sortedList.Count; i++)
+            {
+                if (sortedList[i].ID != i)
+                {
+                    return i;
+                }
+            }
+            return sortedList.Count;
+        }
+        private int CreateQuestionID()
+        {
+            List<QuestionModel> sortedList = GetQuestions();
+            sortedList.Sort(delegate (QuestionModel q1, QuestionModel q2)
+            {
+                int compareID = q1.ID.CompareTo(q2.ID);
+                if (compareID == 0)
+                {
+                    return q2.ID.CompareTo(q1.ID);
+                }
+                return compareID;
+            });
+            for (int i = 0; i < sortedList.Count; i++)
+            {
+                if (sortedList[i].ID != i)
+                {
+                    return i;
+                }
+            }
+            return sortedList.Count;
+        }
     }
 }

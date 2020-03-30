@@ -14,13 +14,13 @@ namespace AskMateMVC.Services
         {
             _dataHandler = datahandler;
         }
-        public AnswerModel CreateAnswer(Guid id, AnswerModel model)
+        public AnswerModel CreateAnswer(int id, AnswerModel model)
         {
             model.QuestionID = id;
-            model.ID = Guid.NewGuid();
+            //model.ID = Guid.NewGuid();
             return model;
         }
-        public List<AnswerModel> GetAnswersForQuestion(Guid id)
+        public List<AnswerModel> GetAnswersForQuestion(int id)
         {
             List<AnswerModel> ResultAnswers = new List<AnswerModel>();
             foreach (var item in _dataHandler.GetAnswers())
@@ -32,7 +32,7 @@ namespace AskMateMVC.Services
             }
             return ResultAnswers;
         }
-        public void RemoveAnswersForQuestion(Guid id)
+        public void RemoveAnswersForQuestion(int id)
         {
             var answersToRemove = GetAnswersForQuestion(id);
             if (answersToRemove.Count > 0)
@@ -65,5 +65,48 @@ namespace AskMateMVC.Services
             }
 
         }
+        public int CreateAnswerID()
+        {
+            List<AnswerModel> sortedList = _dataHandler.GetAnswers();
+            sortedList.Sort(delegate (AnswerModel a1, AnswerModel a2)
+            {
+                int compareID = a1.ID.CompareTo(a2.ID);
+                if (compareID == 0)
+                {
+                    return a2.ID.CompareTo(a1.ID);
+                }
+                return compareID;
+            });
+            for (int i = 0; i < sortedList.Count; i++)
+            {
+                if (sortedList[i].ID != i)
+                {
+                    return i;
+                }
+            }
+            return sortedList.Count;
+        }
+        public int CreateQuestionID()
+        {
+            List<QuestionModel> sortedList = _dataHandler.GetQuestions();
+            sortedList.Sort(delegate (QuestionModel q1, QuestionModel q2)
+            {
+                int compareID = q1.ID.CompareTo(q2.ID);
+                if (compareID == 0)
+                {
+                    return q2.ID.CompareTo(q1.ID);
+                }
+                return compareID;
+            });
+            for (int i = 0; i < sortedList.Count; i++)
+            {
+                if (sortedList[i].ID != i)
+                {
+                    return i;
+                }
+            }
+            return sortedList.Count;
+        }
+
     }
 }
