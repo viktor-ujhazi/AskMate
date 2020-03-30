@@ -16,21 +16,17 @@ namespace AskMateMVC.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IDataHandler _datahandler;
-        private Utility _utility;
 
-
-        public HomeController(ILogger<HomeController> logger, IDataHandler datahandler, Utility utility)
+        public HomeController(ILogger<HomeController> logger, IDataHandler datahandler)
         {
             _logger = logger;
-            _utility = utility;
             _datahandler = datahandler;
-
         }
 
         public IActionResult Index()
         {
             ViewBag.Answers = _datahandler.GetAnswers();
-            ViewBag.Questions = _utility.MostViewedQuestions();
+            ViewBag.Questions = _datahandler.MostViewedQuestions();
             return View();
         }
 
@@ -97,8 +93,8 @@ namespace AskMateMVC.Controllers
             {
                 q.Title = title;
                 q.Message = message;
-                _datahandler.RemoveQuestionById(id);
-                _datahandler.AddQuestion(q);
+                _datahandler.EditQuestion(id,q);
+               
                 return RedirectToAction("list");
             }
             catch
@@ -119,10 +115,8 @@ namespace AskMateMVC.Controllers
             AnswerModel ans = _datahandler.GetAnswerByID(id);
             try
             {
-
                 ans.Message = message;
-                _datahandler.RemoveAnswer(id);
-                _datahandler.AddAnswer(ans,id);
+                _datahandler.EditAnswer(id,ans);
                 return Redirect($"../AnswersForQuestion/{ans.QuestionID}");
             }
             catch
@@ -139,19 +133,16 @@ namespace AskMateMVC.Controllers
 
         public IActionResult AnswersForQuestion(int id)
         {
-            var questionView = _datahandler.GetQuestionByID(id);
-            questionView.IncreaseViews();
-            _datahandler.SaveQuestions();
 
-            ViewBag.Question = questionView;
-            ViewBag.Ans = _utility.GetAnswersForQuestion(id);
+            _datahandler.IncreaseViews(id);
+            ViewBag.Question = _datahandler.GetQuestionByID(id);
+            ViewBag.Ans = _datahandler.GetAnswersForQuestion(id);
             return View();
         }
 
         public IActionResult DeleteAnswer(int id, int qid)
         {
             _datahandler.RemoveAnswer(id);
-            _datahandler.SaveAnswers();
             return Redirect($"../AnswersForQuestion/{qid}");
         }
 
@@ -203,9 +194,6 @@ namespace AskMateMVC.Controllers
             try
             {
                 _datahandler.RemoveQuestionById(q.ID);
-                _utility.RemoveAnswersForQuestion(q.ID);
-                _datahandler.SaveAnswers();
-                _datahandler.SaveQuestions();
                 return RedirectToAction("list");
             }
             catch
@@ -215,33 +203,13 @@ namespace AskMateMVC.Controllers
         }
         public IActionResult QuestionVote(int id, int voteValue)
         {
-            var questionToVote = _datahandler.GetQuestionByID(id);
-
-            if (voteValue == 1)
-            {
-                questionToVote.VoteNumber++;
-            }
-            if (voteValue == 0)
-            {
-                questionToVote.VoteNumber--;
-            }
-            _datahandler.SaveQuestions();
+            _datahandler.ModifyQuestionVote(id, voteValue);
             return Redirect($"../List/");
         }
         public IActionResult AnswerVote(int id, int voteValue)
         {
-            var answerToVote = _datahandler.GetAnswerByID(id);
-
-            if (voteValue == 1)
-            {
-                answerToVote.VoteNumber++;
-            }
-            if (voteValue == 0)
-            {
-                answerToVote.VoteNumber--;
-            }
-            _datahandler.SaveAnswers();
-            return Redirect($"../AnswersForQuestion/{answerToVote.QuestionID}");
+            _datahandler.ModifyAnswerVote(id, voteValue);
+            return Redirect($"../AnswersForQuestion/{_datahandler.GetAnswerByID(id).QuestionID}");
         }
     }
 }

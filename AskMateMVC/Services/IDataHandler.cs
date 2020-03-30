@@ -6,20 +6,20 @@ namespace AskMateMVC.Services
 {
     public interface IDataHandler
     {
-        List<QuestionModel> LoadQuestion();
-        void LoadAnswers();
-        List<QuestionModel> GetQuestions();
-        List<AnswerModel> GetAnswers();
+        public List<QuestionModel> GetQuestions();
+        public List<AnswerModel> GetAnswers();
         public void AddQuestion(QuestionModel model);
         public void AddAnswer(AnswerModel model, int id);
-        void SaveQuestions();
-        void SaveAnswers();
-        QuestionModel GetQuestionByID(int id);
-        AnswerModel GetAnswerByID(int id);
-        //public List<AnswerModel> GetAnswersForQuestion(Guid id);
+        public QuestionModel GetQuestionByID(int id);
+        public AnswerModel GetAnswerByID(int id);
+        public List<AnswerModel> GetAnswersForQuestion(int id);
         public void RemoveQuestionById(int id);
-        //public void RemoveAnswersForQuestion(Guid id);
+        public void EditQuestion(int id, QuestionModel question);
+        public void EditAnswer(int id, AnswerModel answer);
         public void RemoveAnswer(int id);
-        //List<QuestionModel> MostViewedQuestions();
+        public void ModifyQuestionVote(int id, int voteValue);
+        public void ModifyAnswerVote(int id, int voteValue);
+        public void IncreaseViews(int id);
+        public List<QuestionModel> MostViewedQuestions();
     }
 }
