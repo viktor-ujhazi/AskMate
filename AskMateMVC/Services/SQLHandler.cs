@@ -23,9 +23,6 @@ namespace AskMateMVC.Services
         public SQLHandler()
         {
 
-
-
-
             //LoadQuestion();
             //LoadAnswers();
         }
