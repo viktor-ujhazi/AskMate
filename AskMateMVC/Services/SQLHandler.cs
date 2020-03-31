@@ -101,7 +101,7 @@ namespace AskMateMVC.Services
 
         public QuestionModel GetQuestionByID(int id)
         {
-            foreach(var question in Questions)
+            foreach(var question in GetQuestions())
             {
                 if(question.ID==id)
                 {
@@ -113,7 +113,7 @@ namespace AskMateMVC.Services
 
         public AnswerModel GetAnswerByID(int id)
         {
-            foreach (var answer in Answers)
+            foreach (var answer in GetAnswers())
             {
                 if (answer.ID == id)
                 {
@@ -126,7 +126,7 @@ namespace AskMateMVC.Services
         public List<AnswerModel> GetAnswersForQuestion(int id)
         {
             List<AnswerModel> ResultAnswers = new List<AnswerModel>();
-            foreach (var item in Answers)
+            foreach (var item in GetAnswers())
             {
                 if (item.QuestionID.Equals(id))
                 {
