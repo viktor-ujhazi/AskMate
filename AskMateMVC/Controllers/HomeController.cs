@@ -149,41 +149,39 @@ namespace AskMateMVC.Controllers
 
         public IActionResult SortByAttribute(string attribute)
         {
-            SQLHandler sqlHandler = (SQLHandler)_datahandler;
-            List<QuestionModel> questions= sqlHandler.SortedDatas(attribute);
-            return View("List", questions);
+            return View("List", _datahandler.SortedDatas(attribute));
         }
 
 
 
-        public IActionResult SortingByTitle()
-        {
-            List<QuestionModel> list = _datahandler.GetQuestions();
-            list = list.OrderBy(o => o.Title).ToList();
-            return View("List", list);
-        }
+        //public IActionResult SortingByTitle()
+        //{
+        //    List<QuestionModel> list = _datahandler.GetQuestions();
+        //    list = list.OrderBy(o => o.Title).ToList();
+        //    return View("List", list);
+        //}
 
-        public IActionResult SortingByTime()
-        {
-            List<QuestionModel> list = _datahandler.GetQuestions();
-            list = list.OrderBy(o => o.TimeOfQuestion).ToList();
-            list.Reverse();
-            return View("List", list);
-        }
+        //public IActionResult SortingByTime()
+        //{
+        //    List<QuestionModel> list = _datahandler.GetQuestions();
+        //    list = list.OrderBy(o => o.TimeOfQuestion).ToList();
+        //    list.Reverse();
+        //    return View("List", list);
+        //}
 
-        public IActionResult SortingByVote()
-        {
-            List<QuestionModel> list = _datahandler.GetQuestions();
-            list = list.OrderBy(o => o.VoteNumber).ToList();
-            return View("List", list);
-        }
+        //public IActionResult SortingByVote()
+        //{
+        //    List<QuestionModel> list = _datahandler.GetQuestions();
+        //    list = list.OrderBy(o => o.VoteNumber).ToList();
+        //    return View("List", list);
+        //}
 
-        public IActionResult SortingByView()
-        {
-            List<QuestionModel> list = _datahandler.GetQuestions();
-            list = list.OrderBy(o => o.ViewNumber).ToList();
-            return View("List", list);
-        }
+        //public IActionResult SortingByView()
+        //{
+        //    List<QuestionModel> list = _datahandler.GetQuestions();
+        //    list = list.OrderBy(o => o.ViewNumber).ToList();
+        //    return View("List", list);
+        //}
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

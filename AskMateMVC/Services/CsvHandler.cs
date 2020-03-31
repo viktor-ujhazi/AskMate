@@ -292,5 +292,10 @@ namespace AskMateMVC.Services
             }
             return sortedList.Count;
         }
+
+        public List<QuestionModel> SortedDatas(string attribute)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
