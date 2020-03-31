@@ -27,7 +27,7 @@ namespace AskMateMVC.Controllers
         public IActionResult Index()
         {
             ViewBag.Answers = _datahandler.GetAnswers();
-            ViewBag.Questions = _datahandler.MostViewedQuestions();
+            ViewBag.Questions = _datahandler.LatestQuestions();
             return View();
         }
 

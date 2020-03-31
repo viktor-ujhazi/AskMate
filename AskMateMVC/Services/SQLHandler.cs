@@ -375,5 +375,38 @@ namespace AskMateMVC.Services
             };
             return questions;
         }
+        public List<QuestionModel> LatestQuestions()
+        {
+
+            List<QuestionModel> latestQuestions = new List<QuestionModel>();
+            var sql = "SELECT * FROM questions ORDER BY question_time DESC LIMIT 5";
+            using (var conn = new NpgsqlConnection(cs))
+            {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand(sql, conn))
+                {
+                    var reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        var a = reader["question_id"];
+                        QuestionModel q = new QuestionModel
+                        {
+                            ID = (int)reader["question_id"],
+                            TimeOfQuestion = (DateTime)reader["question_time"],
+                            ViewNumber = (int)reader["question_viewnumber"],
+                            VoteNumber = (int)reader["question_votenumber"],
+                            Title = (string)reader["question_title"],
+                            Message = (string)reader["question_message"],
+                            Image = (string)reader["question_imageurl"]
+                        };
+                        latestQuestions.Add(q);
+                    }
+
+                };
+            };
+            return latestQuestions;
+
+
+        }
     }
 }

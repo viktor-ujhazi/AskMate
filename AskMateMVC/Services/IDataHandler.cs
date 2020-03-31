@@ -22,5 +22,6 @@ namespace AskMateMVC.Services
         public void IncreaseViews(int id);
         public List<QuestionModel> MostViewedQuestions();
         public List<QuestionModel> SortedDatas(string attribute);
+        public List<QuestionModel> LatestQuestions();
     }
 }
