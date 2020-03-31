@@ -58,8 +58,6 @@ namespace AskMateMVC.Services
             return Questions;
         }
 
-
-
         public List<AnswerModel> GetAnswers()
         {
             //throw new NotImplementedException();
