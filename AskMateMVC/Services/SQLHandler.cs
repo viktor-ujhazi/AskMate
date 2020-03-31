@@ -66,6 +66,7 @@ namespace AskMateMVC.Services
 
         public void AddQuestion(QuestionModel model)
         {
+
             using (var conn = new NpgsqlConnection(cs))
             {
                 conn.Open();
@@ -82,7 +83,7 @@ namespace AskMateMVC.Services
                     cmd.Parameters.AddWithValue("vote", model.VoteNumber);
                     cmd.Parameters.AddWithValue("title", model.Title);
                     cmd.Parameters.AddWithValue("message", model.Message);
-                    cmd.Parameters.AddWithValue("image", model.Image);
+                    cmd.Parameters.AddWithValue("image", model.Image == "" ? DBNull.Value.ToString() : "");
 
                     cmd.ExecuteNonQuery();
                 };
@@ -92,7 +93,25 @@ namespace AskMateMVC.Services
 
         public void AddAnswer(AnswerModel model, int id)
         {
-            throw new NotImplementedException();
+            using (var conn = new NpgsqlConnection(cs))
+            {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand("INSERT INTO answers " +
+                    "(answer_time, " +
+                    "answer_votenumber, " +
+                    "question_id, " +
+                    "answer_message, " +
+                    "answer_imageurl ) Values (@time, @vote, @qid, @message, @image)", conn))
+                {
+                    cmd.Parameters.AddWithValue("time", model.TimeOfAnswer);
+                    cmd.Parameters.AddWithValue("vote", model.VoteNumber);
+                    cmd.Parameters.AddWithValue("qid", model.QuestionID);
+                    cmd.Parameters.AddWithValue("message", model.Message);
+                    cmd.Parameters.AddWithValue("image", model.Image == "" ? DBNull.Value.ToString() : "");
+
+                    cmd.ExecuteNonQuery();
+                };
+            };
         }
 
 
