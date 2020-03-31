@@ -10,6 +10,7 @@ namespace AskMateMVC.Services
         public List<AnswerModel> GetAnswers();
         public void AddQuestion(QuestionModel model);
         public void AddAnswer(AnswerModel model, int id);
+        public void AddComment(CommentModel model);
         public QuestionModel GetQuestionByID(int id);
         public AnswerModel GetAnswerByID(int id);
         public List<AnswerModel> GetAnswersForQuestion(int id);

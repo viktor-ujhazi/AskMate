@@ -37,10 +37,6 @@ namespace AskMateMVC.Controllers
             return View("List", result);
         }
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
         public IActionResult NewQuestion()
         {
             return View();
@@ -59,6 +55,19 @@ namespace AskMateMVC.Controllers
             }
         }
 
+        public IActionResult NewComment()
+        {
+            return View();
+        }
+        [HttpPost]
+        public IActionResult NewComment(QuestionModel model, CommentModel comment)
+        {
+            comment.Question_ID = model.ID;
+
+            _datahandler.AddComment(comment);
+            return RedirectToAction("list", _datahandler.GetQuestions());
+
+        }
         public IActionResult NewAnswer(int id)
         {
             AnswerModel ans = new AnswerModel();
@@ -71,7 +80,7 @@ namespace AskMateMVC.Controllers
         public IActionResult NewAnswer(int id, AnswerModel model)
         {
             //model=_utility.CreateAnswer(id, model);
-            
+
             if (ModelState.IsValid)
             {
                 _datahandler.AddAnswer(model, id);
@@ -124,7 +133,6 @@ namespace AskMateMVC.Controllers
             try
             {
                 ans.Message = message;
-                ans.Image = image;
                 _datahandler.EditAnswer(id,ans);
                 return Redirect($"../AnswersForQuestion/{ans.QuestionID}");
             }
