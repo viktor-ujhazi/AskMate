@@ -23,7 +23,6 @@ namespace AskMateMVC.Services
         public SQLHandler()
         {
 
-
             //LoadQuestion();
             //LoadAnswers();
         }
@@ -96,19 +95,43 @@ namespace AskMateMVC.Services
             throw new NotImplementedException();
         }
 
+
+
         public QuestionModel GetQuestionByID(int id)
         {
-            throw new NotImplementedException();
+            foreach(var question in Questions)
+            {
+                if(question.ID==id)
+                {
+                    return question;
+                }
+            }
+            return null;
         }
 
         public AnswerModel GetAnswerByID(int id)
         {
-            throw new NotImplementedException();
+            foreach (var answer in Answers)
+            {
+                if (answer.ID == id)
+                {
+                    return answer;
+                }
+            }
+            return null;
         }
 
         public List<AnswerModel> GetAnswersForQuestion(int id)
         {
-            throw new NotImplementedException();
+            List<AnswerModel> ResultAnswers = new List<AnswerModel>();
+            foreach (var item in Answers)
+            {
+                if (item.QuestionID.Equals(id))
+                {
+                    ResultAnswers.Add(item);
+                }
+            }
+            return ResultAnswers;
         }
 
         public void RemoveQuestionById(int id)
