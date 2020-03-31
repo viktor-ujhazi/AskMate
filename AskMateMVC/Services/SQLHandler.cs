@@ -177,44 +177,145 @@ namespace AskMateMVC.Services
 
         public void RemoveQuestionById(int id)
         {
-            throw new NotImplementedException();
+            using (var conn = new NpgsqlConnection(cs))
+            {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand($"DELETE FROM questions WHERE question_id={id} ", conn))
+                {
+                    cmd.ExecuteNonQuery();
+                };
+            };
         }
 
         public void EditQuestion(int id, QuestionModel question)
         {
-            throw new NotImplementedException();
+            string sql = $"UPDATE questions " +
+                    $"SET question_title = '{question.Title}'," +
+                    $"question_message = '{question.Message}', " +
+                    $"question_imageurl = '{question.Image}' " +
+                    $"WHERE question_id={id} ";
+
+            using (var conn = new NpgsqlConnection(cs))
+            {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand(sql, conn))
+                {
+                    cmd.ExecuteNonQuery();
+                };
+            };
         }
 
         public void EditAnswer(int id, AnswerModel answer)
         {
-            throw new NotImplementedException();
+            string sql = $"UPDATE answers " +
+                    $"SET answer_message = '{answer.Message}', " +
+                    $"answer_image = '{answer.Image}' " +
+                    $"WHERE answer_id={id} ";
+
+            using (var conn = new NpgsqlConnection(cs))
+            {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand(sql, conn))
+                {
+                    cmd.ExecuteNonQuery();
+                };
+            };
         }
 
         public void RemoveAnswer(int id)
         {
-            throw new NotImplementedException();
+            using (var conn = new NpgsqlConnection(cs))
+            {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand($"DELETE FROM answers WHERE answer_id={id} ", conn))
+                {
+                    cmd.ExecuteNonQuery();
+                };
+            };
         }
 
         public void ModifyQuestionVote(int id, int voteValue)
         {
-            throw new NotImplementedException();
+            string op="-";
+            if (voteValue == 1)
+            {
+                op = "+";
+            }
+            
+            using (var conn = new NpgsqlConnection(cs))
+            {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand($"UPDATE questions SET question_votenumber = question_votenumber {op} 1 WHERE question_id={id} ", conn))
+                {
+                    cmd.ExecuteNonQuery();
+                };
+            };
+            
         }
 
         public void ModifyAnswerVote(int id, int voteValue)
         {
-            throw new NotImplementedException();
+            string op = "-";
+            if (voteValue == 1)
+            {
+                op = "+";
+            }
+
+            using (var conn = new NpgsqlConnection(cs))
+            {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand($"UPDATE answers SET answer_votenumber = answer_votenumber {op} 1 WHERE answer_id={id} ", conn))
+                {
+                    cmd.ExecuteNonQuery();
+                };
+            };
         }
 
         public void IncreaseViews(int id)
         {
-            //throw new NotImplementedException();
+            using (var conn = new NpgsqlConnection(cs))
+            {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand($"UPDATE questions SET question_viewnumber = question_viewnumber + 1 WHERE question_id={id} ", conn))
+                {
+                    cmd.ExecuteNonQuery();
+                };
+            };
 
         }
 
         public List<QuestionModel> MostViewedQuestions()
         {
-            //throw new NotImplementedException();
-            return new List<QuestionModel>();
+
+            List<QuestionModel> mostViewedQuestions = new List<QuestionModel>();
+            var sql = "SELECT * FROM questions ORDER BY question_viewnumber DESC LIMIT 5";
+            using (var conn = new NpgsqlConnection(cs))
+            {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand(sql, conn))
+                {
+                    var reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        var a = reader["question_id"];
+                        QuestionModel q = new QuestionModel
+                        {
+                            ID = (int)reader["question_id"],
+                            TimeOfQuestion = (DateTime)reader["question_time"],
+                            ViewNumber = (int)reader["question_viewnumber"],
+                            VoteNumber = (int)reader["question_votenumber"],
+                            Title = (string)reader["question_title"],
+                            Message = (string)reader["question_message"],
+                            Image = (string)reader["question_imageurl"]
+                        };
+                        mostViewedQuestions.Add(q);
+                    }
+
+                };
+            };
+            return mostViewedQuestions;
+
+            
         }
 
         public List<QuestionModel> SortedDatas(string attribute)
