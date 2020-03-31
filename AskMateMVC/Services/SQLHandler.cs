@@ -88,7 +88,7 @@ namespace AskMateMVC.Services
                     cmd.ExecuteNonQuery();
                 };
             };
-            
+
         }
 
         public void AddAnswer(AnswerModel model, int id)
@@ -114,13 +114,48 @@ namespace AskMateMVC.Services
             };
         }
 
+        public void AddComment(CommentModel model)
+        {
+            using (var conn = new NpgsqlConnection(cs))
+            {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand("INSERT INTO comment_s " +
+                    "(question_id, " +
+                    "answer_id, " +
+                    "comment_message, " +
+                    "comment_time, " +
+                    "edited_number) Values (@qid, @aid, @message, @time, @edit)", conn))
+                {
+                    if (model.Question_ID != null)
+                    {
+                        cmd.Parameters.AddWithValue("qid", model.Question_ID);
+                    }
+                    else
+                    {
+                        cmd.Parameters.AddWithValue("qid", DBNull.Value);
+                    }
+                    if (model.Answer_ID != null)
+                    {
+                        cmd.Parameters.AddWithValue("aid", model.Answer_ID);
+                    }
+                    else
+                    {
+                        cmd.Parameters.AddWithValue("aid", DBNull.Value);
+                    }
+                    cmd.Parameters.AddWithValue("message", model.Message);
+                    cmd.Parameters.AddWithValue("time", model.SubmissionTime);
+                    cmd.Parameters.AddWithValue("edit", model.EditedNumber);
 
+                    cmd.ExecuteNonQuery();
+                };
+            };
+        }
 
         public QuestionModel GetQuestionByID(int id)
         {
-            foreach(var question in GetQuestions())
+            foreach (var question in GetQuestions())
             {
-                if(question.ID==id)
+                if (question.ID == id)
                 {
                     return question;
                 }
@@ -185,7 +220,7 @@ namespace AskMateMVC.Services
 
         public void IncreaseViews(int id)
         {
-            throw new NotImplementedException();
+            return;
         }
 
         public List<QuestionModel> MostViewedQuestions()

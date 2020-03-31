@@ -98,14 +98,14 @@ namespace AskMateMVC.Services
         {
             return Answers;
         }
-        
+
         public void AddQuestion(QuestionModel model)
         {
             model.ID = CreateQuestionID();
             Questions.Add(model);
             SaveQuestions();
         }
-        
+
         public void SaveQuestions()
         {
             var csv = new StringBuilder();
@@ -156,7 +156,7 @@ namespace AskMateMVC.Services
                     ResultAnswers.Add(item);
                 }
             }
-            
+
             return ResultAnswers;
         }
         public void EditQuestion(int id, QuestionModel question)
@@ -167,7 +167,7 @@ namespace AskMateMVC.Services
         public void EditAnswer(int id, AnswerModel answer)
         {
             RemoveAnswer(id);
-            AddAnswer(answer,id);
+            AddAnswer(answer, id);
         }
         public void RemoveQuestionById(int id)
         {
@@ -215,7 +215,7 @@ namespace AskMateMVC.Services
             }
 
         }
-        public void ModifyQuestionVote(int id, int voteValue) 
+        public void ModifyQuestionVote(int id, int voteValue)
         {
             var questionToVote = GetQuestionByID(id);
 
@@ -291,6 +291,10 @@ namespace AskMateMVC.Services
                 }
             }
             return sortedList.Count;
+        }
+        public void AddComment(CommentModel model)
+        {
+            throw new NotImplementedException();
         }
     }
 }

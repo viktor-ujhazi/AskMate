@@ -45,6 +45,7 @@
 
                     <td>@Html.ActionLink("Edit", "EditQuestion", new { id = question.ID }, null)</td>
                     <td> @Html.ActionLink("Write answer", "NewAnswer", new { id = question.ID }, null)</td>
+                    <td>@Html.ActionLink("Comment", "NewComment", null, question)</td>
                     <td>@Html.ActionLink("Delete", "DeleteQuestion", new { id = question.ID }, null)</td>
                 </tr>
             }
