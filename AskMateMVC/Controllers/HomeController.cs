@@ -9,6 +9,7 @@ using AskMateMVC.Models;
 using AskMateMVC.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using Npgsql;
 
 namespace AskMateMVC.Controllers
 {
@@ -145,6 +146,25 @@ namespace AskMateMVC.Controllers
             _datahandler.RemoveAnswer(id);
             return Redirect($"../AnswersForQuestion/{qid}");
         }
+
+
+        public IActionResult SortByAttribute(string attribute)
+        {
+            SQLHandler sql = (SQLHandler)_datahandler;
+
+            using (NpgsqlConnection cn = new NpgsqlConnection(sql.cs))
+            {
+                cn.Open();
+                using (NpgsqlCommand command = new NpgsqlCommand("SELECT * FROM questions ORDER BY [" + attribute +
+             "]", cn))
+                {
+                    command.ExecuteNonQuery();
+                }
+            }
+            List<QuestionModel> questions = sql.GetQuestions();
+            return View("List", questions);
+        }
+
 
         public IActionResult SortingByTitle()
         {
