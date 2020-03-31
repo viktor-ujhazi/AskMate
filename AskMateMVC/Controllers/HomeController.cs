@@ -49,19 +49,41 @@ namespace AskMateMVC.Controllers
             }
         }
 
-        public IActionResult NewComment()
+        public IActionResult NewComment(int id, int ansID = 0)
         {
-            return View();
+            var comment = new CommentModel();
+            if (ansID == 0)
+            {
+                comment.Question_ID = id;
+                return View(comment);
+            }
+            else
+            {
+                comment.Answer_ID = ansID;
+                return View(comment);
+            }
         }
         [HttpPost]
-        public IActionResult NewComment(QuestionModel model, CommentModel comment)
+        public IActionResult NewComment(int id, CommentModel comment, int ansID = 0)
         {
-            comment.Question_ID = model.ID;
+
+            if (ansID == 0)
+            {
+                comment.Question_ID = id;
+            }
+            else
+            {
+                comment.Answer_ID = ansID;
+
+            }
 
             _datahandler.AddComment(comment);
-            return RedirectToAction("list", _datahandler.GetQuestions());
+            return RedirectToAction("AnswersForQuestion", new RouteValueDictionary(new { action = "AnswersForQuestion", Id = id }));
 
         }
+
+
+
         public IActionResult NewAnswer(int id)
         {
             AnswerModel ans = new AnswerModel();
@@ -96,16 +118,16 @@ namespace AskMateMVC.Controllers
 
         [HttpPost]
 
-        public IActionResult EditQuestion(int id, [FromForm(Name = "Title")] string title, [FromForm(Name = "Message")] string message,[FromForm(Name = "Image")] string image)
+        public IActionResult EditQuestion(int id, [FromForm(Name = "Title")] string title, [FromForm(Name = "Message")] string message, [FromForm(Name = "Image")] string image)
         {
             QuestionModel q = _datahandler.GetQuestionByID(id);
             try
             {
                 q.Title = title;
                 q.Message = message;
-            q.Image = image;
-                _datahandler.EditQuestion(id,q);
-               
+                q.Image = image;
+                _datahandler.EditQuestion(id, q);
+
                 return RedirectToAction("list");
             }
             catch
@@ -127,7 +149,7 @@ namespace AskMateMVC.Controllers
             try
             {
                 ans.Message = message;
-                _datahandler.EditAnswer(id,ans);
+                _datahandler.EditAnswer(id, ans);
                 return Redirect($"../AnswersForQuestion/{ans.QuestionID}");
             }
             catch

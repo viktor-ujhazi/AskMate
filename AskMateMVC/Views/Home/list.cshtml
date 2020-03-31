@@ -16,10 +16,10 @@
     {
         <table class="table table-bordered table-responsive table-hover">
             <tr>
-                <th>@Html.ActionLink("Title", "SortByAttribute", new { attribute="question_title"})</th>
-                <th>@Html.ActionLink("Time", "SortByAttribute", new { attribute="question_time" })</th>
-                <th>@Html.ActionLink("Vote", "SortByAttribute", new { attribute="question_votenumber" })</th>
-                <th>@Html.ActionLink("View number", "SortByAttribute", new { attribute="question_viewnumber" })</th>
+                <th>@Html.ActionLink("Title", "SortByAttribute", new { attribute = "question_title" })</th>
+                <th>@Html.ActionLink("Time", "SortByAttribute", new { attribute = "question_time" })</th>
+                <th>@Html.ActionLink("Vote", "SortByAttribute", new { attribute = "question_votenumber" })</th>
+                <th>@Html.ActionLink("View number", "SortByAttribute", new { attribute = "question_viewnumber" })</th>
             </tr>
 
             @foreach (var question in Model)
@@ -45,7 +45,6 @@
 
                     <td>@Html.ActionLink("Edit", "EditQuestion", new { id = question.ID }, null)</td>
                     <td> @Html.ActionLink("Write answer", "NewAnswer", new { id = question.ID }, null)</td>
-                    <td>@Html.ActionLink("Comment", "NewComment", null, question)</td>
                     <td>@Html.ActionLink("Delete", "DeleteQuestion", new { id = question.ID }, null)</td>
                 </tr>
             }

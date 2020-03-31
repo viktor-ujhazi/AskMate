@@ -12,48 +12,54 @@
 <table style="border-top:groove;border-top-width:5px;border-top-color:black;">
     <tr>
         <th style="text-align:right">
-            <a>@Html.ActionLink("Add new answer","NewAnswer",new { id =ViewBag.Question.ID})<br /><br /><br /></a>
+            <a>
+                @Html.ActionLink("Add new answer","NewAnswer",new { id =ViewBag.Question.ID})
+            </a><br />
+            <a>@Html.ActionLink("Comment", "NewComment", new { id = ViewBag.Question.ID} )</a><br /><br />
+
+
         </th>
     </tr>
     @foreach (var item in ViewBag.Ans)
     {
-        <tr>
-            <th style="text-align:right">
-                <a style="color:cornflowerblue">@item.TimeOfAnswer</a>
-            </th>
-        </tr>
-        <tr>
-            <th style="text-align:right">
-                <a style="color:cornflowerblue">Vote rank:  @item.VoteNumber <br /><br /></a>
-            </th>
-        </tr>
-        <tr>
-            <th style="width:1000px;word-break:break-word">
-                <a style="font-size:30px">@item.Message</a>
-            </th>
-        </tr>
+    <tr>
+        <th style="text-align:right">
+            <a style="color:cornflowerblue">@item.TimeOfAnswer</a>
+        </th>
+    </tr>
+    <tr>
+        <th style="text-align:right">
+            <a style="color:cornflowerblue">Vote rank:  @item.VoteNumber <br /><br /></a>
+        </th>
+    </tr>
+    <tr>
+        <th style="width:1000px;word-break:break-word">
+            <a style="font-size:30px">@item.Message</a>
+        </th>
+    </tr>
 
-        <tr>
-            <th>
-                <a href="@Url.Action("AnswerVote", "Home",new { id = item.ID, voteValue = 1 })">
-                    <img src="~/images/upvote.png" style="width: 15px; height:15px" />
-                </a>
-                <a href="@Url.Action("AnswerVote", "Home",new { id = item.ID, voteValue = 0 })">
-                    <img src="~/images/downvote.png" style="width: 18px;height: 18px" />
-                </a>
-            </th>
-        </tr>
-        <tr style="border-bottom:groove;border-bottom-color:black;">
-            <th>
-                <a style="padding:0px 0px 0px 200px;">@Html.ActionLink("Delete", "DeleteAnswer", new { id = item.ID, qid = ViewBag.Question.ID })</a>
-                <a style="padding:0px 0px 0px 200px;">@Html.ActionLink("Edit", "EditAnswer", new { id = item.ID }, null)</a>
-            </th>
-        </tr>
-        <tr>
-            <th>
-                <br />
-                <br />
-            </th>
-        </tr>
+    <tr>
+        <th>
+            <a href="@Url.Action("AnswerVote", "Home",new { id = item.ID, voteValue = 1 })">
+                <img src="~/images/upvote.png" style="width: 15px; height:15px" />
+            </a>
+            <a href="@Url.Action("AnswerVote", "Home",new { id = item.ID, voteValue = 0 })">
+                <img src="~/images/downvote.png" style="width: 18px;height: 18px" />
+            </a>
+        </th>
+    </tr>
+    <tr style="border-bottom:groove;border-bottom-color:black;">
+        <th>
+            <a style="padding:0px 0px 0px 200px;">@Html.ActionLink("Delete", "DeleteAnswer", new { id = item.ID, qid = ViewBag.Question.ID })</a>
+            <a style="padding:0px 0px 0px 200px;">@Html.ActionLink("Edit", "EditAnswer", new { id = item.ID }, null)</a>
+            <a style="padding:0px 0px 0px 200px;">@Html.ActionLink("Comment", "NewComment", new { id = ViewBag.Question.ID, ansID = item.ID})</a>
+        </th>
+    </tr>
+    <tr>
+        <th>
+            <br />
+            <br />
+        </th>
+    </tr>
     }
 </table>
