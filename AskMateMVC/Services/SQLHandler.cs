@@ -16,6 +16,7 @@ namespace AskMateMVC.Services
 
         List<QuestionModel> Questions { get; set; } = new List<QuestionModel>();
         List<AnswerModel> Answers { get; set; } = new List<AnswerModel>();
+        Dictionary<string, bool> AscOrderings = new Dictionary<string, bool>();
 
         //IWebHostEnvironment WebHostEnvironment { get; }
 
@@ -321,29 +322,56 @@ namespace AskMateMVC.Services
         {
             List<QuestionModel> questions = new List<QuestionModel>();
 
+
             using (NpgsqlConnection cn = new NpgsqlConnection(cs))
             {
                 cn.Open();
-                using (NpgsqlCommand command = new NpgsqlCommand($"SELECT * FROM questions ORDER BY {attribute}", cn))
+                if ((AscOrderings.ContainsKey(attribute) && AscOrderings[attribute] == false) || !AscOrderings.ContainsKey(attribute))
                 {
-                    //var cmd=command.ExecuteNonQuery();
-                    var reader = command.ExecuteReader();
-                    while (reader.Read())
+                    using (NpgsqlCommand command = new NpgsqlCommand($"SELECT * FROM questions ORDER BY {attribute}", cn))
                     {
-                        var a = reader["question_id"];
-                        QuestionModel q = new QuestionModel
+                        var reader = command.ExecuteReader();
+                        while (reader.Read())
                         {
-                            ID = (int)reader["question_id"],
-                            TimeOfQuestion = (DateTime)reader["question_time"],
-                            ViewNumber = (int)reader["question_viewnumber"],
-                            VoteNumber = (int)reader["question_votenumber"],
-                            Title = (string)reader["question_title"],
-                            Message = (string)reader["question_message"],
-                            Image = (string)reader["question_imageurl"]
-                        };
-                        questions.Add(q);
-                    }
-                };
+                            var a = reader["question_id"];
+                            QuestionModel q = new QuestionModel
+                            {
+                                ID = (int)reader["question_id"],
+                                TimeOfQuestion = (DateTime)reader["question_time"],
+                                ViewNumber = (int)reader["question_viewnumber"],
+                                VoteNumber = (int)reader["question_votenumber"],
+                                Title = (string)reader["question_title"],
+                                Message = (string)reader["question_message"],
+                                Image = (string)reader["question_imageurl"]
+                            };
+                            questions.Add(q);
+                        }
+                    };
+                    AscOrderings[attribute] = true;
+                }
+                else
+                {
+                    using (NpgsqlCommand command = new NpgsqlCommand($"SELECT * FROM questions ORDER BY {attribute} DESC", cn))
+                    {
+                        var reader = command.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            var a = reader["question_id"];
+                            QuestionModel q = new QuestionModel
+                            {
+                                ID = (int)reader["question_id"],
+                                TimeOfQuestion = (DateTime)reader["question_time"],
+                                ViewNumber = (int)reader["question_viewnumber"],
+                                VoteNumber = (int)reader["question_votenumber"],
+                                Title = (string)reader["question_title"],
+                                Message = (string)reader["question_message"],
+                                Image = (string)reader["question_imageurl"]
+                            };
+                            questions.Add(q);
+                        }
+                    };
+                    AscOrderings[attribute] = false;
+                }
             };
             return questions;
         }
