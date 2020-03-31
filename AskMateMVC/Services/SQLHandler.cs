@@ -193,5 +193,36 @@ namespace AskMateMVC.Services
             //throw new NotImplementedException();
             return new List<QuestionModel>();
         }
+
+        public List<QuestionModel> SortedDatas(string attribute)
+        {
+            List<QuestionModel> questions = new List<QuestionModel>();
+
+            using (NpgsqlConnection cn = new NpgsqlConnection(cs))
+            {
+                cn.Open();
+                using (NpgsqlCommand command = new NpgsqlCommand($"SELECT * FROM questions ORDER BY {attribute}", cn))
+                {
+                    //var cmd=command.ExecuteNonQuery();
+                    var reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        var a = reader["question_id"];
+                        QuestionModel q = new QuestionModel
+                        {
+                            ID = (int)reader["question_id"],
+                            TimeOfQuestion = (DateTime)reader["question_time"],
+                            ViewNumber = (int)reader["question_viewnumber"],
+                            VoteNumber = (int)reader["question_votenumber"],
+                            Title = (string)reader["question_title"],
+                            Message = (string)reader["question_message"],
+                            Image = (string)reader["question_imageurl"]
+                        };
+                        questions.Add(q);
+                    }
+                };
+            };
+            return questions;
+        }
     }
 }

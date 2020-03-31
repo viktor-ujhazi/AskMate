@@ -147,23 +147,13 @@ namespace AskMateMVC.Controllers
             return Redirect($"../AnswersForQuestion/{qid}");
         }
 
-
         public IActionResult SortByAttribute(string attribute)
         {
-            SQLHandler sql = (SQLHandler)_datahandler;
-
-            using (NpgsqlConnection cn = new NpgsqlConnection(sql.cs))
-            {
-                cn.Open();
-                using (NpgsqlCommand command = new NpgsqlCommand("SELECT * FROM questions ORDER BY [" + attribute +
-             "]", cn))
-                {
-                    command.ExecuteNonQuery();
-                }
-            }
-            List<QuestionModel> questions = sql.GetQuestions();
+            SQLHandler sqlHandler = (SQLHandler)_datahandler;
+            List<QuestionModel> questions= sqlHandler.SortedDatas(attribute);
             return View("List", questions);
         }
+
 
 
         public IActionResult SortingByTitle()
