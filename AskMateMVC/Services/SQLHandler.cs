@@ -60,8 +60,32 @@ namespace AskMateMVC.Services
 
         public List<AnswerModel> GetAnswers()
         {
-            //throw new NotImplementedException();
-            return null;
+            Answers.Clear();
+            var sql = "SELECT * FROM answers";
+            using (var conn = new NpgsqlConnection(cs))
+            {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand(sql, conn))
+                {
+                    var reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        var a = reader["question_id"];
+                        AnswerModel q = new AnswerModel
+                        {
+                            ID = (int)reader["answer_id"],
+                            TimeOfAnswer = (DateTime)reader["answer_time"],
+                            VoteNumber = (int)reader["answer_votenumber"],
+                            QuestionID = (int)reader["question_id"],
+                            Message = (string)reader["answer_message"],
+                            Image = (string)reader["answer_imageurl"]
+                        };
+                        Answers.Add(q);
+                    }
+
+                };
+            };
+            return Answers;
         }
 
         public void AddQuestion(QuestionModel model)
@@ -113,9 +137,6 @@ namespace AskMateMVC.Services
                 };
             };
         }
-
-
-
         public QuestionModel GetQuestionByID(int id)
         {
             foreach(var question in GetQuestions())
