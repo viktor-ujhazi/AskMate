@@ -24,8 +24,6 @@ namespace AskMateMVC.Services
         {
 
 
-
-
             //LoadQuestion();
             //LoadAnswers();
         }
@@ -60,8 +58,6 @@ namespace AskMateMVC.Services
             };
             return Questions;
         }
-
-
 
         public List<AnswerModel> GetAnswers()
         {
