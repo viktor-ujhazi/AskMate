@@ -12,7 +12,7 @@ namespace AskMateMVC.Services
         //static string questionsFileName = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/data", "Questions.csv");
         //static string answersFileName = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/data", "Answers.csv");
 
-        string cs = "Host=localhost;Username=postgres;Password=admin;Database=AskMate";
+        public string cs = "Host=localhost;Username=postgres;Password=admin;Database=AskMate";
 
         List<QuestionModel> Questions { get; set; } = new List<QuestionModel>();
         List<AnswerModel> Answers { get; set; } = new List<AnswerModel>();
