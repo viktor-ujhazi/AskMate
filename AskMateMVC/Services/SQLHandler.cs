@@ -12,10 +12,11 @@ namespace AskMateMVC.Services
         //static string questionsFileName = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/data", "Questions.csv");
         //static string answersFileName = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/data", "Answers.csv");
 
-        string cs = "Host=localhost;Username=postgres;Password=admin;Database=AskMate";
+        public string cs = "Host=localhost;Username=postgres;Password=admin;Database=AskMate";
 
         List<QuestionModel> Questions { get; set; } = new List<QuestionModel>();
         List<AnswerModel> Answers { get; set; } = new List<AnswerModel>();
+        Dictionary<string, bool> AscOrderings = new Dictionary<string, bool>();
 
         //IWebHostEnvironment WebHostEnvironment { get; }
 
@@ -60,8 +61,32 @@ namespace AskMateMVC.Services
 
         public List<AnswerModel> GetAnswers()
         {
-            //throw new NotImplementedException();
-            return null;
+            Answers.Clear();
+            var sql = "SELECT * FROM answers";
+            using (var conn = new NpgsqlConnection(cs))
+            {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand(sql, conn))
+                {
+                    var reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        var a = reader["question_id"];
+                        AnswerModel q = new AnswerModel
+                        {
+                            ID = (int)reader["answer_id"],
+                            TimeOfAnswer = (DateTime)reader["answer_time"],
+                            VoteNumber = (int)reader["answer_votenumber"],
+                            QuestionID = (int)reader["question_id"],
+                            Message = (string)reader["answer_message"],
+                            Image = (string)reader["answer_image"]
+                        };
+                        Answers.Add(q);
+                    }
+
+                };
+            };
+            return Answers;
         }
 
         public void AddQuestion(QuestionModel model)
@@ -83,7 +108,7 @@ namespace AskMateMVC.Services
                     cmd.Parameters.AddWithValue("vote", model.VoteNumber);
                     cmd.Parameters.AddWithValue("title", model.Title);
                     cmd.Parameters.AddWithValue("message", model.Message);
-                    cmd.Parameters.AddWithValue("image", model.Image == "" ? DBNull.Value.ToString() : "");
+                    cmd.Parameters.AddWithValue("image", model.Image == null ? DBNull.Value.ToString() : model.Image);
 
                     cmd.ExecuteNonQuery();
                 };
@@ -101,13 +126,13 @@ namespace AskMateMVC.Services
                     "answer_votenumber, " +
                     "question_id, " +
                     "answer_message, " +
-                    "answer_imageurl ) Values (@time, @vote, @qid, @message, @image)", conn))
+                    "answer_image ) Values (@time, @vote, @qid, @message, @image)", conn))
                 {
                     cmd.Parameters.AddWithValue("time", model.TimeOfAnswer);
                     cmd.Parameters.AddWithValue("vote", model.VoteNumber);
-                    cmd.Parameters.AddWithValue("qid", model.QuestionID);
+                    cmd.Parameters.AddWithValue("qid", id);
                     cmd.Parameters.AddWithValue("message", model.Message);
-                    cmd.Parameters.AddWithValue("image", model.Image == "" ? DBNull.Value.ToString() : "");
+                    cmd.Parameters.AddWithValue("image", model.Image == null ? DBNull.Value.ToString() : model.Image);
 
                     cmd.ExecuteNonQuery();
                 };
@@ -190,43 +215,236 @@ namespace AskMateMVC.Services
 
         public void RemoveQuestionById(int id)
         {
-            throw new NotImplementedException();
+            using (var conn = new NpgsqlConnection(cs))
+            {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand($"DELETE FROM questions WHERE question_id={id} ", conn))
+                {
+                    cmd.ExecuteNonQuery();
+                };
+            };
         }
 
         public void EditQuestion(int id, QuestionModel question)
         {
-            throw new NotImplementedException();
+            string sql = $"UPDATE questions " +
+                    $"SET question_title = '{question.Title}'," +
+                    $"question_message = '{question.Message}', " +
+                    $"question_imageurl = '{question.Image}' " +
+                    $"WHERE question_id={id} ";
+
+            using (var conn = new NpgsqlConnection(cs))
+            {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand(sql, conn))
+                {
+                    cmd.ExecuteNonQuery();
+                };
+            };
         }
 
         public void EditAnswer(int id, AnswerModel answer)
         {
-            throw new NotImplementedException();
+            string sql = $"UPDATE answers " +
+                    $"SET answer_message = '{answer.Message}', " +
+                    $"answer_image = '{answer.Image}' " +
+                    $"WHERE answer_id={id} ";
+
+            using (var conn = new NpgsqlConnection(cs))
+            {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand(sql, conn))
+                {
+                    cmd.ExecuteNonQuery();
+                };
+            };
         }
 
         public void RemoveAnswer(int id)
         {
-            throw new NotImplementedException();
+            using (var conn = new NpgsqlConnection(cs))
+            {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand($"DELETE FROM answers WHERE answer_id={id} ", conn))
+                {
+                    cmd.ExecuteNonQuery();
+                };
+            };
         }
 
         public void ModifyQuestionVote(int id, int voteValue)
         {
-            throw new NotImplementedException();
+            string op="-";
+            if (voteValue == 1)
+            {
+                op = "+";
+            }
+            
+            using (var conn = new NpgsqlConnection(cs))
+            {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand($"UPDATE questions SET question_votenumber = question_votenumber {op} 1 WHERE question_id={id} ", conn))
+                {
+                    cmd.ExecuteNonQuery();
+                };
+            };
+            
         }
 
         public void ModifyAnswerVote(int id, int voteValue)
         {
-            throw new NotImplementedException();
+            string op = "-";
+            if (voteValue == 1)
+            {
+                op = "+";
+            }
+
+            using (var conn = new NpgsqlConnection(cs))
+            {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand($"UPDATE answers SET answer_votenumber = answer_votenumber {op} 1 WHERE answer_id={id} ", conn))
+                {
+                    cmd.ExecuteNonQuery();
+                };
+            };
         }
 
         public void IncreaseViews(int id)
         {
-            return;
+            using (var conn = new NpgsqlConnection(cs))
+            {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand($"UPDATE questions SET question_viewnumber = question_viewnumber + 1 WHERE question_id={id} ", conn))
+                {
+                    cmd.ExecuteNonQuery();
+                };
+            };
+
         }
 
         public List<QuestionModel> MostViewedQuestions()
         {
-            //throw new NotImplementedException();
-            return new List<QuestionModel>();
+
+            List<QuestionModel> mostViewedQuestions = new List<QuestionModel>();
+            var sql = "SELECT * FROM questions ORDER BY question_viewnumber DESC LIMIT 5";
+            using (var conn = new NpgsqlConnection(cs))
+            {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand(sql, conn))
+                {
+                    var reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        var a = reader["question_id"];
+                        QuestionModel q = new QuestionModel
+                        {
+                            ID = (int)reader["question_id"],
+                            TimeOfQuestion = (DateTime)reader["question_time"],
+                            ViewNumber = (int)reader["question_viewnumber"],
+                            VoteNumber = (int)reader["question_votenumber"],
+                            Title = (string)reader["question_title"],
+                            Message = (string)reader["question_message"],
+                            Image = (string)reader["question_imageurl"]
+                        };
+                        mostViewedQuestions.Add(q);
+                    }
+
+                };
+            };
+            return mostViewedQuestions;
+
+            
+        }
+
+        public List<QuestionModel> SortedDatas(string attribute)
+        {
+            List<QuestionModel> questions = new List<QuestionModel>();
+
+
+            using (NpgsqlConnection cn = new NpgsqlConnection(cs))
+            {
+                cn.Open();
+                if ((AscOrderings.ContainsKey(attribute) && AscOrderings[attribute] == false) || !AscOrderings.ContainsKey(attribute))
+                {
+                    using (NpgsqlCommand command = new NpgsqlCommand($"SELECT * FROM questions ORDER BY {attribute}", cn))
+                    {
+                        var reader = command.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            var a = reader["question_id"];
+                            QuestionModel q = new QuestionModel
+                            {
+                                ID = (int)reader["question_id"],
+                                TimeOfQuestion = (DateTime)reader["question_time"],
+                                ViewNumber = (int)reader["question_viewnumber"],
+                                VoteNumber = (int)reader["question_votenumber"],
+                                Title = (string)reader["question_title"],
+                                Message = (string)reader["question_message"],
+                                Image = (string)reader["question_imageurl"]
+                            };
+                            questions.Add(q);
+                        }
+                    };
+                    AscOrderings[attribute] = true;
+                }
+                else
+                {
+                    using (NpgsqlCommand command = new NpgsqlCommand($"SELECT * FROM questions ORDER BY {attribute} DESC", cn))
+                    {
+                        var reader = command.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            var a = reader["question_id"];
+                            QuestionModel q = new QuestionModel
+                            {
+                                ID = (int)reader["question_id"],
+                                TimeOfQuestion = (DateTime)reader["question_time"],
+                                ViewNumber = (int)reader["question_viewnumber"],
+                                VoteNumber = (int)reader["question_votenumber"],
+                                Title = (string)reader["question_title"],
+                                Message = (string)reader["question_message"],
+                                Image = (string)reader["question_imageurl"]
+                            };
+                            questions.Add(q);
+                        }
+                    };
+                    AscOrderings[attribute] = false;
+                }
+            };
+            return questions;
+        }
+        public List<QuestionModel> LatestQuestions()
+        {
+
+            List<QuestionModel> latestQuestions = new List<QuestionModel>();
+            var sql = "SELECT * FROM questions ORDER BY question_time DESC LIMIT 5";
+            using (var conn = new NpgsqlConnection(cs))
+            {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand(sql, conn))
+                {
+                    var reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        var a = reader["question_id"];
+                        QuestionModel q = new QuestionModel
+                        {
+                            ID = (int)reader["question_id"],
+                            TimeOfQuestion = (DateTime)reader["question_time"],
+                            ViewNumber = (int)reader["question_viewnumber"],
+                            VoteNumber = (int)reader["question_votenumber"],
+                            Title = (string)reader["question_title"],
+                            Message = (string)reader["question_message"],
+                            Image = (string)reader["question_imageurl"]
+                        };
+                        latestQuestions.Add(q);
+                    }
+
+                };
+            };
+            return latestQuestions;
+
+
         }
     }
 }

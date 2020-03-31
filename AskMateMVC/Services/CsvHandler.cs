@@ -292,6 +292,16 @@ namespace AskMateMVC.Services
             }
             return sortedList.Count;
         }
+
+        public List<QuestionModel> SortedDatas(string attribute)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<QuestionModel> LatestQuestions()
+        {
+            throw new NotImplementedException();
+        }
         public void AddComment(CommentModel model)
         {
             throw new NotImplementedException();

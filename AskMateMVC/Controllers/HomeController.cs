@@ -9,6 +9,7 @@ using AskMateMVC.Models;
 using AskMateMVC.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using Npgsql;
 
 namespace AskMateMVC.Controllers
 {
@@ -26,7 +27,7 @@ namespace AskMateMVC.Controllers
         public IActionResult Index()
         {
             ViewBag.Answers = _datahandler.GetAnswers();
-            ViewBag.Questions = _datahandler.MostViewedQuestions();
+            ViewBag.Questions = _datahandler.LatestQuestions();
             return View();
         }
 
@@ -78,7 +79,7 @@ namespace AskMateMVC.Controllers
             {
                 _datahandler.AddAnswer(model, id);
 
-                return RedirectToAction("AnswersForQuestion", new RouteValueDictionary(new { action = "AnswersForQuestion", Id = model.QuestionID }));
+                return RedirectToAction("AnswersForQuestion", new RouteValueDictionary(new { action = "AnswersForQuestion", Id = id }));
             }
             else
             {
@@ -95,15 +96,16 @@ namespace AskMateMVC.Controllers
 
         [HttpPost]
 
-        public IActionResult EditQuestion(int id, [FromForm(Name = "Title")] string title, [FromForm(Name = "Message")] string message)
+        public IActionResult EditQuestion(int id, [FromForm(Name = "Title")] string title, [FromForm(Name = "Message")] string message,[FromForm(Name = "Image")] string image)
         {
             QuestionModel q = _datahandler.GetQuestionByID(id);
             try
             {
                 q.Title = title;
                 q.Message = message;
-                _datahandler.EditQuestion(id, q);
-
+            q.Image = image;
+                _datahandler.EditQuestion(id,q);
+               
                 return RedirectToAction("list");
             }
             catch
@@ -119,13 +121,13 @@ namespace AskMateMVC.Controllers
 
         [HttpPost]
 
-        public IActionResult EditAnswer(int id, [FromForm(Name = "Message")] string message)
+        public IActionResult EditAnswer(int id, [FromForm(Name = "Message")] string message, [FromForm(Name = "Image")] string image)
         {
             AnswerModel ans = _datahandler.GetAnswerByID(id);
             try
             {
                 ans.Message = message;
-                _datahandler.EditAnswer(id, ans);
+                _datahandler.EditAnswer(id,ans);
                 return Redirect($"../AnswersForQuestion/{ans.QuestionID}");
             }
             catch
@@ -155,34 +157,41 @@ namespace AskMateMVC.Controllers
             return Redirect($"../AnswersForQuestion/{qid}");
         }
 
-        public IActionResult SortingByTitle()
+        public IActionResult SortByAttribute(string attribute)
         {
-            List<QuestionModel> list = _datahandler.GetQuestions();
-            list = list.OrderBy(o => o.Title).ToList();
-            return View("List", list);
+            return View("List", _datahandler.SortedDatas(attribute));
         }
 
-        public IActionResult SortingByTime()
-        {
-            List<QuestionModel> list = _datahandler.GetQuestions();
-            list = list.OrderBy(o => o.TimeOfQuestion).ToList();
-            list.Reverse();
-            return View("List", list);
-        }
 
-        public IActionResult SortingByVote()
-        {
-            List<QuestionModel> list = _datahandler.GetQuestions();
-            list = list.OrderBy(o => o.VoteNumber).ToList();
-            return View("List", list);
-        }
 
-        public IActionResult SortingByView()
-        {
-            List<QuestionModel> list = _datahandler.GetQuestions();
-            list = list.OrderBy(o => o.ViewNumber).ToList();
-            return View("List", list);
-        }
+        //public IActionResult SortingByTitle()
+        //{
+        //    List<QuestionModel> list = _datahandler.GetQuestions();
+        //    list = list.OrderBy(o => o.Title).ToList();
+        //    return View("List", list);
+        //}
+
+        //public IActionResult SortingByTime()
+        //{
+        //    List<QuestionModel> list = _datahandler.GetQuestions();
+        //    list = list.OrderBy(o => o.TimeOfQuestion).ToList();
+        //    list.Reverse();
+        //    return View("List", list);
+        //}
+
+        //public IActionResult SortingByVote()
+        //{
+        //    List<QuestionModel> list = _datahandler.GetQuestions();
+        //    list = list.OrderBy(o => o.VoteNumber).ToList();
+        //    return View("List", list);
+        //}
+
+        //public IActionResult SortingByView()
+        //{
+        //    List<QuestionModel> list = _datahandler.GetQuestions();
+        //    list = list.OrderBy(o => o.ViewNumber).ToList();
+        //    return View("List", list);
+        //}
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
