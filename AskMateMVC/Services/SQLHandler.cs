@@ -176,7 +176,14 @@ namespace AskMateMVC.Services
 
         public void RemoveQuestionById(int id)
         {
-            throw new NotImplementedException();
+            using (var conn = new NpgsqlConnection(cs))
+            {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand($"DELETE FROM questions WHERE question_id={id} ", conn))
+                {
+                    cmd.ExecuteNonQuery();
+                };
+            };
         }
 
         public void EditQuestion(int id, QuestionModel question)
@@ -191,22 +198,63 @@ namespace AskMateMVC.Services
 
         public void RemoveAnswer(int id)
         {
-            throw new NotImplementedException();
+            using (var conn = new NpgsqlConnection(cs))
+            {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand($"DELETE FROM answers WHERE answer_id={id} ", conn))
+                {
+                    cmd.ExecuteNonQuery();
+                };
+            };
         }
 
         public void ModifyQuestionVote(int id, int voteValue)
         {
-            throw new NotImplementedException();
+            string op="-";
+            if (voteValue == 1)
+            {
+                op = "+";
+            }
+            
+            using (var conn = new NpgsqlConnection(cs))
+            {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand($"UPDATE questions SET question_votenumber = question_votenumber {op} 1 WHERE question_id={id} ", conn))
+                {
+                    cmd.ExecuteNonQuery();
+                };
+            };
+            
         }
 
         public void ModifyAnswerVote(int id, int voteValue)
         {
-            throw new NotImplementedException();
+            string op = "-";
+            if (voteValue == 1)
+            {
+                op = "+";
+            }
+
+            using (var conn = new NpgsqlConnection(cs))
+            {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand($"UPDATE answers SET answer_votenumber = answer_votenumber {op} 1 WHERE answer_id={id} ", conn))
+                {
+                    cmd.ExecuteNonQuery();
+                };
+            };
         }
 
         public void IncreaseViews(int id)
         {
-            //throw new NotImplementedException();
+            using (var conn = new NpgsqlConnection(cs))
+            {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand($"UPDATE questions SET question_viewnumber = question_viewnumber + 1 WHERE question_id={id} ", conn))
+                {
+                    cmd.ExecuteNonQuery();
+                };
+            };
 
         }
 
