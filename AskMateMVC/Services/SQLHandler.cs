@@ -356,7 +356,7 @@ namespace AskMateMVC.Services
                         var reader = command.ExecuteReader();
                         while (reader.Read())
                         {
-                            var a = reader["question_id"];
+                           
                             QuestionModel q = new QuestionModel
                             {
                                 ID = (int)reader["question_id"],
@@ -388,7 +388,41 @@ namespace AskMateMVC.Services
                     var reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
-                        var a = reader["question_id"];
+                        
+                        QuestionModel q = new QuestionModel
+                        {
+                            ID = (int)reader["question_id"],
+                            TimeOfQuestion = (DateTime)reader["question_time"],
+                            ViewNumber = (int)reader["question_viewnumber"],
+                            VoteNumber = (int)reader["question_votenumber"],
+                            Title = (string)reader["question_title"],
+                            Message = (string)reader["question_message"],
+                            Image = (string)reader["question_imageurl"]
+                        };
+                        latestQuestions.Add(q);
+                    }
+
+                };
+            };
+            return latestQuestions;
+
+
+        }
+        public List<QuestionModel> SearchInData(string searchedWord)
+        {
+
+            List<QuestionModel> latestQuestions = new List<QuestionModel>();
+            var sql = $"SELECT * FROM questions WHERE question_title LIKE '%{searchedWord}%' OR question_message LIKE '%{searchedWord}%';";
+
+            using (var conn = new NpgsqlConnection(cs))
+            {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand(sql, conn))
+                {
+                    var reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        
                         QuestionModel q = new QuestionModel
                         {
                             ID = (int)reader["question_id"],

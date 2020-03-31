@@ -23,5 +23,6 @@ namespace AskMateMVC.Services
         public List<QuestionModel> MostViewedQuestions();
         public List<QuestionModel> SortedDatas(string attribute);
         public List<QuestionModel> LatestQuestions();
+        public List<QuestionModel> SearchInData(string searchedWord);
     }
 }

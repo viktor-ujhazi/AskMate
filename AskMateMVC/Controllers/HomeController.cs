@@ -30,6 +30,12 @@ namespace AskMateMVC.Controllers
             ViewBag.Questions = _datahandler.LatestQuestions();
             return View();
         }
+        [HttpPost]
+        public IActionResult Index(string search)
+        {
+            List<QuestionModel> result = _datahandler.SearchInData(search);
+            return View("List", result);
+        }
 
         public IActionResult Privacy()
         {
@@ -130,7 +136,9 @@ namespace AskMateMVC.Controllers
         public IActionResult List(List<QuestionModel> questions)
         {
             if (questions.Count == 0)
+            {
                 questions = _datahandler.GetQuestions();
+            }
             return View(questions);
         }
 
