@@ -78,7 +78,7 @@ namespace AskMateMVC.Services
                             VoteNumber = (int)reader["answer_votenumber"],
                             QuestionID = (int)reader["question_id"],
                             Message = (string)reader["answer_message"],
-                            Image = (string)reader["answer_imageurl"]
+                            Image = (string)reader["answer_image"]
                         };
                         Answers.Add(q);
                     }
@@ -125,11 +125,11 @@ namespace AskMateMVC.Services
                     "answer_votenumber, " +
                     "question_id, " +
                     "answer_message, " +
-                    "answer_imageurl ) Values (@time, @vote, @qid, @message, @image)", conn))
+                    "answer_image ) Values (@time, @vote, @qid, @message, @image)", conn))
                 {
                     cmd.Parameters.AddWithValue("time", model.TimeOfAnswer);
                     cmd.Parameters.AddWithValue("vote", model.VoteNumber);
-                    cmd.Parameters.AddWithValue("qid", model.QuestionID);
+                    cmd.Parameters.AddWithValue("qid", id);
                     cmd.Parameters.AddWithValue("message", model.Message);
                     cmd.Parameters.AddWithValue("image", model.Image == "" ? DBNull.Value.ToString() : "");
 
@@ -206,7 +206,8 @@ namespace AskMateMVC.Services
 
         public void IncreaseViews(int id)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
+
         }
 
         public List<QuestionModel> MostViewedQuestions()
