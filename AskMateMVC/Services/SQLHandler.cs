@@ -450,8 +450,17 @@ namespace AskMateMVC.Services
         {
 
             List<QuestionModel> latestQuestions = new List<QuestionModel>();
-            var sql = $"SELECT * FROM questions WHERE question_title LIKE '%{searchedWord}%' OR question_message LIKE '%{searchedWord}%';";
-
+            //var sql = $"SELECT * FROM questions WHERE question_title LIKE '%{searchedWord}%' OR question_message LIKE '%{searchedWord}%';";
+            var sql = $"SELECT * " +
+                $"FROM questions " +
+                $"WHERE question_id IN" +
+                $"( SELECT q.question_id" +
+                $" FROM questions q " +
+                $"FULL OUTER JOIN answers a " +
+                $"ON q.question_id = a.question_id " +
+                $"WHERE q.question_title LIKE '%{searchedWord}%' " +
+                $"OR q.question_message LIKE '%{searchedWord}%' " +
+                $"OR a.answer_message LIKE '%{searchedWord}%' GROUP BY q.question_id, a.question_id)";
             using (var conn = new NpgsqlConnection(cs))
             {
                 conn.Open();
