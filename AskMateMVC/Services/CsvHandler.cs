@@ -306,5 +306,10 @@ namespace AskMateMVC.Services
         {
             throw new NotImplementedException();
         }
+
+        public List<QuestionModel> SearchInData(string searchedWord)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

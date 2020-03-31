@@ -394,7 +394,7 @@ namespace AskMateMVC.Services
                         var reader = command.ExecuteReader();
                         while (reader.Read())
                         {
-                            var a = reader["question_id"];
+                           
                             QuestionModel q = new QuestionModel
                             {
                                 ID = (int)reader["question_id"],
@@ -426,7 +426,50 @@ namespace AskMateMVC.Services
                     var reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
-                        var a = reader["question_id"];
+                        
+                        QuestionModel q = new QuestionModel
+                        {
+                            ID = (int)reader["question_id"],
+                            TimeOfQuestion = (DateTime)reader["question_time"],
+                            ViewNumber = (int)reader["question_viewnumber"],
+                            VoteNumber = (int)reader["question_votenumber"],
+                            Title = (string)reader["question_title"],
+                            Message = (string)reader["question_message"],
+                            Image = (string)reader["question_imageurl"]
+                        };
+                        latestQuestions.Add(q);
+                    }
+
+                };
+            };
+            return latestQuestions;
+
+
+        }
+        public List<QuestionModel> SearchInData(string searchedWord)
+        {
+
+            List<QuestionModel> latestQuestions = new List<QuestionModel>();
+            //var sql = $"SELECT * FROM questions WHERE question_title LIKE '%{searchedWord}%' OR question_message LIKE '%{searchedWord}%';";
+            var sql = $"SELECT * " +
+                $"FROM questions " +
+                $"WHERE question_id IN" +
+                $"( SELECT q.question_id" +
+                $" FROM questions q " +
+                $"FULL OUTER JOIN answers a " +
+                $"ON q.question_id = a.question_id " +
+                $"WHERE q.question_title LIKE '%{searchedWord}%' " +
+                $"OR q.question_message LIKE '%{searchedWord}%' " +
+                $"OR a.answer_message LIKE '%{searchedWord}%' GROUP BY q.question_id, a.question_id)";
+            using (var conn = new NpgsqlConnection(cs))
+            {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand(sql, conn))
+                {
+                    var reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        
                         QuestionModel q = new QuestionModel
                         {
                             ID = (int)reader["question_id"],

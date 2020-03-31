@@ -1,20 +1,27 @@
 ﻿@{
     ViewData["Title"] = "Home Page";
 }
-
+@using (Html.BeginForm("Index", "Home", FormMethod.Post))
+{
     <div>
-        <h2>Latest Questions</h2>
+        <input type="text" name="search" id="search" />
+        <input type="submit" value="Search" />
+    </div>
+}
+<div>
+    <h2>Latest Questions</h2>
 
-        <div>
-            @{ foreach (var item in ViewBag.Questions) {
-                    int NumberOfAnswers = 0;
-                    foreach (var answer in ViewBag.Answers)
-                    {
-                        if (answer.QuestionID.Equals(item.ID))
-                        {
-                            NumberOfAnswers++;
-                        }
-                    }
+
+    @{ foreach (var item in ViewBag.Questions)
+        {
+            int NumberOfAnswers = 0;
+            foreach (var answer in ViewBag.Answers)
+            {
+                if (answer.QuestionID.Equals(item.ID))
+                {
+                    NumberOfAnswers++;
+                }
+            }
 
             <div class="am-card">
                 <form method="get" action="/Home/AnswersForQuestion/@item.ID">
@@ -35,6 +42,6 @@
 
 
             </div>
-                    } }
-        </div>
-    </div>
+        } }
+</div>
+</div>
