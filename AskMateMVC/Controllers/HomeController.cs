@@ -70,7 +70,7 @@ namespace AskMateMVC.Controllers
             {
                 _datahandler.AddAnswer(model, id);
 
-                return RedirectToAction("AnswersForQuestion", new RouteValueDictionary(new { action = "AnswersForQuestion", Id = model.QuestionID }));
+                return RedirectToAction("AnswersForQuestion", new RouteValueDictionary(new { action = "AnswersForQuestion", Id = id }));
             }
             else
             {
@@ -87,13 +87,14 @@ namespace AskMateMVC.Controllers
 
         [HttpPost]
 
-        public IActionResult EditQuestion(int id, [FromForm(Name = "Title")] string title, [FromForm(Name = "Message")] string message)
+        public IActionResult EditQuestion(int id, [FromForm(Name = "Title")] string title, [FromForm(Name = "Message")] string message,[FromForm(Name = "Image")] string image)
         {
             QuestionModel q = _datahandler.GetQuestionByID(id);
             try
             {
                 q.Title = title;
                 q.Message = message;
+            q.Image = image;
                 _datahandler.EditQuestion(id,q);
                
                 return RedirectToAction("list");
@@ -111,12 +112,13 @@ namespace AskMateMVC.Controllers
 
         [HttpPost]
 
-        public IActionResult EditAnswer(int id, [FromForm(Name = "Message")] string message)
+        public IActionResult EditAnswer(int id, [FromForm(Name = "Message")] string message, [FromForm(Name = "Image")] string image)
         {
             AnswerModel ans = _datahandler.GetAnswerByID(id);
             try
             {
                 ans.Message = message;
+                ans.Image = image;
                 _datahandler.EditAnswer(id,ans);
                 return Redirect($"../AnswersForQuestion/{ans.QuestionID}");
             }

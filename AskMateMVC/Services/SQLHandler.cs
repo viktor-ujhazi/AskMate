@@ -188,12 +188,37 @@ namespace AskMateMVC.Services
 
         public void EditQuestion(int id, QuestionModel question)
         {
-            throw new NotImplementedException();
+            string sql = $"UPDATE questions " +
+                    $"SET question_title = '{question.Title}'," +
+                    $"question_message = '{question.Message}', " +
+                    $"question_imageurl = '{question.Image}' " +
+                    $"WHERE question_id={id} ";
+
+            using (var conn = new NpgsqlConnection(cs))
+            {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand(sql, conn))
+                {
+                    cmd.ExecuteNonQuery();
+                };
+            };
         }
 
         public void EditAnswer(int id, AnswerModel answer)
         {
-            throw new NotImplementedException();
+            string sql = $"UPDATE answers " +
+                    $"SET answer_message = '{answer.Message}', " +
+                    $"answer_image = '{answer.Image}' " +
+                    $"WHERE answer_id={id} ";
+
+            using (var conn = new NpgsqlConnection(cs))
+            {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand(sql, conn))
+                {
+                    cmd.ExecuteNonQuery();
+                };
+            };
         }
 
         public void RemoveAnswer(int id)
