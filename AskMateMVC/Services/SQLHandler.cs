@@ -60,8 +60,32 @@ namespace AskMateMVC.Services
 
         public List<AnswerModel> GetAnswers()
         {
-            //throw new NotImplementedException();
-            return null;
+            Answers.Clear();
+            var sql = "SELECT * FROM answers";
+            using (var conn = new NpgsqlConnection(cs))
+            {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand(sql, conn))
+                {
+                    var reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        var a = reader["question_id"];
+                        AnswerModel q = new AnswerModel
+                        {
+                            ID = (int)reader["answer_id"],
+                            TimeOfAnswer = (DateTime)reader["answer_time"],
+                            VoteNumber = (int)reader["answer_votenumber"],
+                            QuestionID = (int)reader["question_id"],
+                            Message = (string)reader["answer_message"],
+                            Image = (string)reader["answer_image"]
+                        };
+                        Answers.Add(q);
+                    }
+
+                };
+            };
+            return Answers;
         }
 
         public void AddQuestion(QuestionModel model)
@@ -101,11 +125,11 @@ namespace AskMateMVC.Services
                     "answer_votenumber, " +
                     "question_id, " +
                     "answer_message, " +
-                    "answer_imageurl ) Values (@time, @vote, @qid, @message, @image)", conn))
+                    "answer_image ) Values (@time, @vote, @qid, @message, @image)", conn))
                 {
                     cmd.Parameters.AddWithValue("time", model.TimeOfAnswer);
                     cmd.Parameters.AddWithValue("vote", model.VoteNumber);
-                    cmd.Parameters.AddWithValue("qid", model.QuestionID);
+                    cmd.Parameters.AddWithValue("qid", id);
                     cmd.Parameters.AddWithValue("message", model.Message);
                     cmd.Parameters.AddWithValue("image", model.Image == "" ? DBNull.Value.ToString() : "");
 
@@ -113,9 +137,6 @@ namespace AskMateMVC.Services
                 };
             };
         }
-
-
-
         public QuestionModel GetQuestionByID(int id)
         {
             foreach(var question in GetQuestions())
@@ -185,7 +206,8 @@ namespace AskMateMVC.Services
 
         public void IncreaseViews(int id)
         {
-            throw new NotImplementedException();
+            //throw new NotImplementedException();
+
         }
 
         public List<QuestionModel> MostViewedQuestions()
