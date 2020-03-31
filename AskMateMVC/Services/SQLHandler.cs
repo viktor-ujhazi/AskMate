@@ -107,7 +107,7 @@ namespace AskMateMVC.Services
                     cmd.Parameters.AddWithValue("vote", model.VoteNumber);
                     cmd.Parameters.AddWithValue("title", model.Title);
                     cmd.Parameters.AddWithValue("message", model.Message);
-                    cmd.Parameters.AddWithValue("image", model.Image == "" ? DBNull.Value.ToString() : "");
+                    cmd.Parameters.AddWithValue("image", model.Image == null ? DBNull.Value.ToString() : model.Image);
 
                     cmd.ExecuteNonQuery();
                 };
@@ -131,7 +131,7 @@ namespace AskMateMVC.Services
                     cmd.Parameters.AddWithValue("vote", model.VoteNumber);
                     cmd.Parameters.AddWithValue("qid", id);
                     cmd.Parameters.AddWithValue("message", model.Message);
-                    cmd.Parameters.AddWithValue("image", model.Image == "" ? DBNull.Value.ToString() : "");
+                    cmd.Parameters.AddWithValue("image", model.Image == null ? DBNull.Value.ToString() : model.Image);
 
                     cmd.ExecuteNonQuery();
                 };
