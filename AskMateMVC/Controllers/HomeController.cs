@@ -10,6 +10,7 @@ using AskMateMVC.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Npgsql;
+using System.IO;
 
 namespace AskMateMVC.Controllers
 {
@@ -44,8 +45,29 @@ namespace AskMateMVC.Controllers
         [HttpPost]
         public IActionResult NewQuestion(QuestionModel model)
         {
+            
             if (ModelState.IsValid)
             {
+                var files = HttpContext.Request.Form.Files;
+                foreach (var Image in files)
+                {
+                    if (Image != null && Image.Length > 0)
+                    {
+                        var file = Image;
+                        //There is an error here
+                        var uploads = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images"); 
+                        if (file.Length > 0)
+                        {
+                            var fileName = Guid.NewGuid().ToString().Replace("-", "") + Path.GetExtension(file.FileName);
+                            using (var fileStream = new FileStream(Path.Combine(Directory.GetCurrentDirectory(), $"wwwroot/images/{fileName}"), FileMode.Create))
+                            {
+                                file.CopyTo(fileStream);
+                                model.Image = fileName;
+                            }
+
+                        }
+                    }
+                }
                 _datahandler.AddQuestion(model);
                 return RedirectToAction("list", _datahandler.GetQuestions());
             }
@@ -105,6 +127,26 @@ namespace AskMateMVC.Controllers
 
             if (ModelState.IsValid)
             {
+                var files = HttpContext.Request.Form.Files;
+                foreach (var Image in files)
+                {
+                    if (Image != null && Image.Length > 0)
+                    {
+                        var file = Image;
+                        //There is an error here
+                        var uploads = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images");
+                        if (file.Length > 0)
+                        {
+                            var fileName = Guid.NewGuid().ToString().Replace("-", "") + Path.GetExtension(file.FileName);
+                            using (var fileStream = new FileStream(Path.Combine(Directory.GetCurrentDirectory(), $"wwwroot/images/{fileName}"), FileMode.Create))
+                            {
+                                file.CopyTo(fileStream);
+                                model.Image = fileName;
+                            }
+
+                        }
+                    }
+                }
                 _datahandler.AddAnswer(model, id);
 
                 return RedirectToAction("AnswersForQuestion", new RouteValueDictionary(new { action = "AnswersForQuestion", Id = id }));
