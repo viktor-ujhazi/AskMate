@@ -342,6 +342,11 @@ namespace AskMateMVC.Services
             throw new NotImplementedException();
         }
 
+        public void IncreaseNumberOfEdits(int id)
+        {
+            throw new NotImplementedException();
+        }
+
         public TagModel AddTag(int questionID, string url)
         {
             return null;

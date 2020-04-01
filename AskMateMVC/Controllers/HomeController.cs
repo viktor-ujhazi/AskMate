@@ -46,7 +46,7 @@ namespace AskMateMVC.Controllers
         [HttpPost]
         public IActionResult NewQuestion(QuestionModel model)
         {
-            
+
             if (ModelState.IsValid)
             {
                 var files = HttpContext.Request.Form.Files;
@@ -56,7 +56,7 @@ namespace AskMateMVC.Controllers
                     {
                         var file = Image;
                         //There is an error here
-                        var uploads = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images"); 
+                        var uploads = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images");
                         if (file.Length > 0)
                         {
                             var fileName = Guid.NewGuid().ToString().Replace("-", "") + Path.GetExtension(file.FileName);
@@ -259,17 +259,20 @@ namespace AskMateMVC.Controllers
 
         public IActionResult EditComment(int id)
         {
-            return View();
+            CommentModel comment = _datahandler.GetCommentByID(id);
+            return View(comment);
         }
 
         [HttpPost]
         public IActionResult EditComment(int id, [FromForm(Name = "Message")] string message)
         {
             CommentModel comment = _datahandler.GetCommentByID(id);
+
             try
             {
                 comment.Message = message;
                 _datahandler.EditComment(id, comment);
+                _datahandler.IncreaseNumberOfEdits(id);
                 return Redirect($"../AnswersForQuestion/{comment.Question_ID}");
             }
             catch

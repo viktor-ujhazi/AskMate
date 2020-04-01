@@ -9,12 +9,22 @@
 <h2 style="width:1000px;word-break:break-word;color:mediumseagreen">Topic: @ViewBag.Question.Title</h2>
 <h1 style="width:1000px;word-break:break-word;color:mediumseagreen;">@ViewBag.Question.Message</h1>
 <img alt="" src="~/images/@ViewBag.Question.Image" width="200" height="200" />
+
 <a href="~/images/@ViewBag.Question.Image" target="_Self">
     View full size
 </a>
 <p style="text-align:right">
     <a>@Html.ActionLink("Add Tag", "AddingTag", new { id = ViewBag.Question.ID })</a>
 </p>
+
+@{ if (ViewBag.Question.Image.Length > 2 )
+    {
+    <a href="~/images/@ViewBag.Question.Image" target="_Self">
+        View full size
+    </a>
+    } 
+   }
+
 
 <table style="border-top:groove;border-top-width:5px;border-top-color:black;">
     <tr>
@@ -72,9 +82,13 @@
         <tr>
             <th>
                 <img alt="" src="~/images/@item.Image" width="200" height="200" />
-                <a href="~/images/@item.Image" target="_Self">
-                    View full size
-                </a>
+                @{ if (item.Image.Length > 2)
+                    {
+                        <a href="~/images/item.Image" target="_Self">
+                            View full size
+                        </a>
+                    }
+                }
             </th>
         </tr>
         <tr>
