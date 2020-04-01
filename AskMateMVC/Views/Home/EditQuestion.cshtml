@@ -19,13 +19,16 @@
             </div>
             <div class="form-group">
                 <label asp-for="Message" class="control-label"></label>
-                <input asp-for="Message" class="form-control" required pattern=".*\S+.*" />
+                <input asp-for="Message"  class="form-control" required pattern=".*\S+.*" />
                 <span asp-validation-for="Message" class="text-danger"></span>
             </div>
-            <div class="form-group">
+            <div class="form-group" data="">
+                <label asp-for="Image" class="control-label"></label>
+                <input asp-for="Image" readonly class="form-control" />
+
                 <label asp-for="Image" class="control-label"></label>
                 <input asp-for="Image" type="file" class="form-control" />
-                <label asp-for="Image" class="control-label"></label>
+
                 <span asp-validation-for="Image" class="text-danger"></span>
             </div>
             <div class="form-group">
