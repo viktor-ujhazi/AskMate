@@ -8,6 +8,9 @@
 
 <h2 style="width:1000px;word-break:break-word;color:mediumseagreen">Topic: @ViewBag.Question.Title</h2>
 <h1 style="width:1000px;word-break:break-word;color:mediumseagreen;">@ViewBag.Question.Message</h1>
+<p style="text-align:right">
+    <a>@Html.ActionLink("Add Tag", "AddingTag", new { id = ViewBag.Question.ID })</a>
+</p>
 
 <table style="border-top:groove;border-top-width:5px;border-top-color:black;">
     <tr>

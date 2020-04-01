@@ -39,6 +39,7 @@ namespace AskMateMVC.Controllers
         {
             return View();
         }
+
         [HttpPost]
         public IActionResult NewQuestion(QuestionModel model)
         {
@@ -136,7 +137,6 @@ namespace AskMateMVC.Controllers
 
         public IActionResult AnswersForQuestion(int id)
         {
-
             _datahandler.IncreaseViews(id);
             ViewBag.Question = _datahandler.GetQuestionByID(id);
             ViewBag.Ans = _datahandler.GetAnswersForQuestion(id);
@@ -220,6 +220,22 @@ namespace AskMateMVC.Controllers
         {
             _datahandler.ModifyAnswerVote(id, voteValue);
             return Redirect($"../AnswersForQuestion/{_datahandler.GetAnswerByID(id).QuestionID}");
+        }
+
+
+
+        public IActionResult AddingTag(int id)
+        {
+            ViewBag.questionId = id;
+            TagModel tag = new TagModel();
+            return View(tag);
+        }
+
+        [HttpPost]
+        public IActionResult AddingTag(TagModel tag,int questionId)
+        {
+            _datahandler.AddTag(questionId, tag.Url);
+            return Redirect($"../AnswersForQuestion/{questionId}");
         }
     }
 }

@@ -286,7 +286,6 @@ namespace AskMateMVC.Services
 
         public List<QuestionModel> MostViewedQuestions()
         {
-
             List<QuestionModel> mostViewedQuestions = new List<QuestionModel>();
             var sql = "SELECT * FROM questions ORDER BY question_viewnumber DESC LIMIT 5";
             using (var conn = new NpgsqlConnection(cs))
@@ -314,8 +313,6 @@ namespace AskMateMVC.Services
                 };
             };
             return mostViewedQuestions;
-
-            
         }
 
         public List<QuestionModel> SortedDatas(string attribute)
@@ -374,6 +371,73 @@ namespace AskMateMVC.Services
                 }
             };
             return questions;
+        }
+
+        public TagModel AddTag(int questionID,string url)
+        {
+            int tagId;
+            using(NpgsqlConnection cn=new NpgsqlConnection(cs))
+            {
+                cn.Open();
+                try
+                {
+                    using (NpgsqlCommand cmd = new NpgsqlCommand($"SELECT tag_id FROM Question_tags WHERE question_id={questionID}", cn))
+                    {
+                        var reader = cmd.ExecuteReader();
+                        reader.Read();
+                        tagId = (int)reader["tag_id"];
+                    };
+                }
+                catch
+                {
+                    tagId = -1;
+                }
+            };
+
+            if(tagId==-1)       //if tag doesn't exist
+            {
+                using (NpgsqlConnection cn = new NpgsqlConnection(cs))
+                {
+                    cn.Open();
+
+                    using (NpgsqlCommand cmd = new NpgsqlCommand($"INSERT INTO tags(tag_name) VALUES('{url}')", cn))
+                    {
+                        cmd.ExecuteNonQuery();
+                    };
+                };
+
+                using (NpgsqlConnection cn = new NpgsqlConnection(cs))
+                {
+                    cn.Open();
+                    using (NpgsqlCommand cmd = new NpgsqlCommand($"SELECT tag_id FROM tags WHERE tag_name='{url}'", cn))
+                    {
+                        var reader = cmd.ExecuteReader();
+                        reader.Read();
+                        tagId = (int)reader["tag_id"];
+                    };
+                };
+
+                using (NpgsqlConnection cn = new NpgsqlConnection(cs))
+                {
+                    cn.Open();
+                    using (NpgsqlCommand cmd = new NpgsqlCommand($"INSERT INTO question_tags(question_id,tag_id) VALUES({questionID},{tagId})",cn))
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+                };
+            }
+            else    //if tag is already exists
+            {
+                using (NpgsqlConnection cn = new NpgsqlConnection(cs))
+                {
+                    cn.Open();
+                    using (NpgsqlCommand cmd = new NpgsqlCommand($"UPDATE tags SET tag_name='{url}' WHERE tag_id={tagId}",cn))
+                    {
+                        cmd.ExecuteNonQuery();
+                    };
+                };
+            }
+            return new TagModel(tagId, url);
         }
     }
 }

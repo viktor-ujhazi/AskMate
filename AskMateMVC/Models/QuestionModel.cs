@@ -23,6 +23,7 @@ namespace AskMateMVC.Models
         [Display(Name = "Image for Question")]
         public string Image { get; set; }   //image: The path to the image for this question
 
+
         public override string ToString()
         {
             return ID + "," + TimeOfQuestion + "," + ViewNumber + "," + VoteNumber + "," + "\"" + Title + "\"" + "," + "\"" + Message + "\"" + "," + Image;

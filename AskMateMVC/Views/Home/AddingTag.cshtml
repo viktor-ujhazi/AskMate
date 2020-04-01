@@ -1,0 +1,30 @@
+﻿@model AskMateMVC.Models.TagModel
+
+@{
+    ViewData["Title"] = "AddingTag";
+}
+
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="AddingTag">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            
+            <div class="form-group">
+                <label asp-for="Url" class="control-label"></label>
+                <input asp-for="Url" class="form-control" />
+                <span asp-validation-for="Url" class="text-danger"></span>
+                <input type="hidden" id="questionId" name="questionId" value=@ViewBag.questionId runat="server">
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Add" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="list">Back to the Questions</a>
+</div>
+
+
