@@ -79,8 +79,8 @@ namespace AskMateMVC.Controllers
             }
             else
             {
+                comment.Question_ID = id;
                 comment.Answer_ID = ansID;
-
             }
 
             _datahandler.AddComment(comment);
@@ -178,6 +178,8 @@ namespace AskMateMVC.Controllers
             _datahandler.IncreaseViews(id);
             ViewBag.Question = _datahandler.GetQuestionByID(id);
             ViewBag.Ans = _datahandler.GetAnswersForQuestion(id);
+            ViewBag.CommentA = _datahandler.GetCommentsToAnswers(id);
+            ViewBag.CommentQ = _datahandler.GetCommentsToQuestion(id);
             return View();
         }
 
@@ -192,7 +194,26 @@ namespace AskMateMVC.Controllers
             return View("List", _datahandler.SortedDatas(attribute));
         }
 
+        public IActionResult EditComment(int id)
+        {
+            return View();
+        }
 
+        [HttpPost]
+        public IActionResult EditComment(int id, [FromForm(Name = "Message")] string message)
+        {
+            CommentModel comment = _datahandler.GetCommentByID(id);
+            try
+            {
+                comment.Message = message;
+                _datahandler.EditComment(id, comment);
+                return Redirect($"../AnswersForQuestion/{comment.Question_ID}");
+            }
+            catch
+            {
+                return View("EditComment", comment);
+            }
+        }
 
         //public IActionResult SortingByTitle()
         //{
@@ -258,6 +279,12 @@ namespace AskMateMVC.Controllers
         {
             _datahandler.ModifyAnswerVote(id, voteValue);
             return Redirect($"../AnswersForQuestion/{_datahandler.GetAnswerByID(id).QuestionID}");
+        }
+        public IActionResult DeleteComment(int id, int qid)
+        {
+
+            _datahandler.RemoveComment(id);
+            return Redirect($"../AnswersForQuestion/{qid}");
         }
     }
 }

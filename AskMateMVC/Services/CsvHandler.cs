@@ -311,5 +311,35 @@ namespace AskMateMVC.Services
         {
             throw new NotImplementedException();
         }
+
+        public List<CommentModel> GetComments()
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<CommentModel> GetCommentsToAnswers(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<CommentModel> GetCommentsToQuestion(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public CommentModel GetCommentByID(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void EditComment(int id, CommentModel comment)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RemoveComment(int id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
