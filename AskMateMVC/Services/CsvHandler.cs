@@ -341,5 +341,10 @@ namespace AskMateMVC.Services
         {
             throw new NotImplementedException();
         }
+
+        public void IncreaseNumberOfEdits(int id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

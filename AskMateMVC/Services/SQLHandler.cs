@@ -570,8 +570,10 @@ namespace AskMateMVC.Services
         }
         public void EditComment(int id, CommentModel comment)
         {
+            var upDate = DateTime.Now;
             string sql = $"UPDATE comment_s " +
-                    $"SET comment_message = '{comment.Message}' " +
+                    $"SET comment_message = '{comment.Message}' , " +
+                    $"comment_time = '{upDate}' " +
                     $"WHERE comment_id='{id}'";
 
             using (var conn = new NpgsqlConnection(cs))
@@ -639,6 +641,16 @@ namespace AskMateMVC.Services
                 };
             };
         }
+        public void IncreaseNumberOfEdits(int id)
+        {
+            using (var conn = new NpgsqlConnection(cs))
+            {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand($"UPDATE comment_s SET edited_number = edited_number + 1 WHERE comment_id={id} ", conn))
+                {
+                    cmd.ExecuteNonQuery();
+                };
+            };
+        }
     }
 }
-
