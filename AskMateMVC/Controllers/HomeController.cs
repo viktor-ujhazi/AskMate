@@ -171,9 +171,29 @@ namespace AskMateMVC.Controllers
             QuestionModel q = _datahandler.GetQuestionByID(id);
             try
             {
+                var files = HttpContext.Request.Form.Files;
+                foreach (var Image in files)
+                {
+                    if (Image != null && Image.Length > 0)
+                    {
+                        var file = Image;
+                        //There is an error here
+                        var uploads = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images");
+                        if (file.Length > 0)
+                        {
+                            var fileName = Guid.NewGuid().ToString().Replace("-", "") + Path.GetExtension(file.FileName);
+                            using (var fileStream = new FileStream(Path.Combine(Directory.GetCurrentDirectory(), $"wwwroot/images/{fileName}"), FileMode.Create))
+                            {
+                                file.CopyTo(fileStream);
+                                q.Image = fileName;
+                            }
+
+                        }
+                    }
+                }
                 q.Title = title;
                 q.Message = message;
-                q.Image = image;
+                
                 _datahandler.EditQuestion(id, q);
 
                 return RedirectToAction("list");
