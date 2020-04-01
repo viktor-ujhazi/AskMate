@@ -242,6 +242,7 @@ namespace AskMateMVC.Controllers
             ViewBag.Ans = _datahandler.GetAnswersForQuestion(id);
             ViewBag.CommentA = _datahandler.GetCommentsToAnswers(id);
             ViewBag.CommentQ = _datahandler.GetCommentsToQuestion(id);
+            ViewBag.Tag = _datahandler.GetTagUrl(id);
             return View();
         }
 

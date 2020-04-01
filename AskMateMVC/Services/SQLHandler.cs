@@ -636,14 +636,11 @@ namespace AskMateMVC.Services
                 };
             };
         }
-    }
-}
 
-
-        public TagModel AddTag(int questionID,string url)
+        public TagModel AddTag(int questionID, string url)
         {
             int tagId;
-            using(NpgsqlConnection cn=new NpgsqlConnection(cs))
+            using (NpgsqlConnection cn = new NpgsqlConnection(cs))
             {
                 cn.Open();
                 try
@@ -661,7 +658,7 @@ namespace AskMateMVC.Services
                 }
             };
 
-            if(tagId==-1)       //if tag doesn't exist
+            if (tagId == -1)       //if tag doesn't exist
             {
                 using (NpgsqlConnection cn = new NpgsqlConnection(cs))
                 {
@@ -687,7 +684,7 @@ namespace AskMateMVC.Services
                 using (NpgsqlConnection cn = new NpgsqlConnection(cs))
                 {
                     cn.Open();
-                    using (NpgsqlCommand cmd = new NpgsqlCommand($"INSERT INTO question_tags(question_id,tag_id) VALUES({questionID},{tagId})",cn))
+                    using (NpgsqlCommand cmd = new NpgsqlCommand($"INSERT INTO question_tags(question_id,tag_id) VALUES({questionID},{tagId})", cn))
                     {
                         cmd.ExecuteNonQuery();
                     }
@@ -698,13 +695,30 @@ namespace AskMateMVC.Services
                 using (NpgsqlConnection cn = new NpgsqlConnection(cs))
                 {
                     cn.Open();
-                    using (NpgsqlCommand cmd = new NpgsqlCommand($"UPDATE tags SET tag_name='{url}' WHERE tag_id={tagId}",cn))
+                    using (NpgsqlCommand cmd = new NpgsqlCommand($"UPDATE tags SET tag_name='{url}' WHERE tag_id={tagId}", cn))
                     {
                         cmd.ExecuteNonQuery();
                     };
                 };
             }
             return new TagModel(tagId, url);
+        }
+
+        public string GetTagUrl(int questionId)
+        {
+            using(NpgsqlConnection cn=new NpgsqlConnection(cs))
+            {
+                cn.Open();
+                using(NpgsqlCommand cmd=new NpgsqlCommand($"SELECT filter1.tag_name FROM questions " +
+                    $"INNER JOIN (SELECT tags.tag_id, question_tags.question_id, tags.tag_name FROM tags " +
+                    $"INNER JOIN question_tags ON tags.tag_id = question_tags.tag_id) as filter1 " +
+                    $"ON filter1.question_id = questions.question_id WHERE questions.question_id = '{questionId}'",cn))
+                {
+                    var reader=cmd.ExecuteReader();
+                    reader.Read();
+                    return (string)reader["tag_name"];
+                };
+            };
         }
     }
 }

@@ -347,5 +347,9 @@ namespace AskMateMVC.Services
             return null;
         }
 
+        public string GetTagUrl(int questionId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
