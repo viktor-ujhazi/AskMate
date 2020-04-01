@@ -194,7 +194,7 @@ namespace AskMateMVC.Controllers
                 }
                 q.Title = title;
                 q.Message = message;
-                
+
                 _datahandler.EditQuestion(id, q);
 
                 return RedirectToAction("list");
@@ -240,7 +240,6 @@ namespace AskMateMVC.Controllers
             _datahandler.IncreaseViews(id);
             ViewBag.Question = _datahandler.GetQuestionByID(id);
             ViewBag.Ans = _datahandler.GetAnswersForQuestion(id);
-            ViewBag.CommentA = _datahandler.GetCommentsToAnswers(id);
             ViewBag.CommentQ = _datahandler.GetCommentsToQuestion(id);
             ViewBag.Tag = _datahandler.GetTagUrl(id);
             return View();

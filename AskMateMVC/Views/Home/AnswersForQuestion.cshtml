@@ -19,11 +19,11 @@
 
 @{ if (ViewBag.Question.Image.Length > 2 )
     {
-    <a href="~/images/@ViewBag.Question.Image" target="_Self">
-        View full size
-    </a>
-    } 
-   }
+        <a href="~/images/@ViewBag.Question.Image" target="_Self">
+            View full size
+        </a>
+    }
+}
 
 
 <table style="border-top:groove;border-top-width:5px;border-top-color:black;">
@@ -67,7 +67,7 @@
         </tr>
         <tr>
             <th>
-                @foreach (var comment in ViewBag.CommentA)
+                @foreach (var comment in ViewBag.CommentQ)
                 {
                     @if (comment.Answer_ID == item.ID)
                     {
