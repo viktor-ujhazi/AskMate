@@ -221,39 +221,88 @@ namespace AskMateMVC.Services
 
         public QuestionModel GetQuestionByID(int id)
         {
-            foreach (var question in GetQuestions())
+            var sql = $"SELECT * FROM questions WHERE question_id = {id}";
+            using (var conn = new NpgsqlConnection(cs))
             {
-                if (question.ID == id)
+                conn.Open();
+                using (var cmd = new NpgsqlCommand(sql, conn))
                 {
-                    return question;
-                }
-            }
+                    var reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        QuestionModel q = new QuestionModel
+                        {
+                            ID = (int)reader["question_id"],
+                            TimeOfQuestion = (DateTime)reader["question_time"],
+                            ViewNumber = (int)reader["question_viewnumber"],
+                            VoteNumber = (int)reader["question_votenumber"],
+                            Title = (string)reader["question_title"],
+                            Message = (string)reader["question_message"],
+                            Image = (string)reader["question_imageurl"]
+                        };
+                        return q;
+                    }
+
+                };
+            };
             return null;
         }
 
         public AnswerModel GetAnswerByID(int id)
         {
-            foreach (var answer in GetAnswers())
+            var sql = $"SELECT * FROM answers WHERE answer_id = {id}";
+            using (var conn = new NpgsqlConnection(cs))
             {
-                if (answer.ID == id)
+                conn.Open();
+                using (var cmd = new NpgsqlCommand(sql, conn))
                 {
-                    return answer;
-                }
-            }
+                    var reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        AnswerModel q = new AnswerModel
+                        {
+                            ID = (int)reader["answer_id"],
+                            TimeOfAnswer = (DateTime)reader["answer_time"],
+                            VoteNumber = (int)reader["answer_votenumber"],
+                            QuestionID = (int)reader["question_id"],
+                            Message = (string)reader["answer_message"],
+                            Image = (string)reader["answer_image"]
+                        };
+                        return q;
+                    }
+                };
+            };
             return null;
         }
 
         public List<AnswerModel> GetAnswersForQuestion(int id)
         {
             List<AnswerModel> ResultAnswers = new List<AnswerModel>();
-            foreach (var item in GetAnswers())
+            var sql = $"SELECT * FROM answers WHERE question_id = {id}";
+            using (var conn = new NpgsqlConnection(cs))
             {
-                if (item.QuestionID.Equals(id))
+                conn.Open();
+                using (var cmd = new NpgsqlCommand(sql, conn))
                 {
-                    ResultAnswers.Add(item);
-                }
-            }
+                    var reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        AnswerModel q = new AnswerModel
+                        {
+                            ID = (int)reader["answer_id"],
+                            TimeOfAnswer = (DateTime)reader["answer_time"],
+                            VoteNumber = (int)reader["answer_votenumber"],
+                            QuestionID = (int)reader["question_id"],
+                            Message = (string)reader["answer_message"],
+                            Image = (string)reader["answer_image"]
+                        };
+                        ResultAnswers.Add(q);
+                    }
+
+                };
+            };
             return ResultAnswers;
+
         }
 
         public void RemoveQuestionById(int id)
@@ -533,41 +582,48 @@ namespace AskMateMVC.Services
         public List<CommentModel> GetCommentsToQuestion(int id)
         {
             List<CommentModel> ResultComments = new List<CommentModel>();
-            foreach (var item in GetComments())
+
+            var sql = $"SELECT * FROM comment_s WHERE question_id = {id}";
+            using (var conn = new NpgsqlConnection(cs))
             {
-                if (item.Question_ID.Equals(id))
+                conn.Open();
+                using (var cmd = new NpgsqlCommand(sql, conn))
                 {
-                    ResultComments.Add(item);
-                }
-            }
-            return ResultComments;
-
-        }
-
-        public List<CommentModel> GetCommentsToAnswers(int id)
-        {
-            List<CommentModel> ResultComments = new List<CommentModel>();
-            var answers = GetAnswersForQuestion(id);
-            var answerIdList = new List<int>();
-
-            foreach (var answer in answers)
-            {
-                answerIdList.Add(answer.ID);
-            }
-
-            for (int i = 0; i < answerIdList.Count; i++)
-            {
-                foreach (var item in GetComments())
-                {
-                    if (item.Answer_ID.Equals(answerIdList[i]))
+                    var reader = cmd.ExecuteReader();
+                    while (reader.Read())
                     {
-                        ResultComments.Add(item);
-                    }
-                }
-            }
+                        CommentModel c = new CommentModel
+                        {
+                            ID = (int)reader["comment_id"],
+                            Message = (string)reader["comment_message"],
+                            SubmissionTime = (DateTime)reader["comment_time"],
+                            EditedNumber = (int)reader["edited_number"]
+                        };
+                        if (reader["question_id"] is DBNull)
+                        {
+                            c.Question_ID = null;
+                        }
+                        else
+                        {
+                            c.Question_ID = (int?)reader["question_id"];
+                        }
+                        if (reader["answer_id"] is DBNull)
+                        {
+                            c.Answer_ID = null;
+                        }
+                        else
+                        {
+                            c.Answer_ID = (int?)reader["answer_id"];
+                        }
 
+                        ResultComments.Add(c);
+                    }
+                };
+            };
             return ResultComments;
+
         }
+
         public void EditComment(int id, CommentModel comment)
         {
             var upDate = DateTime.Now;
