@@ -719,19 +719,28 @@ namespace AskMateMVC.Services
 
         public string GetTagUrl(int questionId)
         {
-            using(NpgsqlConnection cn=new NpgsqlConnection(cs))
+
+            try
             {
-                cn.Open();
-                using(NpgsqlCommand cmd=new NpgsqlCommand($"SELECT filter1.tag_name FROM questions " +
-                    $"INNER JOIN (SELECT tags.tag_id, question_tags.question_id, tags.tag_name FROM tags " +
-                    $"INNER JOIN question_tags ON tags.tag_id = question_tags.tag_id) as filter1 " +
-                    $"ON filter1.question_id = questions.question_id WHERE questions.question_id = '{questionId}'",cn))
+                using (NpgsqlConnection cn = new NpgsqlConnection(cs))
                 {
-                    var reader=cmd.ExecuteReader();
-                    reader.Read();
-                    return (string)reader["tag_name"];
+                    cn.Open();
+                    using (NpgsqlCommand cmd = new NpgsqlCommand($"SELECT filter1.tag_name FROM questions " +
+                        $"INNER JOIN (SELECT tags.tag_id, question_tags.question_id, tags.tag_name FROM tags " +
+                        $"INNER JOIN question_tags ON tags.tag_id = question_tags.tag_id) as filter1 " +
+                        $"ON filter1.question_id = questions.question_id WHERE questions.question_id = '{questionId}'", cn))
+                    {
+                        var reader = cmd.ExecuteReader();
+                        reader.Read();
+                        return (string)reader["tag_name"];
+                    };
                 };
-            };
+            }
+            catch (Exception)
+            {
+
+                return null;
+            }
         }
     }
 }
