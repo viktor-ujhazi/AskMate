@@ -98,14 +98,14 @@ namespace AskMateMVC.Services
         {
             return Answers;
         }
-        
+
         public void AddQuestion(QuestionModel model)
         {
             model.ID = CreateQuestionID();
             Questions.Add(model);
             SaveQuestions();
         }
-        
+
         public void SaveQuestions()
         {
             var csv = new StringBuilder();
@@ -156,7 +156,7 @@ namespace AskMateMVC.Services
                     ResultAnswers.Add(item);
                 }
             }
-            
+
             return ResultAnswers;
         }
         public void EditQuestion(int id, QuestionModel question)
@@ -167,7 +167,7 @@ namespace AskMateMVC.Services
         public void EditAnswer(int id, AnswerModel answer)
         {
             RemoveAnswer(id);
-            AddAnswer(answer,id);
+            AddAnswer(answer, id);
         }
         public void RemoveQuestionById(int id)
         {
@@ -215,7 +215,7 @@ namespace AskMateMVC.Services
             }
 
         }
-        public void ModifyQuestionVote(int id, int voteValue) 
+        public void ModifyQuestionVote(int id, int voteValue)
         {
             var questionToVote = GetQuestionByID(id);
 
@@ -294,6 +294,50 @@ namespace AskMateMVC.Services
         }
 
         public List<QuestionModel> SortedDatas(string attribute)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<QuestionModel> LatestQuestions()
+        {
+            throw new NotImplementedException();
+        }
+        public void AddComment(CommentModel model)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<QuestionModel> SearchInData(string searchedWord)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<CommentModel> GetComments()
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<CommentModel> GetCommentsToAnswers(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<CommentModel> GetCommentsToQuestion(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public CommentModel GetCommentByID(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void EditComment(int id, CommentModel comment)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RemoveComment(int id)
         {
             throw new NotImplementedException();
         }

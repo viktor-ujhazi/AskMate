@@ -10,6 +10,7 @@ using AskMateMVC.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Npgsql;
+using System.IO;
 
 namespace AskMateMVC.Controllers
 {
@@ -27,14 +28,16 @@ namespace AskMateMVC.Controllers
         public IActionResult Index()
         {
             ViewBag.Answers = _datahandler.GetAnswers();
-            ViewBag.Questions = _datahandler.MostViewedQuestions();
+            ViewBag.Questions = _datahandler.LatestQuestions();
             return View();
+        }
+        [HttpPost]
+        public IActionResult Index(string search)
+        {
+            List<QuestionModel> result = _datahandler.SearchInData(search);
+            return View("List", result);
         }
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
         public IActionResult NewQuestion()
         {
             return View();
@@ -43,8 +46,29 @@ namespace AskMateMVC.Controllers
         [HttpPost]
         public IActionResult NewQuestion(QuestionModel model)
         {
+            
             if (ModelState.IsValid)
             {
+                var files = HttpContext.Request.Form.Files;
+                foreach (var Image in files)
+                {
+                    if (Image != null && Image.Length > 0)
+                    {
+                        var file = Image;
+                        //There is an error here
+                        var uploads = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images"); 
+                        if (file.Length > 0)
+                        {
+                            var fileName = Guid.NewGuid().ToString().Replace("-", "") + Path.GetExtension(file.FileName);
+                            using (var fileStream = new FileStream(Path.Combine(Directory.GetCurrentDirectory(), $"wwwroot/images/{fileName}"), FileMode.Create))
+                            {
+                                file.CopyTo(fileStream);
+                                model.Image = fileName;
+                            }
+
+                        }
+                    }
+                }
                 _datahandler.AddQuestion(model);
                 return RedirectToAction("list", _datahandler.GetQuestions());
             }
@@ -53,6 +77,41 @@ namespace AskMateMVC.Controllers
                 return View("NewQuestion");
             }
         }
+
+        public IActionResult NewComment(int id, int ansID = 0)
+        {
+            var comment = new CommentModel();
+            if (ansID == 0)
+            {
+                comment.Question_ID = id;
+                return View(comment);
+            }
+            else
+            {
+                comment.Answer_ID = ansID;
+                return View(comment);
+            }
+        }
+        [HttpPost]
+        public IActionResult NewComment(int id, CommentModel comment, int ansID = 0)
+        {
+
+            if (ansID == 0)
+            {
+                comment.Question_ID = id;
+            }
+            else
+            {
+                comment.Question_ID = id;
+                comment.Answer_ID = ansID;
+            }
+
+            _datahandler.AddComment(comment);
+            return RedirectToAction("AnswersForQuestion", new RouteValueDictionary(new { action = "AnswersForQuestion", Id = id }));
+
+        }
+
+
 
         public IActionResult NewAnswer(int id)
         {
@@ -66,9 +125,29 @@ namespace AskMateMVC.Controllers
         public IActionResult NewAnswer(int id, AnswerModel model)
         {
             //model=_utility.CreateAnswer(id, model);
-            
+
             if (ModelState.IsValid)
             {
+                var files = HttpContext.Request.Form.Files;
+                foreach (var Image in files)
+                {
+                    if (Image != null && Image.Length > 0)
+                    {
+                        var file = Image;
+                        //There is an error here
+                        var uploads = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images");
+                        if (file.Length > 0)
+                        {
+                            var fileName = Guid.NewGuid().ToString().Replace("-", "") + Path.GetExtension(file.FileName);
+                            using (var fileStream = new FileStream(Path.Combine(Directory.GetCurrentDirectory(), $"wwwroot/images/{fileName}"), FileMode.Create))
+                            {
+                                file.CopyTo(fileStream);
+                                model.Image = fileName;
+                            }
+
+                        }
+                    }
+                }
                 _datahandler.AddAnswer(model, id);
 
                 return RedirectToAction("AnswersForQuestion", new RouteValueDictionary(new { action = "AnswersForQuestion", Id = id }));
@@ -88,16 +167,36 @@ namespace AskMateMVC.Controllers
 
         [HttpPost]
 
-        public IActionResult EditQuestion(int id, [FromForm(Name = "Title")] string title, [FromForm(Name = "Message")] string message,[FromForm(Name = "Image")] string image)
+        public IActionResult EditQuestion(int id, [FromForm(Name = "Title")] string title, [FromForm(Name = "Message")] string message, [FromForm(Name = "Image")] string image)
         {
             QuestionModel q = _datahandler.GetQuestionByID(id);
             try
             {
+                var files = HttpContext.Request.Form.Files;
+                foreach (var Image in files)
+                {
+                    if (Image != null && Image.Length > 0)
+                    {
+                        var file = Image;
+                        //There is an error here
+                        var uploads = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images");
+                        if (file.Length > 0)
+                        {
+                            var fileName = Guid.NewGuid().ToString().Replace("-", "") + Path.GetExtension(file.FileName);
+                            using (var fileStream = new FileStream(Path.Combine(Directory.GetCurrentDirectory(), $"wwwroot/images/{fileName}"), FileMode.Create))
+                            {
+                                file.CopyTo(fileStream);
+                                q.Image = fileName;
+                            }
+
+                        }
+                    }
+                }
                 q.Title = title;
                 q.Message = message;
-            q.Image = image;
-                _datahandler.EditQuestion(id,q);
-               
+                
+                _datahandler.EditQuestion(id, q);
+
                 return RedirectToAction("list");
             }
             catch
@@ -119,8 +218,7 @@ namespace AskMateMVC.Controllers
             try
             {
                 ans.Message = message;
-                ans.Image = image;
-                _datahandler.EditAnswer(id,ans);
+                _datahandler.EditAnswer(id, ans);
                 return Redirect($"../AnswersForQuestion/{ans.QuestionID}");
             }
             catch
@@ -131,7 +229,9 @@ namespace AskMateMVC.Controllers
         public IActionResult List(List<QuestionModel> questions)
         {
             if (questions.Count == 0)
+            {
                 questions = _datahandler.GetQuestions();
+            }
             return View(questions);
         }
 
@@ -140,6 +240,8 @@ namespace AskMateMVC.Controllers
             _datahandler.IncreaseViews(id);
             ViewBag.Question = _datahandler.GetQuestionByID(id);
             ViewBag.Ans = _datahandler.GetAnswersForQuestion(id);
+            ViewBag.CommentA = _datahandler.GetCommentsToAnswers(id);
+            ViewBag.CommentQ = _datahandler.GetCommentsToQuestion(id);
             return View();
         }
 
@@ -154,7 +256,26 @@ namespace AskMateMVC.Controllers
             return View("List", _datahandler.SortedDatas(attribute));
         }
 
+        public IActionResult EditComment(int id)
+        {
+            return View();
+        }
 
+        [HttpPost]
+        public IActionResult EditComment(int id, [FromForm(Name = "Message")] string message)
+        {
+            CommentModel comment = _datahandler.GetCommentByID(id);
+            try
+            {
+                comment.Message = message;
+                _datahandler.EditComment(id, comment);
+                return Redirect($"../AnswersForQuestion/{comment.Question_ID}");
+            }
+            catch
+            {
+                return View("EditComment", comment);
+            }
+        }
 
         //public IActionResult SortingByTitle()
         //{
@@ -236,6 +357,12 @@ namespace AskMateMVC.Controllers
         {
             _datahandler.AddTag(questionId, tag.Url);
             return Redirect($"../AnswersForQuestion/{questionId}");
+        }
+        public IActionResult DeleteComment(int id, int qid)
+        {
+
+            _datahandler.RemoveComment(id);
+            return Redirect($"../AnswersForQuestion/{qid}");
         }
     }
 }
