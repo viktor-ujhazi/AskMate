@@ -346,5 +346,15 @@ namespace AskMateMVC.Services
         {
             throw new NotImplementedException();
         }
+
+        public TagModel AddTag(int questionID, string url)
+        {
+            return null;
+        }
+
+        public string GetTagUrl(int questionId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
