@@ -370,6 +370,11 @@ namespace AskMateMVC.Services
         {
             throw new NotImplementedException();
         }
+
+        public List<TagModel> GetTags()
+        {
+            throw new NotImplementedException();
+        }
     }
 
 }

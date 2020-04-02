@@ -358,6 +358,7 @@ namespace AskMateMVC.Controllers
 
         public IActionResult AddingTag(int id)
         {
+            ViewBag.tags = _datahandler.GetTags();
             ViewBag.questionId = id;
             TagModel tagModel = new TagModel();
             return View(tagModel);

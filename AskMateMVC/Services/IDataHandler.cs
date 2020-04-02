@@ -36,5 +36,6 @@ namespace AskMateMVC.Services
         public TagModel AddTag(int questionID, string url);
         public string GetTagUrl(int questionId);
         public void DeleteTag(int questionId);
+        public List<TagModel> GetTags();
     }
 }

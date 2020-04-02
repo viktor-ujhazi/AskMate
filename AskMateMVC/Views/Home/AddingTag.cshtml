@@ -1,4 +1,4 @@
-﻿@model AskMateMVC.Models.TagModel
+﻿@model TagModel
 
 @{
     ViewData["Title"] = "AddingTag";
@@ -9,14 +9,26 @@
     <div class="col-md-4">
         <form asp-action="AddingTag">
             <div>
-                @Html.DropDownList("tags", new List<SelectListItem>
-                {
-                    new SelectListItem { Text="Funny", Value="Funny" },
-                    new SelectListItem { Text="Good to know", Value="Good to know" },
-                    new SelectListItem { Text="Not interesting", Value="Not interesting" },
-                    new SelectListItem { Text="Study", Value="Study" },
-                    new SelectListItem { Text = "Select Tag", Value = "No Tag added", Selected=true}
-                })
+                @*@Html.DropDownList("tags", new List<SelectListItem>
+        {
+            foreach (var item in ViewBag.Tags)
+            {
+                new SelectListItem{Text = item.Url, Value = item.Url};
+            }
+        })*@
+
+                @Html.DropDownListFor(x => x.Url, new SelectList(ViewBag.tags,"ID", "Url"));
+
+
+
+                @*@Html.DropDownList("tags", new List<SelectListItem>
+        {
+            new SelectListItem { Text="Funny", Value="Funny" },
+            new SelectListItem { Text="Good to know", Value="Good to know" },
+            new SelectListItem { Text="Not interesting", Value="Not interesting" },
+            new SelectListItem { Text="Study", Value="Study" },
+            new SelectListItem { Text = "Select Tag", Value = "No Tag added", Selected=true}
+        })*@
                 <input type="hidden" id="questionId" name="questionId" value=@ViewBag.questionId runat="server">
             </div>
 

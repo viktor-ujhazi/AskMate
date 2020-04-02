@@ -17,6 +17,7 @@ namespace AskMateMVC.Services
         List<QuestionModel> Questions { get; set; } = new List<QuestionModel>();
         List<AnswerModel> Answers { get; set; } = new List<AnswerModel>();
         List<CommentModel> Comments { get; set; } = new List<CommentModel>();
+        List<TagModel> Tags { get; set; } = new List<TagModel>();
         Dictionary<string, bool> AscOrderings = new Dictionary<string, bool>();
 
         //IWebHostEnvironment WebHostEnvironment { get; }
@@ -87,7 +88,31 @@ namespace AskMateMVC.Services
             };
             return Answers;
         }
+        public List<TagModel> GetTags()
+        {
+            Tags.Clear();
+            var sql = "SELECT * FROM tags";
+            using (var conn = new NpgsqlConnection(cs))
+            {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand(sql, conn))
+                {
+                    var reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        TagModel t = new TagModel
+                        {
+                            ID = (int)reader["tag_id"],
+                            Url = (string)reader["tag_name"],
+                            
+                        };
+                        Tags.Add(t);
+                    }
 
+                };
+            };
+            return Tags;
+        }
         public List<CommentModel> GetComments()
         {
             Comments.Clear();
