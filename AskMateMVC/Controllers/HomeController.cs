@@ -354,11 +354,10 @@ namespace AskMateMVC.Controllers
             TagModel tagModel = new TagModel();
             return View(tagModel);
         }
-
+        
         [HttpPost]
         public IActionResult AddingTag(int questionId,string tags)
         {
-            Console.WriteLine(tags);
             _datahandler.AddTag(questionId, tags);
             return Redirect($"../AnswersForQuestion/{questionId}");
         }
