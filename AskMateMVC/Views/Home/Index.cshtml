@@ -8,6 +8,16 @@
         <input type="submit" value="Search" />
     </div>
 }
+
+@using (Html.BeginForm("FancySearch", "Home", FormMethod.Post))
+{
+    <div>
+        <input type="text" name="fancysearch" id="fancysearch" />
+        <input type="submit" value="Fancy Search" />
+    </div>
+}
+
+
 <div>
     <h2>Latest Questions</h2>
 

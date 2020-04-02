@@ -37,6 +37,14 @@ namespace AskMateMVC.Controllers
             List<QuestionModel> result = _datahandler.SearchInData(search);
             return View("List", result);
         }
+        [HttpPost]
+        public IActionResult FancySearch(string fancysearch)
+        {
+            ViewBag.Answers = _datahandler.SearchInAnswers(fancysearch);
+
+            ViewBag.Search = fancysearch;
+            return View("FancySearch", _datahandler.SearchInData(fancysearch));
+        }
 
         public IActionResult NewQuestion()
         {
@@ -350,17 +358,23 @@ namespace AskMateMVC.Controllers
 
         public IActionResult AddingTag(int id)
         {
+            ViewBag.tags = _datahandler.GetTags();
             ViewBag.questionId = id;
             TagModel tagModel = new TagModel();
             return View(tagModel);
         }
         
         [HttpPost]
-        public IActionResult AddingTag(int questionId,string tags)
+        public IActionResult AddingTag([FromForm(Name = "Url_i")] string newTag, int questionId, string tag)
         {
-            if (!_datahandler.TagAlreadyOrdered(questionId, tags))
+            if (tag == null || tag == "")
+            {
+                tag = newTag;
+            }
+
+            if (!_datahandler.TagAlreadyOrdered(questionId, tag))
             { 
-                _datahandler.AddTag(questionId, tags);
+                _datahandler.AddTag(questionId, tag);
             }
             return Redirect($"../AnswersForQuestion/{questionId}");
         }

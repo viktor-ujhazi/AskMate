@@ -357,7 +357,21 @@ namespace AskMateMVC.Services
             throw new NotImplementedException();
         }
 
+
+        public List<QuestionModel> SearchInQuestions(string searchedWord)
+        {
+            throw new NotImplementedException();
+        }
+        public List<AnswerModel> SearchInAnswers(string searchedWord)
+        {
+            throw new NotImplementedException();
+        }
         public void DeleteTag(int questionId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<TagModel> GetTags()
         {
             throw new NotImplementedException();
         }
@@ -367,4 +381,5 @@ namespace AskMateMVC.Services
             throw new NotImplementedException();
         }
     }
+
 }
