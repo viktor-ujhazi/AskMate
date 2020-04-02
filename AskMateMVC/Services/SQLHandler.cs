@@ -547,9 +547,9 @@ namespace AskMateMVC.Services
                 $" FROM questions q " +
                 $"FULL OUTER JOIN answers a " +
                 $"ON q.question_id = a.question_id " +
-                $"WHERE q.question_title LIKE '%{searchedWord}%' " +
-                $"OR q.question_message LIKE '%{searchedWord}%' " +
-                $"OR a.answer_message LIKE '%{searchedWord}%' GROUP BY q.question_id, a.question_id)";
+                $"WHERE LOWER(q.question_title) LIKE LOWER('%{searchedWord}%') " +
+                $"OR LOWER(q.question_message) LIKE LOWER('%{searchedWord}%') " +
+                $"OR LOWER(a.answer_message) LIKE LOWER('%{searchedWord}%') GROUP BY q.question_id, a.question_id)";
             using (var conn = new NpgsqlConnection(cs))
             {
                 conn.Open();
