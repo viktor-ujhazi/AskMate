@@ -347,17 +347,22 @@ namespace AskMateMVC.Services
             throw new NotImplementedException();
         }
 
-        public TagModel AddTag(int questionID, string url)
+        public void AddTag(int questionID, string url)
         {
-            return null;
+            throw new NotImplementedException();
         }
 
-        public string GetTagUrl(int questionId)
+        public List<TagModel> GetTagUrl(int questionId)
         {
             throw new NotImplementedException();
         }
 
         public void DeleteTag(int questionId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool TagAlreadyOrdered(int questionID, string url)
         {
             throw new NotImplementedException();
         }

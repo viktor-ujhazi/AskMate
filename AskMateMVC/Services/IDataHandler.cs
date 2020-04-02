@@ -32,8 +32,9 @@ namespace AskMateMVC.Services
         public List<QuestionModel> LatestQuestions();
         public List<QuestionModel> SearchInData(string searchedWord);
         public void IncreaseNumberOfEdits(int id);
-        public TagModel AddTag(int questionID, string url);
-        public string GetTagUrl(int questionId);
+        public void AddTag(int questionID, string url);
+        public List<TagModel> GetTagUrl(int questionId);
         public void DeleteTag(int questionId);
+        public bool TagAlreadyOrdered(int questionID,string url);
     }
 }

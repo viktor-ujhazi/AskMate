@@ -358,7 +358,10 @@ namespace AskMateMVC.Controllers
         [HttpPost]
         public IActionResult AddingTag(int questionId,string tags)
         {
-            _datahandler.AddTag(questionId, tags);
+            if (!_datahandler.TagAlreadyOrdered(questionId, tags))
+            { 
+                _datahandler.AddTag(questionId, tags);
+            }
             return Redirect($"../AnswersForQuestion/{questionId}");
         }
 

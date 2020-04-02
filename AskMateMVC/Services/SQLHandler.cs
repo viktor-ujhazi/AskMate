@@ -706,109 +706,107 @@ namespace AskMateMVC.Services
             };
         }
 
-        public TagModel AddTag(int questionID, string url)
+        public void AddTag(int questionID, string url)
         {
             int tagId;
+
             using (NpgsqlConnection cn = new NpgsqlConnection(cs))
             {
                 cn.Open();
-                try
+
+                using (NpgsqlCommand cmd = new NpgsqlCommand($"INSERT INTO tags(tag_name) VALUES('{url}')", cn))
                 {
-                    using (NpgsqlCommand cmd = new NpgsqlCommand($"SELECT tag_id FROM Question_tags WHERE question_id={questionID}", cn))
-                    {
-                        var reader = cmd.ExecuteReader();
-                        reader.Read();
-                        tagId = (int)reader["tag_id"];
-                    };
-                }
-                catch
+                    cmd.ExecuteNonQuery();
+                };
+            }
+
+            using (NpgsqlConnection cn = new NpgsqlConnection(cs))
+            {
+                cn.Open();
+                using (NpgsqlCommand cmd = new NpgsqlCommand($"SELECT tag_id FROM tags WHERE tag_name='{url}'", cn))
                 {
-                    tagId = -1;
-                }
+                    var reader = cmd.ExecuteReader();
+                    reader.Read();
+                    tagId = (int)reader["tag_id"];
+                };
             };
 
-            if (tagId == -1)       //if tag doesn't exist
+            using (NpgsqlConnection cn = new NpgsqlConnection(cs))
             {
-                using (NpgsqlConnection cn = new NpgsqlConnection(cs))
+                cn.Open();
+                using (NpgsqlCommand cmd = new NpgsqlCommand($"INSERT INTO question_tags(question_id,tag_id) VALUES({questionID},{tagId})", cn))
                 {
-                    cn.Open();
-
-                    using (NpgsqlCommand cmd = new NpgsqlCommand($"INSERT INTO tags(tag_name) VALUES('{url}')", cn))
-                    {
-                        cmd.ExecuteNonQuery();
-                    };
-                };
-
-                using (NpgsqlConnection cn = new NpgsqlConnection(cs))
-                {
-                    cn.Open();
-                    using (NpgsqlCommand cmd = new NpgsqlCommand($"SELECT tag_id FROM tags WHERE tag_name='{url}'", cn))
-                    {
-                        var reader = cmd.ExecuteReader();
-                        reader.Read();
-                        tagId = (int)reader["tag_id"];
-                    };
-                };
-
-                using (NpgsqlConnection cn = new NpgsqlConnection(cs))
-                {
-                    cn.Open();
-                    using (NpgsqlCommand cmd = new NpgsqlCommand($"INSERT INTO question_tags(question_id,tag_id) VALUES({questionID},{tagId})", cn))
-                    {
-                        cmd.ExecuteNonQuery();
-                    }
-                };
-            }
-            else    //if tag is already exists
-            {
-                using (NpgsqlConnection cn = new NpgsqlConnection(cs))
-                {
-                    cn.Open();
-                    using (NpgsqlCommand cmd = new NpgsqlCommand($"UPDATE tags SET tag_name='{url}' WHERE tag_id={tagId}", cn))
-                    {
-                        cmd.ExecuteNonQuery();
-                    };
-                };
-            }
-            return new TagModel(tagId, url);
+                    cmd.ExecuteNonQuery();
+                }
+            };
         }
+        
 
-        public string GetTagUrl(int questionId)
+
+        public List<TagModel> GetTagUrl(int questionId)
         {
-
+            List<TagModel> listOfTags = new List<TagModel>();
+            
             try
-            {
+            { 
                 using (NpgsqlConnection cn = new NpgsqlConnection(cs))
                 {
                     cn.Open();
-                    using (NpgsqlCommand cmd = new NpgsqlCommand($"SELECT filter1.tag_name FROM questions " +
+                    using (NpgsqlCommand cmd = new NpgsqlCommand($"SELECT filter1.tag_name, filter1.tag_id FROM questions " +
                         $"INNER JOIN (SELECT tags.tag_id, question_tags.question_id, tags.tag_name FROM tags " +
                         $"INNER JOIN question_tags ON tags.tag_id = question_tags.tag_id) as filter1 " +
                         $"ON filter1.question_id = questions.question_id WHERE questions.question_id = '{questionId}'", cn))
                     {
                         var reader = cmd.ExecuteReader();
-                        reader.Read();
-                        return (string)reader["tag_name"];
+                        while(reader.Read())
+                        {
+                            TagModel tag = new TagModel((int)reader["tag_id"], (string)reader["tag_name"]);
+                            listOfTags.Add(tag);
+                        }
                     };
                 };
             }
-            catch (Exception)
-            {
-
-                return null;
-            }
+            catch (Exception){}
+            return listOfTags;
         }
 
-        public void DeleteTag(int questionId)
+        public void DeleteTag(int tagId)
         {
             using (NpgsqlConnection cn = new NpgsqlConnection(cs))
             {
                 cn.Open();
-                using (NpgsqlCommand cmd = new NpgsqlCommand($"DELETE FROM question_tags WHERE question_id={questionId}",cn))
+                using (NpgsqlCommand cmd = new NpgsqlCommand($"DELETE FROM tags WHERE tag_id='{tagId}'",cn))
                 {
                     cmd.ExecuteNonQuery();
                 };
             };
+        }
+
+        public bool TagAlreadyOrdered(int questionID, string url)
+        {
+            bool alreadyInIt=false;
+
+            using (NpgsqlConnection cn = new NpgsqlConnection(cs))
+            {
+                cn.Open();
+                using (NpgsqlCommand cmd = new NpgsqlCommand($"SELECT question_tags.question_id, tags.tag_name FROM tags " +
+                    $"INNER JOIN question_tags ON question_tags.tag_id=tags.tag_id " +
+                    $"WHERE question_tags.question_id='{questionID}'", cn))
+                {
+                    var reader = cmd.ExecuteReader();
+                    while(reader.Read())
+                    {
+                        string tag = (string)reader["tag_name"];
+                        if (tag.Equals(url))
+                        {
+                            alreadyInIt = true;
+                            break;
+                        }
+                    }
+                };
+            };
+            
+        return alreadyInIt;
         }
     }
 }
