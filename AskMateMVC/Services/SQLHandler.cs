@@ -576,6 +576,38 @@ namespace AskMateMVC.Services
             };
             return latestQuestions;
         }
+
+        public List<AnswerModel> SearchInAnswers(string searchedWord)
+        {
+            var resultAnswers = new List<AnswerModel>();
+            var sql = $"SELECT * " +
+                $"FROM answers " +
+                $"WHERE LOWER(answer_message) LIKE LOWER('%{searchedWord}%')";
+            using (var conn = new NpgsqlConnection(cs))
+            {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand(sql, conn))
+                {
+                    var reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        AnswerModel q = new AnswerModel
+                        {
+                            ID = (int)reader["answer_id"],
+                            TimeOfAnswer = (DateTime)reader["answer_time"],
+                            VoteNumber = (int)reader["answer_votenumber"],
+                            QuestionID = (int)reader["question_id"],
+                            Message = (string)reader["answer_message"],
+                            Image = (string)reader["answer_image"]
+                        };
+                        resultAnswers.Add(q);
+                    }
+
+                };
+            };
+            return resultAnswers;
+
+        }
         public List<CommentModel> GetCommentsToQuestion(int id)
         {
             List<CommentModel> ResultComments = new List<CommentModel>();

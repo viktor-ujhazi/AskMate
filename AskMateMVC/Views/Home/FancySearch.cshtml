@@ -1,0 +1,59 @@
+﻿@model IEnumerable<AskMateMVC.Models.QuestionModel>
+@{
+    ViewData["Title"] = "FancySearch";
+}
+
+<h1>Fancy Search</h1>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Link</th>
+            <th>
+                @Html.DisplayNameFor(model => model.TimeOfQuestion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Message)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.ActionLink(@item.Title, "AnswersForQuestion", new { id = item.ID }, null)</td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TimeOfQuestion)
+                </td>
+                <td>
+                    @Html.Raw((item.Title.ToLower().Replace((string)ViewBag.Search, "<span style='background-color:yellow'>" + ViewBag.Search + "</span>")))
+                </td>
+                <td>
+                    @Html.Raw((item.Message.ToLower().Replace((string)ViewBag.Search, "<span style='background-color:yellow'>" + ViewBag.Search + "</span>")))
+                </td>
+
+            </tr>
+            <tr>
+                @foreach (var answer in ViewBag.Answers)
+                {
+                    if (answer.QuestionID == item.ID)
+                    {
+                        <td></td>
+                        <td>
+                            Answer
+                        </td>
+                        <td>
+                            @Html.Raw((answer.Message.ToLower().Replace((string)ViewBag.Search, "<span style='background-color:yellow'>" + ViewBag.Search + "</span>")))
+                        </td>
+                        <td></td>
+                    }
+                }
+            </tr>
+        }
+    </tbody>
+</table>

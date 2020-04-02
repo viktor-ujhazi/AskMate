@@ -37,6 +37,14 @@ namespace AskMateMVC.Controllers
             List<QuestionModel> result = _datahandler.SearchInData(search);
             return View("List", result);
         }
+        [HttpPost]
+        public IActionResult FancySearch(string fancysearch)
+        {
+            ViewBag.Answers = _datahandler.SearchInAnswers(fancysearch);
+
+            ViewBag.Search = fancysearch;
+            return View("FancySearch", _datahandler.SearchInData(fancysearch));
+        }
 
         public IActionResult NewQuestion()
         {
@@ -356,7 +364,7 @@ namespace AskMateMVC.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddingTag(TagModel tag,int questionId)
+        public IActionResult AddingTag(TagModel tag, int questionId)
         {
             _datahandler.AddTag(questionId, tag.Url);
             return Redirect($"../AnswersForQuestion/{questionId}");
