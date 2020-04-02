@@ -32,7 +32,7 @@ namespace AskMateMVC.Services
         public List<QuestionModel> GetQuestions()
         {
             Questions.Clear();
-            var sql = "SELECT * FROM questions";
+            var sql = "SELECT * FROM questions ORDER BY question_time DESC";
             using (var conn = new NpgsqlConnection(cs))
             {
                 conn.Open();
