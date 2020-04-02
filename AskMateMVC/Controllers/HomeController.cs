@@ -351,19 +351,19 @@ namespace AskMateMVC.Controllers
         public IActionResult AddingTag(int id)
         {
             ViewBag.questionId = id;
-            TagModel tag = new TagModel();
-            return View(tag);
+            TagModel tagModel = new TagModel();
+            return View(tagModel);
         }
 
         [HttpPost]
-        public IActionResult AddingTag(TagModel tag,int questionId)
+        public IActionResult AddingTag(int questionId,string tags)
         {
-            _datahandler.AddTag(questionId, tag.Url);
+            Console.WriteLine(tags);
+            _datahandler.AddTag(questionId, tags);
             return Redirect($"../AnswersForQuestion/{questionId}");
         }
         public IActionResult DeleteComment(int id, int qid)
         {
-
             _datahandler.RemoveComment(id);
             return Redirect($"../AnswersForQuestion/{qid}");
         }
