@@ -17,7 +17,7 @@
     <a>@Html.ActionLink("Add Tag", "AddingTag", new { id = ViewBag.Question.ID })</a>
 </p>
 
-@{ if (ViewBag.Question.Image.Length > 2 )
+@{ if (ViewBag.Question.Image.Length > 2)
     {
         <a href="~/images/@ViewBag.Question.Image" target="_Self">
             View full size
@@ -34,8 +34,13 @@
                 if (comment.Answer_ID == null)
                 {
                     <div>
-                        @comment.Message || @comment.SubmissionTime || @Html.ActionLink("Edit", "EditComment", new { id = comment.ID })
-                        || @Html.ActionLink("Delete", "DeleteComment", new { id = comment.ID, qid = ViewBag.Question.ID })
+                        @comment.Message || @comment.SubmissionTime
+                        || <a href="@Url.Action("EditComment", "Home",new { id = comment.ID})">
+                            <img src="~/images/Edit.png" style="width: 19px; height:19px" />
+                        </a>
+                        || <a href="@Url.Action("DeleteComment", "Home",new { id = comment.ID, qid = ViewBag.Question.ID })">
+                            <img src="~/images/trashcan.png" style="width: 15px; height:15px" />
+                        </a>
                     </div>
                 }
             }
@@ -72,8 +77,13 @@
                     @if (comment.Answer_ID == item.ID)
                     {
                         <div>
-                            @comment.Message || @comment.SubmissionTime || @Html.ActionLink("Edit", "EditComment", new { id = comment.ID })
-                            || @Html.ActionLink("Delete", "DeleteComment", new { id = comment.ID, qid = ViewBag.Question.ID })
+                            @comment.Message || @comment.SubmissionTime
+                            || <a href="@Url.Action("EditComment", "Home",new { id = comment.ID})">
+                                <img src="~/images/Edit.png" style="width: 19px; height:19px" />
+                            </a>
+                            || <a href="@Url.Action("DeleteComment", "Home",new { id = comment.ID, qid = ViewBag.Question.ID })">
+                                <img src="~/images/trashcan.png" style="width: 15px; height:15px" />
+                            </a>
                         </div>
                     }
                 }
@@ -93,10 +103,10 @@
         </tr>
         <tr>
             <th>
-                <a href="@Url.Action(" AnswerVote", "Home" ,new { id=item.ID, voteValue=1 })">
+                <a href="@Url.Action("AnswerVote", "Home" ,new { id=item.ID, voteValue=1 })">
                     <img src="~/images/upvote.png" style="width: 15px; height:15px" />
                 </a>
-                <a href="@Url.Action(" AnswerVote", "Home" ,new { id=item.ID, voteValue=0 })">
+                <a href="@Url.Action("AnswerVote", "Home" ,new { id=item.ID, voteValue=0 })">
                     <img src="~/images/downvote.png" style="width: 18px;height: 18px" />
                 </a>
             </th>
