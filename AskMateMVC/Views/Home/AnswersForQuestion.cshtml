@@ -113,8 +113,12 @@
         </tr>
         <tr style="border-bottom:groove;border-bottom-color:black;">
             <th>
-                <a style="padding:0px 0px 0px 200px;">@Html.ActionLink("Delete", "DeleteAnswer", new { id = item.ID, qid = ViewBag.Question.ID })</a>
-                <a style="padding:0px 0px 0px 200px;">@Html.ActionLink("Edit", "EditAnswer", new { id = item.ID }, null)</a>
+                <a style="padding:0px 0px 0px 200px;" href="@Url.Action("DeleteAnswer", "Home",new { id = item.ID, qid = ViewBag.Question.ID })">
+                    <img src="~/images/trashcan.png" style="width: 15px; height:15px" />
+                </a>
+                <a style="padding:0px 0px 0px 200px;" href="@Url.Action("EditAnswer", "Home",new { id = item.ID}, null)">
+                    <img src="~/images/Edit.png" style="width: 19px; height:19px" />
+                </a>
                 <a style="padding:0px 0px 0px 200px;">@Html.ActionLink("Comment", "NewComment", new { id = ViewBag.Question.ID, ansID = item.ID })</a>
             </th>
         </tr>
