@@ -8,14 +8,18 @@
 <div class="row">
     <div class="col-md-4">
         <form asp-action="AddingTag">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            
-            <div class="form-group">
-                <label asp-for="Url" class="control-label"></label>
-                <input asp-for="Url" class="form-control" />
-                <span asp-validation-for="Url" class="text-danger"></span>
+            <div>
+                @Html.DropDownList("tags", new List<SelectListItem>
+                {
+                    new SelectListItem { Text="Funny", Value="Funny" },
+                    new SelectListItem { Text="Good to know", Value="Good to know" },
+                    new SelectListItem { Text="Not interesting", Value="Not interesting" },
+                    new SelectListItem { Text="Study", Value="Study" },
+                    new SelectListItem { Text = "Select Tag", Value = "No Tag added", Selected=true}
+                })
                 <input type="hidden" id="questionId" name="questionId" value=@ViewBag.questionId runat="server">
             </div>
+
             <div class="form-group">
                 <input type="submit" value="Add" class="btn btn-primary" />
             </div>

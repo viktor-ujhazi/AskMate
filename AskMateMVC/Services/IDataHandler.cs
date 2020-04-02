@@ -35,5 +35,6 @@ namespace AskMateMVC.Services
         public void IncreaseNumberOfEdits(int id);
         public TagModel AddTag(int questionID, string url);
         public string GetTagUrl(int questionId);
+        public void DeleteTag(int questionId);
     }
 }

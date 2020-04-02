@@ -366,6 +366,10 @@ namespace AskMateMVC.Services
         {
             throw new NotImplementedException();
         }
+        public void DeleteTag(int questionId)
+        {
+            throw new NotImplementedException();
+        }
     }
 
 }
