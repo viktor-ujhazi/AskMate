@@ -361,6 +361,13 @@ namespace AskMateMVC.Controllers
             _datahandler.AddTag(questionId, tags);
             return Redirect($"../AnswersForQuestion/{questionId}");
         }
+
+        public IActionResult DeleteTag(int id)
+        {
+            _datahandler.DeleteTag(id);
+            return Redirect($"../AnswersForQuestion/{id}");
+        }
+
         public IActionResult DeleteComment(int id, int qid)
         {
             _datahandler.RemoveComment(id);

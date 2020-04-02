@@ -798,5 +798,17 @@ namespace AskMateMVC.Services
                 return null;
             }
         }
+
+        public void DeleteTag(int questionId)
+        {
+            using (NpgsqlConnection cn = new NpgsqlConnection(cs))
+            {
+                cn.Open();
+                using (NpgsqlCommand cmd = new NpgsqlCommand($"DELETE FROM question_tags WHERE question_id={questionId}",cn))
+                {
+                    cmd.ExecuteNonQuery();
+                };
+            };
+        }
     }
 }
