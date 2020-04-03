@@ -363,7 +363,7 @@ namespace AskMateMVC.Controllers
             TagModel tagModel = new TagModel();
             return View(tagModel);
         }
-        
+
         [HttpPost]
         public IActionResult AddingTag([FromForm(Name = "Url_i")] string newTag, int questionId, string tag)
         {
@@ -373,10 +373,24 @@ namespace AskMateMVC.Controllers
             }
 
             if (!_datahandler.TagAlreadyOrdered(questionId, tag))
-            { 
+            {
                 _datahandler.AddTag(questionId, tag);
             }
             return Redirect($"../AnswersForQuestion/{questionId}");
+        }
+        public IActionResult SelectFromTags([FromForm(Name = "Url_i")] string newTag, int questionId, string tag)
+        {
+            if (tag == null || tag == "")
+            {
+                tag = newTag;
+            }
+
+            if (!_datahandler.TagAlreadyOrdered(questionId, tag))
+            {
+                _datahandler.AddTag(questionId, tag);
+            }
+            return Redirect($"../AnswersForQuestion/{questionId}");
+
         }
 
         public IActionResult DeleteTag(int id)

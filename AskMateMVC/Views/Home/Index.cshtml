@@ -4,7 +4,7 @@
 @using (Html.BeginForm("Index", "Home", FormMethod.Post))
 {
     <div>
-        <input type="text" name="search" id="search" />
+        <input type="text" name="search" id="search" required />
         <input type="submit" value="Search" />
     </div>
 }
@@ -12,7 +12,7 @@
 @using (Html.BeginForm("FancySearch", "Home", FormMethod.Post))
 {
     <div>
-        <input type="text" name="fancysearch" id="fancysearch" />
+        <input type="text" name="fancysearch" id="fancysearch" required />
         <input type="submit" value="Fancy Search" />
     </div>
 }

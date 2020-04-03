@@ -7,15 +7,18 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="AddingTag">
-
+        <form asp-action="SelectFromTags">
             <div class="form-group">
                 <input type="hidden" id="questionId" name="questionId" value=@ViewBag.questionId runat="server">
-
                 @Html.DropDownListFor(x => x.Url, new SelectList(ViewBag.tags, "ID", "Url"))
+
+
                 <input type="submit" value="Add" class="btn btn-primary" />
             </div>
+        </form>
+        <form asp-action="AddingTag">
             <div class="form-group">
+                <input type="hidden" id="questionId" name="questionId" value=@ViewBag.questionId runat="server">
                 <input name="Url_i" id="Url_i" class="form-control" />
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
