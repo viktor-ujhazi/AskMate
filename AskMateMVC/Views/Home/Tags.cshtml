@@ -1,0 +1,38 @@
+﻿@model Dictionary<string, int>
+@{
+    ViewData["Title"] = "Tags";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Tags</h1>
+
+<div>
+    <table align="center" style="text-align:center" border="1">
+        <tr>
+            <td style="padding:0px 50px 0px 50px">
+                <p>Tag name</p>
+            </td>
+            <td>
+                <p>Amount of it</p>
+            </td>
+        </tr>
+
+        @{
+
+            foreach (var key in Model)
+            {
+
+                <tr style="padding:0px 50px 0px 50px">
+                    <td style="padding:0px 50px 0px 50px">
+                        @key.Key
+                    </td>
+                    <td>
+                        @key.Value
+                    </td>
+                </tr>
+            }
+        }
+    </table>
+    </div>
+
+

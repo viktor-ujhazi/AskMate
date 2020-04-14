@@ -380,6 +380,11 @@ namespace AskMateMVC.Services
         {
             throw new NotImplementedException();
         }
+
+        public Dictionary<string, int> GetTagsWithCount()
+        {
+            throw new NotImplementedException();
+        }
     }
 
 }
