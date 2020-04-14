@@ -45,6 +45,7 @@ namespace AskMateMVC.Services
                         QuestionModel q = new QuestionModel
                         {
                             ID = (int)reader["question_id"],
+                            UserID = (int)reader["user_id"],
                             TimeOfQuestion = (DateTime)reader["question_time"],
                             ViewNumber = (int)reader["question_viewnumber"],
                             VoteNumber = (int)reader["question_votenumber"],
@@ -75,6 +76,7 @@ namespace AskMateMVC.Services
                         AnswerModel q = new AnswerModel
                         {
                             ID = (int)reader["answer_id"],
+                            UserID = (int)reader["user_id"],
                             TimeOfAnswer = (DateTime)reader["answer_time"],
                             VoteNumber = (int)reader["answer_votenumber"],
                             QuestionID = (int)reader["question_id"],
@@ -88,6 +90,33 @@ namespace AskMateMVC.Services
             };
             return Answers;
         }
+        public List<UserModel> GetUsers()
+        {
+            var users = new List<UserModel>();
+            var sql = "SELECT * FROM users";
+            using (var conn = new NpgsqlConnection(cs))
+            {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand(sql, conn))
+                {
+                    var reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        UserModel u = new UserModel
+                        {
+                            ID = (int)reader["user_id"],
+                            Name = (string)reader["user_name"],
+                            Password = (string)reader["user_password"],
+                            Reputation = (int)reader["user_reputation"]
+                        };
+                        users.Add(u);
+                    }
+
+                };
+            };
+            return users;
+        }
+
         public List<TagModel> GetTags()
         {
             Tags.Clear();
@@ -104,7 +133,7 @@ namespace AskMateMVC.Services
                         {
                             ID = (int)reader["tag_id"],
                             Url = (string)reader["tag_name"],
-                            
+
                         };
                         Tags.Add(t);
                     }
@@ -127,6 +156,7 @@ namespace AskMateMVC.Services
                     {
                         CommentModel c = new CommentModel
                         {
+                            UserID = (int)reader["user_id"],
                             ID = (int)reader["comment_id"],
                             Message = (string)reader["comment_message"],
                             SubmissionTime = (DateTime)reader["comment_time"],
@@ -164,13 +194,15 @@ namespace AskMateMVC.Services
             {
                 conn.Open();
                 using (var cmd = new NpgsqlCommand("INSERT INTO questions " +
-                    "(question_time, " +
+                    "(user_id," +
+                    "question_time, " +
                     "question_viewnumber, " +
                     "question_votenumber, " +
                     "question_title, " +
                     "question_message, " +
-                    "question_imageurl ) Values (@time, @view, @vote, @title, @message, @image)", conn))
+                    "question_imageurl ) Values (@user_id,@time, @view, @vote, @title, @message, @image)", conn))
                 {
+                    cmd.Parameters.AddWithValue("user_id", model.UserID);
                     cmd.Parameters.AddWithValue("time", model.TimeOfQuestion);
                     cmd.Parameters.AddWithValue("view", model.ViewNumber);
                     cmd.Parameters.AddWithValue("vote", model.VoteNumber);
@@ -190,12 +222,14 @@ namespace AskMateMVC.Services
             {
                 conn.Open();
                 using (var cmd = new NpgsqlCommand("INSERT INTO answers " +
-                    "(answer_time, " +
+                    "(user_id," +
+                    "answer_time, " +
                     "answer_votenumber, " +
                     "question_id, " +
                     "answer_message, " +
-                    "answer_image ) Values (@time, @vote, @qid, @message, @image)", conn))
+                    "answer_image ) Values (@user_id,@time, @vote, @qid, @message, @image)", conn))
                 {
+                    cmd.Parameters.AddWithValue("user_id", model.UserID);
                     cmd.Parameters.AddWithValue("time", model.TimeOfAnswer);
                     cmd.Parameters.AddWithValue("vote", model.VoteNumber);
                     cmd.Parameters.AddWithValue("qid", id);
@@ -213,11 +247,12 @@ namespace AskMateMVC.Services
             {
                 conn.Open();
                 using (var cmd = new NpgsqlCommand("INSERT INTO comment_s " +
-                    "(question_id, " +
+                    "(user_id," +
+                    "question_id, " +
                     "answer_id, " +
                     "comment_message, " +
                     "comment_time, " +
-                    "edited_number) Values (@qid, @aid, @message, @time, @edit)", conn))
+                    "edited_number) Values (@user_id,@qid, @aid, @message, @time, @edit)", conn))
                 {
                     if (model.Question_ID != null)
                     {
@@ -235,9 +270,29 @@ namespace AskMateMVC.Services
                     {
                         cmd.Parameters.AddWithValue("aid", DBNull.Value);
                     }
+                    cmd.Parameters.AddWithValue("user_id", model.UserID);
                     cmd.Parameters.AddWithValue("message", model.Message);
                     cmd.Parameters.AddWithValue("time", model.SubmissionTime);
                     cmd.Parameters.AddWithValue("edit", model.EditedNumber);
+
+                    cmd.ExecuteNonQuery();
+                };
+            };
+        }
+
+        public void AddUser(UserModel model)
+        {
+            using (var conn = new NpgsqlConnection(cs))
+            {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand("INSERT INTO users " +
+                    "(user_name," +
+                    "user_password, " +
+                    "user_reputation) Values (@user_name,@user_password, @user_reputation)", conn))
+                {
+                    cmd.Parameters.AddWithValue("user_name", model.Name);
+                    cmd.Parameters.AddWithValue("user_password", model.Password);
+                    cmd.Parameters.AddWithValue("user_reputation", model.Reputation);
 
                     cmd.ExecuteNonQuery();
                 };
@@ -258,6 +313,7 @@ namespace AskMateMVC.Services
                         QuestionModel q = new QuestionModel
                         {
                             ID = (int)reader["question_id"],
+                            UserID = (int)reader["user_id"],
                             TimeOfQuestion = (DateTime)reader["question_time"],
                             ViewNumber = (int)reader["question_viewnumber"],
                             VoteNumber = (int)reader["question_votenumber"],
@@ -267,7 +323,6 @@ namespace AskMateMVC.Services
                         };
                         return q;
                     }
-
                 };
             };
             return null;
@@ -287,6 +342,7 @@ namespace AskMateMVC.Services
                         AnswerModel q = new AnswerModel
                         {
                             ID = (int)reader["answer_id"],
+                            UserID = (int)reader["user_id"],
                             TimeOfAnswer = (DateTime)reader["answer_time"],
                             VoteNumber = (int)reader["answer_votenumber"],
                             QuestionID = (int)reader["question_id"],
@@ -315,6 +371,7 @@ namespace AskMateMVC.Services
                         AnswerModel q = new AnswerModel
                         {
                             ID = (int)reader["answer_id"],
+                            UserID = (int)reader["user_id"],
                             TimeOfAnswer = (DateTime)reader["answer_time"],
                             VoteNumber = (int)reader["answer_votenumber"],
                             QuestionID = (int)reader["question_id"],
@@ -455,6 +512,7 @@ namespace AskMateMVC.Services
                         QuestionModel q = new QuestionModel
                         {
                             ID = (int)reader["question_id"],
+                            UserID = (int)reader["user_id"],
                             TimeOfQuestion = (DateTime)reader["question_time"],
                             ViewNumber = (int)reader["question_viewnumber"],
                             VoteNumber = (int)reader["question_votenumber"],
@@ -489,6 +547,7 @@ namespace AskMateMVC.Services
                             QuestionModel q = new QuestionModel
                             {
                                 ID = (int)reader["question_id"],
+                                UserID = (int)reader["user_id"],
                                 TimeOfQuestion = (DateTime)reader["question_time"],
                                 ViewNumber = (int)reader["question_viewnumber"],
                                 VoteNumber = (int)reader["question_votenumber"],
@@ -512,6 +571,7 @@ namespace AskMateMVC.Services
                             QuestionModel q = new QuestionModel
                             {
                                 ID = (int)reader["question_id"],
+                                UserID = (int)reader["user_id"],
                                 TimeOfQuestion = (DateTime)reader["question_time"],
                                 ViewNumber = (int)reader["question_viewnumber"],
                                 VoteNumber = (int)reader["question_votenumber"],
@@ -544,6 +604,7 @@ namespace AskMateMVC.Services
                         QuestionModel q = new QuestionModel
                         {
                             ID = (int)reader["question_id"],
+                            UserID = (int)reader["user_id"],
                             TimeOfQuestion = (DateTime)reader["question_time"],
                             ViewNumber = (int)reader["question_viewnumber"],
                             VoteNumber = (int)reader["question_votenumber"],
@@ -587,6 +648,7 @@ namespace AskMateMVC.Services
                         QuestionModel q = new QuestionModel
                         {
                             ID = (int)reader["question_id"],
+                            UserID = (int)reader["user_id"],
                             TimeOfQuestion = (DateTime)reader["question_time"],
                             ViewNumber = (int)reader["question_viewnumber"],
                             VoteNumber = (int)reader["question_votenumber"],
@@ -619,6 +681,7 @@ namespace AskMateMVC.Services
                         AnswerModel q = new AnswerModel
                         {
                             ID = (int)reader["answer_id"],
+                            UserID = (int)reader["user_id"],
                             TimeOfAnswer = (DateTime)reader["answer_time"],
                             VoteNumber = (int)reader["answer_votenumber"],
                             QuestionID = (int)reader["question_id"],
@@ -648,6 +711,7 @@ namespace AskMateMVC.Services
                     {
                         CommentModel c = new CommentModel
                         {
+                            UserID = (int)reader["user_id"],
                             ID = (int)reader["comment_id"],
                             Message = (string)reader["comment_message"],
                             SubmissionTime = (DateTime)reader["comment_time"],
@@ -697,7 +761,6 @@ namespace AskMateMVC.Services
         }
         public CommentModel GetCommentByID(int id)
         {
-
             string sql = $"SELECT * FROM comment_s " +
                 $"WHERE comment_id = {id}";
 
@@ -710,6 +773,7 @@ namespace AskMateMVC.Services
                     reader.Read();
                     CommentModel c = new CommentModel
                     {
+                        UserID = (int)reader["user_id"],
                         ID = (int)reader["comment_id"],
                         Message = (string)reader["comment_message"],
                         SubmissionTime = (DateTime)reader["comment_time"],
@@ -797,15 +861,15 @@ namespace AskMateMVC.Services
                 }
             };
         }
-        
+
 
 
         public List<TagModel> GetTagUrl(int questionId)
         {
             List<TagModel> listOfTags = new List<TagModel>();
-            
+
             try
-            { 
+            {
                 using (NpgsqlConnection cn = new NpgsqlConnection(cs))
                 {
                     cn.Open();
@@ -815,7 +879,7 @@ namespace AskMateMVC.Services
                         $"ON filter1.question_id = questions.question_id WHERE questions.question_id = '{questionId}'", cn))
                     {
                         var reader = cmd.ExecuteReader();
-                        while(reader.Read())
+                        while (reader.Read())
                         {
                             TagModel tag = new TagModel((int)reader["tag_id"], (string)reader["tag_name"]);
                             listOfTags.Add(tag);
@@ -823,7 +887,7 @@ namespace AskMateMVC.Services
                     };
                 };
             }
-            catch (Exception){}
+            catch (Exception) { }
             return listOfTags;
         }
 
@@ -832,7 +896,7 @@ namespace AskMateMVC.Services
             using (NpgsqlConnection cn = new NpgsqlConnection(cs))
             {
                 cn.Open();
-                using (NpgsqlCommand cmd = new NpgsqlCommand($"DELETE FROM tags WHERE tag_id='{tagId}'",cn))
+                using (NpgsqlCommand cmd = new NpgsqlCommand($"DELETE FROM tags WHERE tag_id='{tagId}'", cn))
                 {
                     cmd.ExecuteNonQuery();
                 };
@@ -841,7 +905,7 @@ namespace AskMateMVC.Services
 
         public bool TagAlreadyOrdered(int questionID, string url)
         {
-            bool alreadyInIt=false;
+            bool alreadyInIt = false;
 
             using (NpgsqlConnection cn = new NpgsqlConnection(cs))
             {
@@ -851,7 +915,7 @@ namespace AskMateMVC.Services
                     $"WHERE question_tags.question_id='{questionID}'", cn))
                 {
                     var reader = cmd.ExecuteReader();
-                    while(reader.Read())
+                    while (reader.Read())
                     {
                         string tag = (string)reader["tag_name"];
                         if (tag.Equals(url))
@@ -862,8 +926,8 @@ namespace AskMateMVC.Services
                     }
                 };
             };
-            
-        return alreadyInIt;
+
+            return alreadyInIt;
         }
     }
 }

@@ -9,9 +9,11 @@ namespace AskMateMVC.Services
         public List<QuestionModel> GetQuestions();
         public List<AnswerModel> GetAnswers();
         public List<CommentModel> GetComments();
+        public List<UserModel> GetUsers();
         public void AddQuestion(QuestionModel model);
         public void AddAnswer(AnswerModel model, int id);
         public void AddComment(CommentModel model);
+        public void AddUser(UserModel model);
         public QuestionModel GetQuestionByID(int id);
         public AnswerModel GetAnswerByID(int id);
         public CommentModel GetCommentByID(int id);
@@ -37,6 +39,6 @@ namespace AskMateMVC.Services
         public List<TagModel> GetTagUrl(int questionId);
         public void DeleteTag(int questionId);
         public List<TagModel> GetTags();
-        public bool TagAlreadyOrdered(int questionID,string url);
+        public bool TagAlreadyOrdered(int questionID, string url);
     }
 }

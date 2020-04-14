@@ -380,6 +380,16 @@ namespace AskMateMVC.Services
         {
             throw new NotImplementedException();
         }
+
+        public void AddUser(UserModel model)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<UserModel> GetUsers()
+        {
+            throw new NotImplementedException();
+        }
     }
 
 }

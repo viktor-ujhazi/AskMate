@@ -10,7 +10,7 @@ namespace AskMateMVC.Models
     {
         public int ID { get; set; }  //id: A unique identifier 
         public int? Answer_ID { get; set; } = null;
-
+        public int UserID { get; set; }
         public int? Question_ID { get; set; } = null;
 
         [Required(ErrorMessage = "Comment message can't be empty.")]
