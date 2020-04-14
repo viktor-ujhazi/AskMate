@@ -202,7 +202,7 @@ namespace AskMateMVC.Services
                     "question_message, " +
                     "question_imageurl ) Values (@user_id,@time, @view, @vote, @title, @message, @image)", conn))
                 {
-                    cmd.Parameters.AddWithValue("user_id", model.UserID);
+                    cmd.Parameters.AddWithValue("user_id", 1); // model.UserID kell az 1 helyere, ideiglenes amig nincs login
                     cmd.Parameters.AddWithValue("time", model.TimeOfQuestion);
                     cmd.Parameters.AddWithValue("view", model.ViewNumber);
                     cmd.Parameters.AddWithValue("vote", model.VoteNumber);
@@ -229,7 +229,7 @@ namespace AskMateMVC.Services
                     "answer_message, " +
                     "answer_image ) Values (@user_id,@time, @vote, @qid, @message, @image)", conn))
                 {
-                    cmd.Parameters.AddWithValue("user_id", model.UserID);
+                    cmd.Parameters.AddWithValue("user_id", 1); // model.UserID kell az 1 helyere, ideiglenes amig nincs login
                     cmd.Parameters.AddWithValue("time", model.TimeOfAnswer);
                     cmd.Parameters.AddWithValue("vote", model.VoteNumber);
                     cmd.Parameters.AddWithValue("qid", id);
@@ -270,7 +270,7 @@ namespace AskMateMVC.Services
                     {
                         cmd.Parameters.AddWithValue("aid", DBNull.Value);
                     }
-                    cmd.Parameters.AddWithValue("user_id", model.UserID);
+                    cmd.Parameters.AddWithValue("user_id", 1); // model.UserID kell az 1 helyere, ideiglenes amig nincs login
                     cmd.Parameters.AddWithValue("message", model.Message);
                     cmd.Parameters.AddWithValue("time", model.SubmissionTime);
                     cmd.Parameters.AddWithValue("edit", model.EditedNumber);
@@ -900,7 +900,7 @@ namespace AskMateMVC.Services
                 //NpgsqlCommand cmd = new NpgsqlCommand($"DELETE FROM tags WHERE tag_id='{tagId}'",cn)
                 using (NpgsqlCommand cmd = new NpgsqlCommand($"SELECT tags.tag_id FROM question_tags INNER JOIN tags " +
                     $"ON tags.tag_id = question_tags.tag_id" +
-                    $" WHERE question_tags.question_id = '{questionID}' and tags.tag_name = '{url}'",cn))
+                    $" WHERE question_tags.question_id = '{questionID}' and tags.tag_name = '{url}'", cn))
                 {
                     var reader = cmd.ExecuteReader();
                     reader.Read();
@@ -912,11 +912,11 @@ namespace AskMateMVC.Services
             using (NpgsqlConnection cn = new NpgsqlConnection(cs))
             {
                 cn.Open();
-                using (NpgsqlCommand cmd = new NpgsqlCommand($"DELETE FROM tags WHERE tag_id='{tagId}'", cn))
+                using (NpgsqlCommand cmd = new NpgsqlCommand($"DELETE FROM question_tags WHERE tag_id = '{searchedTagID}' AND question_id = '{questionID}'", cn))
                 {
                     cmd.ExecuteNonQuery();
                 };
-                
+
             }
         }
 

@@ -18,7 +18,6 @@ namespace AskMateMVC.Services
         public AnswerModel GetAnswerByID(int id);
         public CommentModel GetCommentByID(int id);
         public List<AnswerModel> GetAnswersForQuestion(int id);
-        //   public List<CommentModel> GetCommentsToAnswers(int id);
         public List<CommentModel> GetCommentsToQuestion(int id);
         public void RemoveQuestionById(int id);
         public void EditQuestion(int id, QuestionModel question);
