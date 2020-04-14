@@ -366,7 +366,7 @@ namespace AskMateMVC.Services
         {
             throw new NotImplementedException();
         }
-        public void DeleteTag(string url,int questionID)
+        public void DeleteTag(string url, int questionID)
         {
             throw new NotImplementedException();
         }
@@ -392,6 +392,11 @@ namespace AskMateMVC.Services
         }
 
         public List<UserModel> GetUsers()
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool IsValidUser(string username, string password)
         {
             throw new NotImplementedException();
         }

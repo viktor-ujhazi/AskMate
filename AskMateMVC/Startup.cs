@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AskMateMVC.Services;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -29,6 +30,13 @@ namespace AskMateMVC
             services.AddControllersWithViews();
             //services.AddSingleton(typeof(IDataHandler), new CsvHandler());
             services.AddSingleton(typeof(IDataHandler), new SQLHandler());
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie
+            (CookieAuthenticationDefaults.AuthenticationScheme, options =>
+           {
+               options.LoginPath = "/User/Login";
+               options.LogoutPath = "/User/Logout";
+           }
+            );
 
             //services.AddSingleton<CsvLoader>();
             //CsvLoader.LoadQuestion();
@@ -51,6 +59,7 @@ namespace AskMateMVC
             app.UseStaticFiles();
 
             app.UseRouting();
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

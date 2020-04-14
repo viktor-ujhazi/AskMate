@@ -950,14 +950,14 @@ namespace AskMateMVC.Services
         public Dictionary<string, int> GetTagsWithCount()
         {
             Dictionary<string, int> TagsWithCounts = new Dictionary<string, int>();
-            using(NpgsqlConnection cn=new NpgsqlConnection(cs))
+            using (NpgsqlConnection cn = new NpgsqlConnection(cs))
             {
                 cn.Open();
                 using (NpgsqlCommand cmd = new NpgsqlCommand($"SELECT tags.tag_name, COUNT(tags.tag_id) as amount FROM tags" +
                     $" INNER JOIN question_tags ON question_tags.tag_id = tags.tag_id GROUP BY tags.tag_id", cn))
                 {
                     var reader = cmd.ExecuteReader();
-                    while(reader.Read())
+                    while (reader.Read())
                     {
                         string key = reader["tag_name"].ToString();
                         TagsWithCounts[key] = Convert.ToInt32(reader["amount"]);
@@ -965,6 +965,27 @@ namespace AskMateMVC.Services
                 };
             };
             return TagsWithCounts;
+        }
+
+        public bool IsValidUser(string username, string password)
+        {
+            var sql = $"SELECT count(*) as count FROM users WHERE user_name = '{username}' And user_password = '{password}'";
+            using (var conn = new NpgsqlConnection(cs))
+            {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand(sql, conn))
+                {
+                    var reader = cmd.ExecuteReader();
+                    reader.Read();
+                    var result = (long)reader["count"];
+
+                    if (result == 1)
+                    {
+                        return true;
+                    }
+                    return false;
+                };
+            };
         }
     }
 }
