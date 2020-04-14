@@ -181,7 +181,7 @@ namespace AskMateMVC.Services
 
                         Comments.Add(c);
                     }
-                };
+                }; 1
             };
             return Comments;
         }
