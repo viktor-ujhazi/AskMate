@@ -35,7 +35,7 @@ namespace AskMateMVC.Services
         public void IncreaseNumberOfEdits(int id);
         public void AddTag(int questionID, string url);
         public List<TagModel> GetTagUrl(int questionId);
-        public void DeleteTag(int questionId);
+        public void DeleteTag(string url, int questionID);
         public List<TagModel> GetTags();
         public bool TagAlreadyOrdered(int questionID,string url);
     }

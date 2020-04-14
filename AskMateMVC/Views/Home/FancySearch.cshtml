@@ -31,10 +31,10 @@
                     @Html.DisplayFor(modelItem => item.TimeOfQuestion)
                 </td>
                 <td>
-                    @Html.Raw((item.Title.ToLower().Replace((string)ViewBag.Search, "<span style='background-color:yellow'>" + ViewBag.Search + "</span>")))
+                    @Html.Raw((item.Title.ToLower().Replace((string)ViewBag.Search.ToLower(), "<span style='background-color:yellow'>" + ViewBag.Search.ToUpper() + "</span>")))
                 </td>
                 <td>
-                    @Html.Raw((item.Message.ToLower().Replace((string)ViewBag.Search, "<span style='background-color:yellow'>" + ViewBag.Search + "</span>")))
+                    @Html.Raw((item.Message.ToLower().Replace((string)ViewBag.Search.ToLower(), "<span style='background-color:yellow'>" + ViewBag.Search.ToUpper() + "</span>")))
                 </td>
 
             </tr>
@@ -48,7 +48,7 @@
                             Answer
                         </td>
                         <td>
-                            @Html.Raw((answer.Message.ToLower().Replace((string)ViewBag.Search, "<span style='background-color:yellow'>" + ViewBag.Search + "</span>")))
+                            @Html.Raw((answer.Message.ToLower().Replace((string)ViewBag.Search.ToLower(), "<span style='background-color:yellow'>" + ViewBag.Search.ToUpper() + "</span>")))
                         </td>
                         <td></td>
                     }

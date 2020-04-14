@@ -827,16 +827,34 @@ namespace AskMateMVC.Services
             return listOfTags;
         }
 
-        public void DeleteTag(int tagId)
+        public void DeleteTag(string url, int questionID)
         {
+            string searchedTagID;
             using (NpgsqlConnection cn = new NpgsqlConnection(cs))
             {
                 cn.Open();
-                using (NpgsqlCommand cmd = new NpgsqlCommand($"DELETE FROM tags WHERE tag_id='{tagId}'",cn))
+                //NpgsqlCommand cmd = new NpgsqlCommand($"DELETE FROM tags WHERE tag_id='{tagId}'",cn)
+                using (NpgsqlCommand cmd = new NpgsqlCommand($"SELECT tags.tag_id FROM question_tags INNER JOIN tags " +
+                    $"ON tags.tag_id = question_tags.tag_id" +
+                    $" WHERE question_tags.question_id = '{questionID}' and tags.tag_name = '{url}'",cn))
+                {
+                    var reader = cmd.ExecuteReader();
+                    reader.Read();
+
+                    searchedTagID = reader["tag_id"].ToString();
+                };
+            };
+
+            using (NpgsqlConnection cn = new NpgsqlConnection(cs))
+            {
+                cn.Open();
+               
+                using (NpgsqlCommand cmd = new NpgsqlCommand($"DELETE FROM question_tags WHERE tag_id = '{searchedTagID}' AND question_id = '{questionID}'", cn))
                 {
                     cmd.ExecuteNonQuery();
                 };
-            };
+                
+            }
         }
 
         public bool TagAlreadyOrdered(int questionID, string url)

@@ -367,37 +367,47 @@ namespace AskMateMVC.Controllers
 
         public IActionResult AddingTag(int id)
         {
-            ViewBag.tags = _datahandler.GetTags();
+            ViewBag.Tags = _datahandler.GetTags();
+            
             ViewBag.questionId = id;
+
             TagModel tagModel = new TagModel();
             return View(tagModel);
         }
-        
+
         [HttpPost]
-        public IActionResult AddingTag([FromForm(Name = "Url_i")] string newTag, int questionId)
+        public IActionResult AddingTag([FromForm(Name = "Url")] string newTag, int questionId,string Url_i)
         {
-           
+            if (newTag == null || newTag == "")
+            {
+                newTag = Url_i;
+            }
+
             if (!_datahandler.TagAlreadyOrdered(questionId, newTag))
-            { 
+            {
                 _datahandler.AddTag(questionId, newTag);
             }
             return Redirect($"../AnswersForQuestion/{questionId}");
         }
-
-        //[HttpPost]
-        //public IActionResult SelectFromTags(string tag, int questionId)
-        //{
-        //    if (!_datahandler.TagAlreadyOrdered(questionId, tag))
-        //    {
-        //        _datahandler.AddTag(questionId, tag);
-        //    }
-        //    return Redirect($"../AnswersForQuestion/{questionId}");
-        //}
-
-        public IActionResult DeleteTag(int id)
+        public IActionResult SelectFromTags([FromForm(Name = "Url_i")] string newTag, int questionId, string tag)
         {
-            _datahandler.DeleteTag(id);
-            return Redirect($"../AnswersForQuestion/{id}");
+            if (tag == null || tag == "")
+            {
+                tag = newTag;
+            }
+
+            if (!_datahandler.TagAlreadyOrdered(questionId, tag))
+            {
+                _datahandler.AddTag(questionId, tag);
+            }
+            return Redirect($"../AnswersForQuestion/{questionId}");
+
+        }
+
+        public IActionResult DeleteTag(string url,int questionID)
+        {
+            _datahandler.DeleteTag(url,questionID);
+            return Redirect($"../Home/AnswersForQuestion/{questionID}");
         }
 
         public IActionResult DeleteComment(int id, int qid)
