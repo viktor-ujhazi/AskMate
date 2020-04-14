@@ -946,5 +946,25 @@ namespace AskMateMVC.Services
 
             return alreadyInIt;
         }
+
+        public Dictionary<string, int> GetTagsWithCount()
+        {
+            Dictionary<string, int> TagsWithCounts = new Dictionary<string, int>();
+            using(NpgsqlConnection cn=new NpgsqlConnection(cs))
+            {
+                cn.Open();
+                using (NpgsqlCommand cmd = new NpgsqlCommand($"SELECT tags.tag_name, COUNT(tags.tag_id) as amount FROM tags" +
+                    $" INNER JOIN question_tags ON question_tags.tag_id = tags.tag_id GROUP BY tags.tag_id", cn))
+                {
+                    var reader = cmd.ExecuteReader();
+                    while(reader.Read())
+                    {
+                        string key = reader["tag_name"].ToString();
+                        TagsWithCounts[key] = Convert.ToInt32(reader["amount"]);
+                    }
+                };
+            };
+            return TagsWithCounts;
+        }
     }
 }

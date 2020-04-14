@@ -381,6 +381,11 @@ namespace AskMateMVC.Services
             throw new NotImplementedException();
         }
 
+        public Dictionary<string, int> GetTagsWithCount()
+        {
+            throw new NotImplementedException();
+        }
+
         public void AddUser(UserModel model)
         {
             throw new NotImplementedException();
