@@ -5,12 +5,19 @@
 
 
 <h2>Answers For Question</h2>
-@{
-    foreach (var tag in ViewBag.Tags)
-    {
-    <p style="text-align:right">@tag.Url @Html.ActionLink("Delete Tag", "DeleteTag", new { url=tag.Url,questionID = ViewBag.Question.ID })</p>
-    }
-}
+
+    <p> 
+        @foreach (var tag in ViewBag.Tags)
+        {
+        
+            @tag.Url  <a href ="@Url.Action("Delete Tag", "DeleteTag", new { url = tag.Url, questionID = ViewBag.Question.ID })">
+                          <img src="~/images/trashcan.png" style="width: 15px; height:15px" />
+            </a>
+        
+        } 
+        
+    </p>
+
 
 <h2 style="width:1000px;word-break:break-word;color:mediumseagreen">Topic: @ViewBag.Question.Title</h2>
 <h1 style="width:1000px;word-break:break-word;color:mediumseagreen;">@ViewBag.Question.Message</h1>
@@ -62,7 +69,7 @@
     </tr>
     @foreach (var item in ViewBag.Ans)
     {
-        <tr>
+        <tr><th><a></a></th>
             <th style="text-align:right">
                 <a style="color:cornflowerblue">@item.TimeOfAnswer</a>
             </th>

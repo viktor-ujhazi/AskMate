@@ -359,7 +359,7 @@ namespace AskMateMVC.Services
         public List<AnswerModel> GetAnswersForQuestion(int id)
         {
             List<AnswerModel> ResultAnswers = new List<AnswerModel>();
-            var sql = $"SELECT * FROM answers WHERE question_id = {id}";
+            var sql = $"SELECT * FROM answers WHERE question_id = {id} ORDER BY answer_time DESC";
             using (var conn = new NpgsqlConnection(cs))
             {
                 conn.Open();
