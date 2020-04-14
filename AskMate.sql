@@ -3,9 +3,18 @@ DROP TABLE IF EXISTS Answers CASCADE;
 DROP TABLE IF EXISTS Comment_s CASCADE;
 DROP TABLE IF EXISTS Tags CASCADE;
 DROP TABLE IF EXISTS Question_tags CASCADE;
+DROP TABLE IF EXISTS Users;
+
+CREATE TABLE IF NOT EXISTS Users(
+	user_id SERIAL PRIMARY KEY,
+	user_name TEXT,
+	user_password TEXT,
+	user_reputation TEXT
+);
 
 CREATE TABLE IF NOT EXISTS Questions(
 	question_id SERIAL PRIMARY KEY,
+	user_id INT REFERENCES Users(user_id) ON DELETE SET NUll,
 	question_time TIMESTAMP,
 	question_viewNumber INT,
 	question_voteNumber INT,
@@ -17,6 +26,7 @@ CREATE TABLE IF NOT EXISTS Questions(
 
 CREATE TABLE IF NOT EXISTS Answers(
 	answer_id SERIAL PRIMARY KEY,
+	user_id INT REFERENCES Users(user_id) ON DELETE SET NUll,
 	answer_time TIMESTAMP,
     	answer_voteNumber INT,
 	question_id INT REFERENCES Questions(question_id) ON DELETE CASCADE,
@@ -26,6 +36,7 @@ CREATE TABLE IF NOT EXISTS Answers(
 
 CREATE TABLE IF NOT EXISTS Comment_s(
 	comment_id SERIAL PRIMARY KEY,
+	user_id INT REFERENCES Users(user_id) ON DELETE SET NUll,
 	question_id INT REFERENCES Questions(question_id) ON DELETE CASCADE,
 	answer_id INT REFERENCES Answers(answer_id) ON DELETE CASCADE,
 	comment_message TEXT,
