@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Npgsql;
 using System.IO;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace AskMateMVC.Controllers
 {
@@ -249,7 +250,15 @@ namespace AskMateMVC.Controllers
             ViewBag.Question = _datahandler.GetQuestionByID(id);
             ViewBag.Ans = _datahandler.GetAnswersForQuestion(id);
             ViewBag.CommentQ = _datahandler.GetCommentsToQuestion(id);
-            ViewBag.Tag = _datahandler.GetTagUrl(id);
+
+            List<SelectListItem> items = new List<SelectListItem>();
+            foreach(var tag in _datahandler.GetTagUrl(id))
+            { 
+                items.Add(new SelectListItem { Text=tag.Url, Value=tag.Url});
+            }
+
+            ViewBag.Tag = items;
+            ViewBag.Tags = _datahandler.GetTagUrl(id);
             return View();
         }
 
@@ -365,19 +374,25 @@ namespace AskMateMVC.Controllers
         }
         
         [HttpPost]
-        public IActionResult AddingTag([FromForm(Name = "Url_i")] string newTag, int questionId, string tag)
+        public IActionResult AddingTag([FromForm(Name = "Url_i")] string newTag, int questionId)
         {
-            if (tag == null || tag == "")
-            {
-                tag = newTag;
-            }
-
-            if (!_datahandler.TagAlreadyOrdered(questionId, tag))
+           
+            if (!_datahandler.TagAlreadyOrdered(questionId, newTag))
             { 
-                _datahandler.AddTag(questionId, tag);
+                _datahandler.AddTag(questionId, newTag);
             }
             return Redirect($"../AnswersForQuestion/{questionId}");
         }
+
+        //[HttpPost]
+        //public IActionResult SelectFromTags(string tag, int questionId)
+        //{
+        //    if (!_datahandler.TagAlreadyOrdered(questionId, tag))
+        //    {
+        //        _datahandler.AddTag(questionId, tag);
+        //    }
+        //    return Redirect($"../AnswersForQuestion/{questionId}");
+        //}
 
         public IActionResult DeleteTag(int id)
         {
