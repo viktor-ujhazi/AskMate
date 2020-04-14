@@ -7,9 +7,9 @@ DROP TABLE IF EXISTS Users;
 
 CREATE TABLE IF NOT EXISTS Users(
 	user_id SERIAL PRIMARY KEY,
-	user_name TEXT,
+	user_name TEXT UNIQUE,
 	user_password TEXT,
-	user_reputation TEXT
+	user_reputation INT
 );
 
 CREATE TABLE IF NOT EXISTS Questions(
@@ -54,3 +54,7 @@ CREATE TABLE IF NOT EXISTS Question_tags(
 	tag_id INT REFERENCES Tags(tag_id) ON DELETE CASCADE,
 	PRIMARY KEY (question_id, tag_id)
 );
+
+
+Insert into users (user_name, user_password, user_reputation)
+Values ('Mark', 'admin',1);
