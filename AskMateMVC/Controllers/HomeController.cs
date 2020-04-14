@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Npgsql;
 using System.IO;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace AskMateMVC.Controllers
 {
@@ -249,7 +250,15 @@ namespace AskMateMVC.Controllers
             ViewBag.Question = _datahandler.GetQuestionByID(id);
             ViewBag.Ans = _datahandler.GetAnswersForQuestion(id);
             ViewBag.CommentQ = _datahandler.GetCommentsToQuestion(id);
-            ViewBag.Tag = _datahandler.GetTagUrl(id);
+
+            List<SelectListItem> items = new List<SelectListItem>();
+            foreach(var tag in _datahandler.GetTagUrl(id))
+            { 
+                items.Add(new SelectListItem { Text=tag.Url, Value=tag.Url});
+            }
+
+            ViewBag.Tag = items;
+            ViewBag.Tags = _datahandler.GetTagUrl(id);
             return View();
         }
 
@@ -358,23 +367,25 @@ namespace AskMateMVC.Controllers
 
         public IActionResult AddingTag(int id)
         {
-            ViewBag.tags = _datahandler.GetTags();
+            ViewBag.Tags = _datahandler.GetTags();
+            
             ViewBag.questionId = id;
+
             TagModel tagModel = new TagModel();
             return View(tagModel);
         }
 
         [HttpPost]
-        public IActionResult AddingTag([FromForm(Name = "Url_i")] string newTag, int questionId, string tag)
+        public IActionResult AddingTag([FromForm(Name = "Url")] string newTag, int questionId,string Url_i)
         {
-            if (tag == null || tag == "")
+            if (newTag == null || newTag == "")
             {
-                tag = newTag;
+                newTag = Url_i;
             }
 
-            if (!_datahandler.TagAlreadyOrdered(questionId, tag))
+            if (!_datahandler.TagAlreadyOrdered(questionId, newTag))
             {
-                _datahandler.AddTag(questionId, tag);
+                _datahandler.AddTag(questionId, newTag);
             }
             return Redirect($"../AnswersForQuestion/{questionId}");
         }
@@ -393,10 +404,10 @@ namespace AskMateMVC.Controllers
 
         }
 
-        public IActionResult DeleteTag(int id)
+        public IActionResult DeleteTag(string url,int questionID)
         {
-            _datahandler.DeleteTag(id);
-            return Redirect($"../AnswersForQuestion/{id}");
+            _datahandler.DeleteTag(url,questionID);
+            return Redirect($"../Home/AnswersForQuestion/{questionID}");
         }
 
         public IActionResult DeleteComment(int id, int qid)

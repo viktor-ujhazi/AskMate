@@ -6,9 +6,9 @@
 
 <h2>Answers For Question</h2>
 @{
-    foreach (var tag in ViewBag.Tag)
+    foreach (var tag in ViewBag.Tags)
     {
-        <p style="text-align:right">@tag.Url</p>
+    <p style="text-align:right">@tag.Url @Html.ActionLink("Delete Tag", "DeleteTag", new { url=tag.Url,questionID = ViewBag.Question.ID })</p>
     }
 }
 
@@ -22,7 +22,6 @@
 <p style="text-align:right">
     <a>@Html.ActionLink("Add Tag", "AddingTag", new { id = ViewBag.Question.ID })</a>
     <br />
-    <a>@Html.ActionLink("Delete Tag", "DeleteTag", new { id = ViewBag.Question.ID })</a>
 </p>
 
 @{ if (ViewBag.Question.Image.Length > 2)
