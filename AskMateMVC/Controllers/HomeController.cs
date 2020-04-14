@@ -415,5 +415,12 @@ namespace AskMateMVC.Controllers
             _datahandler.RemoveComment(id);
             return Redirect($"../AnswersForQuestion/{qid}");
         }
+
+        public IActionResult Tags()
+        {
+            Dictionary<string, int> tagsWithVote = _datahandler.GetTagsWithCount();
+            return View(tagsWithVote);
+        }
+
     }
 }
