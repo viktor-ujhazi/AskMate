@@ -43,5 +43,6 @@ namespace AskMateMVC.Services
         public bool IsValidUser(string username, string password);
         public void AcceptAnswer(int answerID, int questionID);
         public int GetUserIdForUsername(string username);
+        public void IncreaseViewsCorrection(int id);
     }
 }
