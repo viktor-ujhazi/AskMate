@@ -261,6 +261,12 @@ namespace AskMateMVC.Controllers
         public IActionResult AnswersForQuestion(int id)
         {
             _datahandler.IncreaseViews(id);
+            try
+            {
+                var username = HttpContext.User.Claims.First(c => c.Type == ClaimTypes.Name).Value;
+                ViewBag.ActualUserID = _datahandler.GetUserIdForUsername(username);
+            }
+            catch { }
             ViewBag.Question = _datahandler.GetQuestionByID(id);
             ViewBag.Ans = _datahandler.GetAnswersForQuestion(id);
             ViewBag.CommentQ = _datahandler.GetCommentsToQuestion(id);
@@ -344,11 +350,13 @@ namespace AskMateMVC.Controllers
                 return View("EditQuestion", q);
             }
         }
+        [Authorize]
         public IActionResult QuestionVote(int id, int voteValue)
         {
             _datahandler.ModifyQuestionVote(id, voteValue);
             return Redirect($"../List/");
         }
+        [Authorize]
         public IActionResult AnswerVote(int id, int voteValue)
         {
             
@@ -422,6 +430,7 @@ namespace AskMateMVC.Controllers
         [Authorize]
         public IActionResult AcceptAnswer(int answerID, int questionID)
         {
+            
             _datahandler.AcceptAnswer(answerID, questionID);
             return Redirect($"../Home/AnswersForQuestion/{questionID}");
         }

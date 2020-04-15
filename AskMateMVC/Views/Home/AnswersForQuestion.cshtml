@@ -1,6 +1,8 @@
 ﻿@{
     ViewData["Title"] = "AnswersForQuestion";
     string background = "white";
+    string username="";
+    int rep=0;
 }
 
 
@@ -90,17 +92,19 @@
 <table style="background-color:@background">
     <tr>
         <td style="width:5%"><a>user: </a></td>
+        
+
         @foreach (var user in ViewBag.User)
         {
-        <td><a>@user.Name  rep: @user.Reputation</a></td>
-        }
+            if (user.ID == item.UserID)
+            {
+                username = user.Name;
+                rep = user.Reputation;
+            }
+        }<td><a>@username  rep: @rep</a></td>
         <td colspan="15" style="text-align:center">
             @{
-                if (ViewBag.Question.AcceptAnswerID == 0 && ViewBag.User[0].ID == ViewBag.Question.UserID)
-
-                //ViewBag.User[0].ID will be the logged in user
-
-
+                if (ViewBag.Question.AcceptAnswerID == 0 && ViewBag.ActualUserID == ViewBag.Question.UserID)
                 { <a>@Html.ActionLink("Accept answer", "AcceptAnswer", new { questionID = ViewBag.Question.ID, answerID = item.ID, })</a>}
             }
         </td>
@@ -126,13 +130,17 @@
 
         </td>
         <td style="width:5%; text-align:right">
+            
+            @if (ViewBag.ActualUserID == item.UserID)
+            {
+
             <a href="@Url.Action("DeleteAnswer", "Home", new { id = item.ID, qid = ViewBag.Question.ID })">
                 <img src="~/images/trashcan.png" style="width: 15px; height:15px" />
             </a><br />
             <a style="width:5%; text-align:right" href="@Url.Action("EditAnswer", "Home", new { id = item.ID }, null)">
                 <img src="~/images/Edit.png" style="width: 19px; height:19px" />
             </a>
-
+            }
         </td>
     </tr>
     <tr></tr>
