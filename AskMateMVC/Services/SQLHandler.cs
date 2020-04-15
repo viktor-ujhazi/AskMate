@@ -477,9 +477,9 @@ namespace AskMateMVC.Services
                 op = "+";
                 ModifyReputation(userID, 5);
             }
-            else 
-            { 
-                ModifyReputation(userID, -2); 
+            else
+            {
+                ModifyReputation(userID, -2);
             }
 
 
@@ -1002,26 +1002,6 @@ namespace AskMateMVC.Services
             return TagsWithCounts;
         }
 
-        public bool IsValidUser(string username, string password)
-        {
-            var sql = $"SELECT count(*) as count FROM users WHERE user_name = '{username}' And user_password = '{password}'";
-            using (var conn = new NpgsqlConnection(cs))
-            {
-                conn.Open();
-                using (var cmd = new NpgsqlCommand(sql, conn))
-                {
-                    var reader = cmd.ExecuteReader();
-                    reader.Read();
-                    var result = (long)reader["count"];
-
-                    if (result == 1)
-                    {
-                        return true;
-                    }
-                    return false;
-                };
-            };
-        }
 
         public void AcceptAnswer(int answerID, int questionID)
         {
@@ -1070,7 +1050,7 @@ namespace AskMateMVC.Services
                     var reader = cmd.ExecuteReader();
                     while (reader.Read())
                     {
-                        result= (int)reader["user_id"];
+                        result = (int)reader["user_id"];
                     }
                 };
             };
@@ -1106,7 +1086,6 @@ namespace AskMateMVC.Services
                     var reader = cmd.ExecuteReader();
                     reader.Read();
                     var result = (int)reader["user_id"];
-
 
                     return (int)result;
                 };

@@ -28,7 +28,7 @@ namespace AskMateMVC
         {
 
             services.AddControllersWithViews();
-            //services.AddSingleton(typeof(IDataHandler), new CsvHandler());
+            services.AddSingleton(typeof(ICyberSecurityProvider), new PasswordEncryption());
             services.AddSingleton(typeof(IDataHandler), new SQLHandler());
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie
             (CookieAuthenticationDefaults.AuthenticationScheme, options =>
