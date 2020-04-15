@@ -38,8 +38,9 @@ namespace AskMateMVC.Services
         public List<TagModel> GetTagUrl(int questionId);
         public void DeleteTag(string url, int questionID);
         public List<TagModel> GetTags();
-        public bool TagAlreadyOrdered(int questionID,string url);
+        public bool TagAlreadyOrdered(int questionID, string url);
         public Dictionary<string, int> GetTagsWithCount();
+        public bool IsValidUser(string username, string password);
         public void AcceptAnswer(int answerID, int questionID);
     }
 }
