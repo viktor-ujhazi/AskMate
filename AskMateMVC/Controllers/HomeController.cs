@@ -359,9 +359,11 @@ namespace AskMateMVC.Controllers
         [Authorize]
         public IActionResult AnswerVote(int id, int voteValue)
         {
+            int questionID = _datahandler.GetAnswerByID(id).QuestionID;
             
+            _datahandler.IncreaseViewsCorrection(questionID);
             _datahandler.ModifyAnswerVote(id, voteValue);
-            return Redirect($"../AnswersForQuestion/{_datahandler.GetAnswerByID(id).QuestionID}");
+            return Redirect($"../AnswersForQuestion/{questionID}");
         }
 
         [Authorize]

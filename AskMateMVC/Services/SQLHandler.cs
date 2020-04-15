@@ -516,6 +516,7 @@ namespace AskMateMVC.Services
                     cmd.ExecuteNonQuery();
                 };
             };
+            
         }
 
         public void IncreaseViews(int id)
@@ -524,6 +525,18 @@ namespace AskMateMVC.Services
             {
                 conn.Open();
                 using (var cmd = new NpgsqlCommand($"UPDATE questions SET question_viewnumber = question_viewnumber + 1 WHERE question_id={id} ", conn))
+                {
+                    cmd.ExecuteNonQuery();
+                };
+            };
+
+        }
+        public void IncreaseViewsCorrection(int id)
+        {
+            using (var conn = new NpgsqlConnection(cs))
+            {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand($"UPDATE questions SET question_viewnumber = question_viewnumber - 1 WHERE question_id={id} ", conn))
                 {
                     cmd.ExecuteNonQuery();
                 };
@@ -1018,7 +1031,7 @@ namespace AskMateMVC.Services
                 };
             };
             int userID = GetUserIDByAnswerID(answerID);
-
+            IncreaseViewsCorrection(questionID);
             ModifyReputation(userID, 15);
         }
 
