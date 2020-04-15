@@ -29,24 +29,35 @@ namespace AskMateMVC.Services
 
         public bool IsValidUser(string username, string password)
         {
-            string savedPassword = GetUserPassword(username);// get the pw from database
-
-            byte[] hashBytes = Convert.FromBase64String(savedPassword);
-            /* Get the salt */
-            byte[] salt = new byte[16];
-            Array.Copy(hashBytes, 0, salt, 0, 16);
-            /* Compute the hash on the password the user entered */
-            var pbkdf2 = new Rfc2898DeriveBytes(password, salt, 10000);
-            byte[] hash = pbkdf2.GetBytes(20);
-            /* Compare the results */
-            for (int i = 0; i < 20; i++)
+            try
             {
-                if (hashBytes[i + 16] != hash[i])
+                string savedPassword = GetUserPassword(username);// get the pw from database
+
+                byte[] hashBytes = Convert.FromBase64String(savedPassword);
+                /* Get the salt */
+                byte[] salt = new byte[16];
+                Array.Copy(hashBytes, 0, salt, 0, 16);
+                /* Compute the hash on the password the user entered */
+                var pbkdf2 = new Rfc2898DeriveBytes(password, salt, 10000);
+                byte[] hash = pbkdf2.GetBytes(20);
+                /* Compare the results */
+                for (int i = 0; i < 20; i++)
                 {
-                    return false;
+                    if (hashBytes[i + 16] != hash[i])
+                    {
+                        return false;
+                    }
                 }
+                return true;
             }
-            return true;
+            catch (InvalidOperationException)
+            {
+
+                return false;
+            }
+
+
+
         }
 
 
