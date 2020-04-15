@@ -52,7 +52,7 @@ namespace AskMateMVC.Services
                             Title = (string)reader["question_title"],
                             Message = (string)reader["question_message"],
                             Image = (string)reader["question_imageurl"],
-                            AcceptAnswerID = (int)reader["accept_answer_id"]
+                            //AcceptAnswerID = (int)reader["accept_answer_id"]
                         };
 
 
