@@ -405,6 +405,11 @@ namespace AskMateMVC.Services
         {
             throw new NotImplementedException();
         }
+
+        public int GetUserIdForUsername(string username)
+        {
+            throw new NotImplementedException();
+        }
     }
 
 }

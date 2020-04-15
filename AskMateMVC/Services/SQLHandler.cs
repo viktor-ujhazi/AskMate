@@ -205,7 +205,7 @@ namespace AskMateMVC.Services
                     "question_message, " +
                     "question_imageurl ) Values (@user_id,@time, @view, @vote, @title, @message, @image)", conn))
                 {
-                    cmd.Parameters.AddWithValue("user_id", 1); // model.UserID kell az 1 helyere, ideiglenes amig nincs login
+                    cmd.Parameters.AddWithValue("user_id", model.UserID);
                     cmd.Parameters.AddWithValue("time", model.TimeOfQuestion);
                     cmd.Parameters.AddWithValue("view", model.ViewNumber);
                     cmd.Parameters.AddWithValue("vote", model.VoteNumber);
@@ -232,7 +232,7 @@ namespace AskMateMVC.Services
                     "answer_message, " +
                     "answer_image ) Values (@user_id,@time, @vote, @qid, @message, @image)", conn))
                 {
-                    cmd.Parameters.AddWithValue("user_id", 1); // model.UserID kell az 1 helyere, ideiglenes amig nincs login
+                    cmd.Parameters.AddWithValue("user_id", model.UserID);
                     cmd.Parameters.AddWithValue("time", model.TimeOfAnswer);
                     cmd.Parameters.AddWithValue("vote", model.VoteNumber);
                     cmd.Parameters.AddWithValue("qid", id);
@@ -273,7 +273,7 @@ namespace AskMateMVC.Services
                     {
                         cmd.Parameters.AddWithValue("aid", DBNull.Value);
                     }
-                    cmd.Parameters.AddWithValue("user_id", 1); // model.UserID kell az 1 helyere, ideiglenes amig nincs login
+                    cmd.Parameters.AddWithValue("user_id", model.UserID);
                     cmd.Parameters.AddWithValue("message", model.Message);
                     cmd.Parameters.AddWithValue("time", model.SubmissionTime);
                     cmd.Parameters.AddWithValue("edit", model.EditedNumber);
@@ -323,7 +323,7 @@ namespace AskMateMVC.Services
                             Title = (string)reader["question_title"],
                             Message = (string)reader["question_message"],
                             Image = (string)reader["question_imageurl"],
-                            
+
                         };
                         if (reader["accept_answer_id"] is DBNull)
                         {
@@ -1013,6 +1013,24 @@ namespace AskMateMVC.Services
                 using (var cmd = new NpgsqlCommand(sql, conn))
                 {
                     cmd.ExecuteNonQuery();
+                };
+            };
+        }
+
+        public int GetUserIdForUsername(string username)
+        {
+            var sql = $"SELECT user_id  FROM users WHERE user_name = '{username}'";
+            using (var conn = new NpgsqlConnection(cs))
+            {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand(sql, conn))
+                {
+                    var reader = cmd.ExecuteReader();
+                    reader.Read();
+                    var result = (int)reader["user_id"];
+
+
+                    return (int)result;
                 };
             };
         }

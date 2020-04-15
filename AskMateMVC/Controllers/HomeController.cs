@@ -12,6 +12,8 @@ using Microsoft.AspNetCore.Routing;
 using Npgsql;
 using System.IO;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace AskMateMVC.Controllers
 {
@@ -46,12 +48,12 @@ namespace AskMateMVC.Controllers
             ViewBag.Search = fancysearch;
             return View("FancySearch", _datahandler.SearchInData(fancysearch));
         }
-
+        [Authorize]
         public IActionResult NewQuestion()
         {
             return View();
         }
-
+        [Authorize]
         [HttpPost]
         public IActionResult NewQuestion(QuestionModel model)
         {
@@ -78,6 +80,9 @@ namespace AskMateMVC.Controllers
                         }
                     }
                 }
+                var username = HttpContext.User.Claims.First(c => c.Type == ClaimTypes.Name).Value;
+                model.UserID = _datahandler.GetUserIdForUsername(username);
+
                 _datahandler.AddQuestion(model);
                 return RedirectToAction("list", _datahandler.GetQuestions());
             }
@@ -86,7 +91,7 @@ namespace AskMateMVC.Controllers
                 return View("NewQuestion");
             }
         }
-
+        [Authorize]
         public IActionResult NewComment(int id, int ansID = 0)
         {
             var comment = new CommentModel();
@@ -101,6 +106,8 @@ namespace AskMateMVC.Controllers
                 return View(comment);
             }
         }
+
+        [Authorize]
         [HttpPost]
         public IActionResult NewComment(int id, CommentModel comment, int ansID = 0)
         {
@@ -115,13 +122,14 @@ namespace AskMateMVC.Controllers
                 comment.Answer_ID = ansID;
             }
 
+            var username = HttpContext.User.Claims.First(c => c.Type == ClaimTypes.Name).Value;
+            comment.UserID = _datahandler.GetUserIdForUsername(username);
             _datahandler.AddComment(comment);
             return RedirectToAction("AnswersForQuestion", new RouteValueDictionary(new { action = "AnswersForQuestion", Id = id }));
 
         }
 
-
-
+        [Authorize]
         public IActionResult NewAnswer(int id)
         {
             AnswerModel ans = new AnswerModel();
@@ -130,6 +138,7 @@ namespace AskMateMVC.Controllers
             return View(ans);
         }
 
+        [Authorize]
         [HttpPost]
         public IActionResult NewAnswer(int id, AnswerModel model)
         {
@@ -157,6 +166,9 @@ namespace AskMateMVC.Controllers
                         }
                     }
                 }
+                var username = HttpContext.User.Claims.First(c => c.Type == ClaimTypes.Name).Value;
+                model.UserID = _datahandler.GetUserIdForUsername(username);
+
                 _datahandler.AddAnswer(model, id);
 
                 return RedirectToAction("AnswersForQuestion", new RouteValueDictionary(new { action = "AnswersForQuestion", Id = id }));
@@ -167,15 +179,15 @@ namespace AskMateMVC.Controllers
             }
         }
 
-
+        [Authorize]
         public IActionResult EditQuestion(int id)
         {
             QuestionModel q = _datahandler.GetQuestionByID(id);
             return View("EditQuestion", q);
         }
 
+        [Authorize]
         [HttpPost]
-
         public IActionResult EditQuestion(int id, [FromForm(Name = "Title")] string title, [FromForm(Name = "Message")] string message, [FromForm(Name = "Image")] string image)
         {
             QuestionModel q = _datahandler.GetQuestionByID(id);
@@ -213,14 +225,16 @@ namespace AskMateMVC.Controllers
                 return View("EditQuestion", q);
             }
         }
+
+        [Authorize]
         public IActionResult EditAnswer(int id)
         {
             AnswerModel q = _datahandler.GetAnswerByID(id);
             return View("EditAnswer", q);
         }
 
+        [Authorize]
         [HttpPost]
-
         public IActionResult EditAnswer(int id, [FromForm(Name = "Message")] string message, [FromForm(Name = "Image")] string image)
         {
             AnswerModel ans = _datahandler.GetAnswerByID(id);
@@ -253,9 +267,9 @@ namespace AskMateMVC.Controllers
             ViewBag.User = _datahandler.GetUsers();
 
             List<SelectListItem> items = new List<SelectListItem>();
-            foreach(var tag in _datahandler.GetTagUrl(id))
-            { 
-                items.Add(new SelectListItem { Text=tag.Url, Value=tag.Url});
+            foreach (var tag in _datahandler.GetTagUrl(id))
+            {
+                items.Add(new SelectListItem { Text = tag.Url, Value = tag.Url });
             }
 
             ViewBag.Tag = items;
@@ -263,6 +277,7 @@ namespace AskMateMVC.Controllers
             return View();
         }
 
+        [Authorize]
         public IActionResult DeleteAnswer(int id, int qid)
         {
             _datahandler.RemoveAnswer(id);
@@ -274,12 +289,14 @@ namespace AskMateMVC.Controllers
             return View("List", _datahandler.SortedDatas(attribute));
         }
 
+        [Authorize]
         public IActionResult EditComment(int id)
         {
             CommentModel comment = _datahandler.GetCommentByID(id);
             return View(comment);
         }
 
+        [Authorize]
         [HttpPost]
         public IActionResult EditComment(int id, [FromForm(Name = "Message")] string message)
         {
@@ -298,34 +315,6 @@ namespace AskMateMVC.Controllers
             }
         }
 
-        //public IActionResult SortingByTitle()
-        //{
-        //    List<QuestionModel> list = _datahandler.GetQuestions();
-        //    list = list.OrderBy(o => o.Title).ToList();
-        //    return View("List", list);
-        //}
-
-        //public IActionResult SortingByTime()
-        //{
-        //    List<QuestionModel> list = _datahandler.GetQuestions();
-        //    list = list.OrderBy(o => o.TimeOfQuestion).ToList();
-        //    list.Reverse();
-        //    return View("List", list);
-        //}
-
-        //public IActionResult SortingByVote()
-        //{
-        //    List<QuestionModel> list = _datahandler.GetQuestions();
-        //    list = list.OrderBy(o => o.VoteNumber).ToList();
-        //    return View("List", list);
-        //}
-
-        //public IActionResult SortingByView()
-        //{
-        //    List<QuestionModel> list = _datahandler.GetQuestions();
-        //    list = list.OrderBy(o => o.ViewNumber).ToList();
-        //    return View("List", list);
-        //}
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
@@ -333,6 +322,7 @@ namespace AskMateMVC.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
+        [Authorize]
         public IActionResult DeleteQuestion(int id)
         {
             QuestionModel q = _datahandler.GetQuestionByID(id);
@@ -340,6 +330,7 @@ namespace AskMateMVC.Controllers
             return View("DeleteQuestion", q);
         }
 
+        [Authorize]
         [HttpPost]
         public IActionResult DeleteQuestion(QuestionModel q)
         {
@@ -364,20 +355,20 @@ namespace AskMateMVC.Controllers
             return Redirect($"../AnswersForQuestion/{_datahandler.GetAnswerByID(id).QuestionID}");
         }
 
-
-
+        [Authorize]
         public IActionResult AddingTag(int id)
         {
             ViewBag.Tags = _datahandler.GetTags();
-            
+
             ViewBag.questionId = id;
 
             TagModel tagModel = new TagModel();
             return View(tagModel);
         }
 
+        [Authorize]
         [HttpPost]
-        public IActionResult AddingTag([FromForm(Name = "Url")] string newTag, int questionId,string Url_i)
+        public IActionResult AddingTag([FromForm(Name = "Url")] string newTag, int questionId, string Url_i)
         {
             if (newTag == null || newTag == "")
             {
@@ -390,6 +381,8 @@ namespace AskMateMVC.Controllers
             }
             return Redirect($"../AnswersForQuestion/{questionId}");
         }
+
+        [Authorize]
         public IActionResult SelectFromTags([FromForm(Name = "Url_i")] string newTag, int questionId, string tag)
         {
             if (tag == null || tag == "")
@@ -405,12 +398,14 @@ namespace AskMateMVC.Controllers
 
         }
 
-        public IActionResult DeleteTag(string url,int questionID)
+        [Authorize]
+        public IActionResult DeleteTag(string url, int questionID)
         {
-            _datahandler.DeleteTag(url,questionID);
+            _datahandler.DeleteTag(url, questionID);
             return Redirect($"../Home/AnswersForQuestion/{questionID}");
         }
 
+        [Authorize]
         public IActionResult DeleteComment(int id, int qid)
         {
             _datahandler.RemoveComment(id);
@@ -423,6 +418,7 @@ namespace AskMateMVC.Controllers
             return View(tagsWithVote);
         }
 
+        [Authorize]
         public IActionResult AcceptAnswer(int answerID, int questionID)
         {
             _datahandler.AcceptAnswer(answerID, questionID);
