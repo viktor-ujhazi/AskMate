@@ -52,14 +52,9 @@ namespace AskMateMVC.Services
             }
             catch (InvalidOperationException)
             {
-
                 return false;
             }
-
-
-
         }
-
 
         public string GetUserPassword(string username)
         {

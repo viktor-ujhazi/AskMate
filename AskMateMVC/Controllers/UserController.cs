@@ -103,6 +103,7 @@ namespace AskMateMVC.Controllers
                 CookieAuthenticationDefaults.AuthenticationScheme,
                 new ClaimsPrincipal(claimsIdentity),
                 authProperties);
+            Startup.isLoggedIn = true;
             return RedirectToAction("Index", "Home");
         }
 
@@ -111,6 +112,7 @@ namespace AskMateMVC.Controllers
         public async Task<IActionResult> LogoutAsync()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            Startup.isLoggedIn = false;
             return RedirectToAction("Index", "Home");
         }
     }

@@ -14,6 +14,7 @@ using System.IO;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
 
 namespace AskMateMVC.Controllers
 {
@@ -22,11 +23,14 @@ namespace AskMateMVC.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IDataHandler _datahandler;
 
+
         public HomeController(ILogger<HomeController> logger, IDataHandler datahandler)
         {
             _logger = logger;
             _datahandler = datahandler;
         }
+
+
 
         public IActionResult Index()
         {
@@ -360,7 +364,7 @@ namespace AskMateMVC.Controllers
         public IActionResult AnswerVote(int id, int voteValue)
         {
             int questionID = _datahandler.GetAnswerByID(id).QuestionID;
-            
+
             _datahandler.IncreaseViewsCorrection(questionID);
             _datahandler.ModifyAnswerVote(id, voteValue);
             return Redirect($"../AnswersForQuestion/{questionID}");
@@ -432,7 +436,7 @@ namespace AskMateMVC.Controllers
         [Authorize]
         public IActionResult AcceptAnswer(int answerID, int questionID)
         {
-            
+
             _datahandler.AcceptAnswer(answerID, questionID);
             return Redirect($"../Home/AnswersForQuestion/{questionID}");
         }
