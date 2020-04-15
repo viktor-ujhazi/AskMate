@@ -100,5 +100,13 @@ namespace AskMateMVC.Controllers
                 authProperties);
             return RedirectToAction("Index", "Home");
         }
+
+        [Authorize]
+        [HttpGet]
+        public async Task<IActionResult> LogoutAsync()
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            return RedirectToAction("Index", "Home");
+        }
     }
 }
