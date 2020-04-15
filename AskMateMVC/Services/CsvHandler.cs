@@ -395,6 +395,11 @@ namespace AskMateMVC.Services
         {
             throw new NotImplementedException();
         }
+
+        public void AcceptAnswer(int answerID, int questionID)
+        {
+            throw new NotImplementedException();
+        }
     }
 
 }

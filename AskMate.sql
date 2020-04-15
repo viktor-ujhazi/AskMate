@@ -34,6 +34,9 @@ CREATE TABLE IF NOT EXISTS Answers(
 	answer_image TEXT
 );
 
+ALTER TABLE Questions
+ADD acceptAnswerID INT REFERENCES Answers(answer_id) ON DELETE SET NULL;
+
 CREATE TABLE IF NOT EXISTS Comment_s(
 	comment_id SERIAL PRIMARY KEY,
 	user_id INT REFERENCES Users(user_id) ON DELETE SET NUll,

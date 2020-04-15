@@ -51,7 +51,8 @@ namespace AskMateMVC.Services
                             VoteNumber = (int)reader["question_votenumber"],
                             Title = (string)reader["question_title"],
                             Message = (string)reader["question_message"],
-                            Image = (string)reader["question_imageurl"]
+                            Image = (string)reader["question_imageurl"],
+                            AcceptAnswerID = (int)reader["accept_answer_id"]
                         };
                         Questions.Add(q);
                     }
@@ -319,7 +320,8 @@ namespace AskMateMVC.Services
                             VoteNumber = (int)reader["question_votenumber"],
                             Title = (string)reader["question_title"],
                             Message = (string)reader["question_message"],
-                            Image = (string)reader["question_imageurl"]
+                            Image = (string)reader["question_imageurl"],
+                            AcceptAnswerID = (int)reader["accept_answer_id"]
                         };
                         return q;
                     }
@@ -965,6 +967,22 @@ namespace AskMateMVC.Services
                 };
             };
             return TagsWithCounts;
+        }
+
+        public void AcceptAnswer(int answerID, int questionID)
+        {
+            string sql = $"UPDATE questions " +
+                    $"SET accept_answer_id = '{answerID}' " +
+                    $"WHERE question_id='{questionID}'";
+
+            using (var conn = new NpgsqlConnection(cs))
+            {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand(sql, conn))
+                {
+                    cmd.ExecuteNonQuery();
+                };
+            };
         }
     }
 }

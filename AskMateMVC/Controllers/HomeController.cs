@@ -250,6 +250,7 @@ namespace AskMateMVC.Controllers
             ViewBag.Question = _datahandler.GetQuestionByID(id);
             ViewBag.Ans = _datahandler.GetAnswersForQuestion(id);
             ViewBag.CommentQ = _datahandler.GetCommentsToQuestion(id);
+            ViewBag.User = _datahandler.GetUsers();
 
             List<SelectListItem> items = new List<SelectListItem>();
             foreach(var tag in _datahandler.GetTagUrl(id))
@@ -422,5 +423,10 @@ namespace AskMateMVC.Controllers
             return View(tagsWithVote);
         }
 
+        public IActionResult AcceptAnswer(int answerID, int questionID)
+        {
+            _datahandler.AcceptAnswer(answerID, questionID);
+            return Redirect($"../Home/AnswersForQuestion/{questionID}");
+        }
     }
 }

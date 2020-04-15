@@ -23,7 +23,7 @@ namespace AskMateMVC.Models
         public string Message { get; set; } //message: The question text
         [Display(Name = "Image for Question")]
         public string Image { get; set; }   //image: The path to the image for this question
-
+        public int AcceptAnswerID { get; set; } = 0;
 
         public override string ToString()
         {
