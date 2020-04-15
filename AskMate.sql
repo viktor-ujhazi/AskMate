@@ -35,7 +35,7 @@ CREATE TABLE IF NOT EXISTS Answers(
 );
 
 ALTER TABLE Questions
-ADD acceptAnswerID INT REFERENCES Answers(answer_id) ON DELETE SET NULL;
+ADD accept_Answer_ID INT REFERENCES Answers(answer_id) ON DELETE SET NULL;
 
 CREATE TABLE IF NOT EXISTS Comment_s(
 	comment_id SERIAL PRIMARY KEY,
