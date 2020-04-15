@@ -90,7 +90,10 @@
 <table style="background-color:@background">
     <tr>
         <td style="width:5%"><a>user: </a></td>
-        <td><a>@item.UserID</a></td>
+        @foreach (var user in ViewBag.User)
+        {
+        <td><a>@user.Name  rep: @user.Reputation</a></td>
+        }
         <td colspan="15" style="text-align:center">
             @{
                 if (ViewBag.Question.AcceptAnswerID == 0 && ViewBag.User[0].ID == ViewBag.Question.UserID)

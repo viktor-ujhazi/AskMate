@@ -112,6 +112,15 @@ namespace AskMateMVC.Services
                             Password = (string)reader["user_password"],
                             Reputation = (int)reader["user_reputation"]
                         };
+                        if (reader["user_reputation"] is DBNull)
+                        {
+                            u.Reputation = 0;
+                        }
+                        else
+                        {
+                            u.Reputation = (int)reader["user_reputation"];
+                        }
+
                         users.Add(u);
                     }
 
@@ -462,10 +471,17 @@ namespace AskMateMVC.Services
         public void ModifyQuestionVote(int id, int voteValue)
         {
             string op = "-";
+            int userID = GetUserIDByQuestionID(id);
             if (voteValue == 1)
             {
                 op = "+";
+                ModifyReputation(userID, 5);
             }
+            else 
+            { 
+                ModifyReputation(userID, -2); 
+            }
+
 
             using (var conn = new NpgsqlConnection(cs))
             {
@@ -481,9 +497,15 @@ namespace AskMateMVC.Services
         public void ModifyAnswerVote(int id, int voteValue)
         {
             string op = "-";
+            int userID = GetUserIDByAnswerID(id);
             if (voteValue == 1)
             {
                 op = "+";
+                ModifyReputation(userID, 10);
+            }
+            else
+            {
+                ModifyReputation(userID, -2);
             }
 
             using (var conn = new NpgsqlConnection(cs))
@@ -1015,6 +1037,62 @@ namespace AskMateMVC.Services
                     cmd.ExecuteNonQuery();
                 };
             };
+            int userID = GetUserIDByAnswerID(answerID);
+
+            ModifyReputation(userID, 15);
+        }
+
+        private void ModifyReputation(int userID, int point)
+        {
+            string sql = $"UPDATE users " +
+                    $"SET user_reputation = user_reputation + '{point}' " +
+                    $"WHERE user_id='{userID}'";
+
+            using (var conn = new NpgsqlConnection(cs))
+            {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand(sql, conn))
+                {
+                    cmd.ExecuteNonQuery();
+                };
+            };
+        }
+
+        private int GetUserIDByAnswerID(int id)
+        {
+            int result = 0;
+            var sql = $"SELECT user_id FROM answers WHERE answer_id = {id}";
+            using (var conn = new NpgsqlConnection(cs))
+            {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand(sql, conn))
+                {
+                    var reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        result= (int)reader["user_id"];
+                    }
+                };
+            };
+            return result;
+        }
+        private int GetUserIDByQuestionID(int id)
+        {
+            int result = 0;
+            var sql = $"SELECT user_id FROM questions WHERE question_id = {id}";
+            using (var conn = new NpgsqlConnection(cs))
+            {
+                conn.Open();
+                using (var cmd = new NpgsqlCommand(sql, conn))
+                {
+                    var reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        result = (int)reader["user_id"];
+                    }
+                };
+            };
+            return result;
         }
     }
 }

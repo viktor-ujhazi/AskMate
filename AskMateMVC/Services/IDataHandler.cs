@@ -42,5 +42,6 @@ namespace AskMateMVC.Services
         public Dictionary<string, int> GetTagsWithCount();
         public bool IsValidUser(string username, string password);
         public void AcceptAnswer(int answerID, int questionID);
+        
     }
 }
