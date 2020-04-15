@@ -351,6 +351,7 @@ namespace AskMateMVC.Controllers
         }
         public IActionResult AnswerVote(int id, int voteValue)
         {
+            
             _datahandler.ModifyAnswerVote(id, voteValue);
             return Redirect($"../AnswersForQuestion/{_datahandler.GetAnswerByID(id).QuestionID}");
         }
