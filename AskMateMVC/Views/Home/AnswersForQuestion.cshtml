@@ -12,7 +12,7 @@
     @foreach (var tag in ViewBag.Tags)
     {
 
-        @tag.Url <a href="@Url.Action("Delete Tag", "DeleteTag", new { url = tag.Url, questionID = ViewBag.Question.ID })">
+        @tag.Url <a href="@Url.Action("DeleteTag", "Home", new { url = tag.Url, questionID = ViewBag.Question.ID })">
             <img src="~/images/trashcan.png" style="width: 15px; height:15px" />
         </a>
 
