@@ -54,6 +54,8 @@ namespace AskMateMVC.Services
                             Image = (string)reader["question_imageurl"],
                             AcceptAnswerID = (int)reader["accept_answer_id"]
                         };
+
+
                         Questions.Add(q);
                     }
 
@@ -321,8 +323,17 @@ namespace AskMateMVC.Services
                             Title = (string)reader["question_title"],
                             Message = (string)reader["question_message"],
                             Image = (string)reader["question_imageurl"],
-                            AcceptAnswerID = (int)reader["accept_answer_id"]
+                            
                         };
+                        if (reader["accept_answer_id"] is DBNull)
+                        {
+                            q.AcceptAnswerID = 0;
+                        }
+                        else
+                        {
+                            q.AcceptAnswerID = (int)reader["accept_answer_id"];
+                        }
+
                         return q;
                     }
                 };

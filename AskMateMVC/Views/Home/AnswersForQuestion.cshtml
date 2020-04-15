@@ -94,6 +94,10 @@
         <td colspan="15" style="text-align:center">
             @{
                 if (ViewBag.Question.AcceptAnswerID == 0 && ViewBag.User[0].ID == ViewBag.Question.UserID)
+
+                //ViewBag.User[0].ID will be the logged in user
+
+
                 { <a>@Html.ActionLink("Accept answer", "AcceptAnswer", new { questionID = ViewBag.Question.ID, answerID = item.ID, })</a>}
             }
         </td>
@@ -103,13 +107,13 @@
     </tr>
     <tr>
         <td style="width:5%">
-            <p href="@Url.Action("AnswerVote", "Home", new { id = item.ID, voteValue = 1 })">
+            <a href="@Url.Action("AnswerVote", "Home", new { id = item.ID, voteValue = 1 })">
                 <img src="~/images/upvote.png" style="width: 15px; height:15px" />
-            </p>
-            <p style="color:cornflowerblue">@item.VoteNumber</p>
-            <p href="@Url.Action("AnswerVote", "Home", new { id = item.ID, voteValue = 0 })">
+            </a><p></p>
+            <a style="color:cornflowerblue">@item.VoteNumber</a><p></p>
+            <a href="@Url.Action("AnswerVote", "Home", new { id = item.ID, voteValue = 0 })">
                 <img src="~/images/downvote.png" style="width: 18px;height: 18px" />
-            </p>
+            </a><p></p>
 
         </td>
 
