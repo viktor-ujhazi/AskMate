@@ -257,6 +257,13 @@ namespace AskMateMVC.Controllers
         }
         public IActionResult List(List<QuestionModel> questions)
         {
+            try
+            {
+                var username = HttpContext.User.Claims.First(c => c.Type == ClaimTypes.Name).Value;
+                ViewBag.ActualUserID = _datahandler.GetUserIdForUsername(username);
+            }
+            catch { }
+
             if (questions.Count == 0)
             {
                 questions = _datahandler.GetQuestions();
@@ -273,6 +280,7 @@ namespace AskMateMVC.Controllers
                 ViewBag.ActualUserID = _datahandler.GetUserIdForUsername(username);
             }
             catch { }
+
             ViewBag.Question = _datahandler.GetQuestionByID(id);
             ViewBag.Ans = _datahandler.GetAnswersForQuestion(id);
             ViewBag.CommentQ = _datahandler.GetCommentsToQuestion(id);
