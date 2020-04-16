@@ -285,7 +285,6 @@ namespace AskMateMVC.Services
                     cmd.Parameters.AddWithValue("user_id", model.UserID);
                     cmd.Parameters.AddWithValue("message", model.Message);
                     cmd.Parameters.AddWithValue("time", model.SubmissionTime);
-                    
                 };
             };
         }
@@ -877,26 +876,42 @@ namespace AskMateMVC.Services
         {
             int tagId;
 
-            using (NpgsqlConnection cn = new NpgsqlConnection(cs))
-            {
-                cn.Open();
-
-                using (NpgsqlCommand cmd = new NpgsqlCommand($"INSERT INTO tags(tag_name) VALUES('{url}')", cn))
+            try 
+            { 
+                using (NpgsqlConnection cn = new NpgsqlConnection(cs))
                 {
-                    cmd.ExecuteNonQuery();
+                    cn.Open();
+                    using (NpgsqlCommand cmd = new NpgsqlCommand($"SELECT tag_id FROM tags WHERE tag_name='{url}'", cn))
+                    {
+                        var reader = cmd.ExecuteReader();
+                        reader.Read();
+                        tagId = (int)reader["tag_id"];
+                    };
                 };
             }
-
-            using (NpgsqlConnection cn = new NpgsqlConnection(cs))
-            {
-                cn.Open();
-                using (NpgsqlCommand cmd = new NpgsqlCommand($"SELECT tag_id FROM tags WHERE tag_name='{url}'", cn))
+            catch
+            { 
+                using (NpgsqlConnection cn = new NpgsqlConnection(cs))
                 {
-                    var reader = cmd.ExecuteReader();
-                    reader.Read();
-                    tagId = (int)reader["tag_id"];
+                    cn.Open();
+
+                    using (NpgsqlCommand cmd = new NpgsqlCommand($"INSERT INTO tags(tag_name) VALUES('{url}')", cn))
+                    {
+                        cmd.ExecuteNonQuery();
+                    };
+                }
+
+                using (NpgsqlConnection cn = new NpgsqlConnection(cs))
+                {
+                    cn.Open();
+                    using (NpgsqlCommand cmd = new NpgsqlCommand($"SELECT tag_id FROM tags WHERE tag_name='{url}'", cn))
+                    {
+                        var reader = cmd.ExecuteReader();
+                        reader.Read();
+                        tagId = (int)reader["tag_id"];
+                    };
                 };
-            };
+            }
 
             using (NpgsqlConnection cn = new NpgsqlConnection(cs))
             {
@@ -907,8 +922,6 @@ namespace AskMateMVC.Services
                 }
             };
         }
-
-
 
         public List<TagModel> GetTagUrl(int questionId)
         {
