@@ -15,10 +15,59 @@
         rep = user.Reputation;
     }
 }
-<p>@ViewBag.Question.ViewNumber</p>
+<table>
+    <tr>
+        <td><a>user: </a></td>
+        <td>@username</td>
+        <td><a>     Views: @ViewBag.Question.ViewNumber</a></td>
+    </tr>
+    <tr>
+        <td><a>rep: </a></td>
+        <td>@rep</td>
+    </tr>
+    <tr><td></td>
+        <td>
+            <a style="width:1000px;word-break:break-word;color:mediumseagreen">Topic: @ViewBag.Question.Title</a>
+        </td>
+    </tr>
+    <tr>
+        <td style="width:5%">
+            <a href="@Url.Action("QuestionVote", "Home", new { id = ViewBag.Question.ID, voteValue = 1 })">
+                <img src="~/images/upvote.png" style="width: 15px; height:15px" />
+            </a><p></p>
+            <a style="color:cornflowerblue">@ViewBag.Question.VoteNumber</a><p></p>
+            <a href="@Url.Action("QuestionVote", "Home", new { id = ViewBag.Question.ID, voteValue = 0 })">
+                <img src="~/images/downvote.png" style="width: 18px;height: 18px" />
+            </a><p></p>
 
-<p>@username</p>
-<p>@rep</p>
+        </td>
+        <td rowspan="3" colspan="15" style="width:100%; vertical-align:top; word-break:break-word">
+            <a style="width:1000px;word-break:break-word;color:mediumseagreen;">@ViewBag.Question.Message</a>
+            <img alt="" src="~/images/@ViewBag.Question.Image" width="200" height="200" />
+
+            <a href="~/images/@ViewBag.Question.Image" target="_Self">
+
+            </a>
+            <p style="text-align:right">
+                <a>@Html.ActionLink("Add Tag", "AddingTag", new { id = ViewBag.Question.ID })</a>
+                <br />
+            </p>
+
+            @{ if (ViewBag.Question.Image.Length > 2)
+                {
+                    <a href="~/images/@ViewBag.Question.Image" target="_Self">
+                        View full size
+                    </a>
+                }
+            }
+        </td>
+    </tr>
+</table>
+
+
+
+
+
 
 <p>
     @foreach (var tag in ViewBag.Tags)
@@ -33,25 +82,8 @@
 </p>
 
 
-<h2 style="width:1000px;word-break:break-word;color:mediumseagreen">Topic: @ViewBag.Question.Title</h2>
-<h1 style="width:1000px;word-break:break-word;color:mediumseagreen;">@ViewBag.Question.Message</h1>
-<img alt="" src="~/images/@ViewBag.Question.Image" width="200" height="200" />
 
-<a href="~/images/@ViewBag.Question.Image" target="_Self">
 
-</a>
-<p style="text-align:right">
-    <a>@Html.ActionLink("Add Tag", "AddingTag", new { id = ViewBag.Question.ID })</a>
-    <br />
-</p>
-
-@{ if (ViewBag.Question.Image.Length > 2)
-    {
-        <a href="~/images/@ViewBag.Question.Image" target="_Self">
-            View full size
-        </a>
-    }
-}
 
 
 <table width="100%" style="border-top:groove;border-top-width:5px;border-top-color:black;">
