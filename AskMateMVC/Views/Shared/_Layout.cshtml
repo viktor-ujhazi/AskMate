@@ -28,25 +28,27 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="List">All Question</a>
                         </li>
                         @{
-                        if(!Startup.isLoggedIn){
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Login">Login</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="NewUser">Register</a>
-                            </li>
-                        }
+                            if (ViewData["currentUser"].ToString() == "")
+                            {
+                                <li classcurrentUser="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Login">Login</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="NewUser">Register</a>
+                                </li>
+                            }
                         }
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Tags">All Tag</a>
                         </li>
                         @{
 
-                        if(Startup.isLoggedIn){
-                            <li class="nav-item">
-                                <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Logout">Logout</a>
-                            </li>
-                        }
+                            if (ViewData["currentUser"].ToString() != "")
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Logout">Logout</a>
+                                </li>
+                            }
                         }
                     </ul>
                 </div>
