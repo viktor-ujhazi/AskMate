@@ -1265,7 +1265,7 @@ namespace AskMateMVC.Services
                         answersForQuestion.Add(answer);
                     }
                 }
-                if (answersForQuestion != null)
+                if (answersForQuestion.Count>0)
                     result[question] = answersForQuestion;
             }
 
@@ -1290,7 +1290,7 @@ namespace AskMateMVC.Services
                         commentsForQuestion.Add(comment);
                     }
                 }
-                if(commentsForQuestion!=null)
+                if(commentsForQuestion.Count>0)
                     result[question] = commentsForQuestion;
             }
 
