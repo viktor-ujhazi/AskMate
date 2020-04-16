@@ -39,6 +39,7 @@ namespace AskMateMVC.Controllers
             var user = new UserModel();
             user.Password = _cyberSecurity.EncryptPassword(Password);
             user.Name = Name;
+
             try
             {
                 _datahandler.AddUser(user);

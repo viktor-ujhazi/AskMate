@@ -290,7 +290,7 @@ namespace AskMateMVC.Services
                 using (var cmd = new NpgsqlCommand("INSERT INTO users " +
                     "(user_name," +
                     "user_password," +
-                    "user_registration_date " +
+                    "user_registration_date, " +
                     "user_reputation) Values (@user_name,@user_password,@user_registration_date, @user_reputation)", conn))
                 {
                     cmd.Parameters.AddWithValue("user_registration_date", model.TimeOfRegistration);
