@@ -34,10 +34,23 @@ namespace AskMateMVC.Controllers
 
         public IActionResult Index()
         {
+            string currentUser;
+            try
+            {
+                currentUser = HttpContext.User.Claims.First(c => c.Type == ClaimTypes.Name).Value;
+            }
+            catch (System.InvalidOperationException)
+            {
+
+                currentUser = "";
+            }
+
+            ViewData.Add("currentUser", currentUser);
             ViewBag.Answers = _datahandler.GetAnswers();
             ViewBag.Questions = _datahandler.LatestQuestions();
             return View();
         }
+
         [HttpPost]
         public IActionResult Index(string search)
         {

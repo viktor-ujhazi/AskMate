@@ -28,9 +28,9 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="List">All Question</a>
                         </li>
                         @{
-                            if (!Startup.isLoggedIn)
+                            if (ViewData["currentUser"] == "")
                             {
-                                <li class="nav-item">
+                                <li classcurrentUser="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Login">Login</a>
                                 </li>
                                 <li class="nav-item">
@@ -43,7 +43,7 @@
                         </li>
                         @{
 
-                            if (Startup.isLoggedIn)
+                            if (ViewData["currentUser"] != "")
                             {
                                 <li class="nav-item">
                                     <a class="nav-link text-dark" asp-area="" asp-controller="User" asp-action="Logout">Logout</a>
