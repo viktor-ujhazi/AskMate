@@ -16,7 +16,6 @@ namespace AskMateMVC
 {
     public class Startup
     {
-        public static bool isLoggedIn = false;
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;

@@ -1,0 +1,63 @@
+﻿@{
+    ViewData["Title"] = "DetailsOfCurrentUser";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@if (ViewBag.Questions.Count > 0)
+{
+    <table class="table table-bordered table-responsive table-hover">
+
+        @foreach (var question in ViewBag.Questions)
+        {
+            <tr>
+                <td>
+                    <a href="@Url.Action("AnswersForQuestion", "Home", new { id = question.ID })"> @question.Title </a>
+                </td>
+            </tr>
+        }
+    </table>
+}
+
+@if (ViewBag.Answers.Count > 0)
+{
+    <table class="table table-bordered table-responsive table-hover">
+        @{
+            foreach (var question in ViewBag.Answers)
+            {
+                foreach (var answer in question.Value)
+                {
+                    <tr>
+                        <td>
+                            <a href="@Url.Action("AnswersForQuestion", "Home", new { id = question.Key.ID })"> @question.Key.Title </a>
+                        </td>
+                        <td>
+                            <p>@answer.Message</p>
+                        </td>
+                    </tr>
+                }
+            }
+        }
+    </table>
+}
+
+@if (ViewBag.Comments.Count > 0)
+{
+    <table class="table table-bordered table-responsive table-hover">
+        @{
+            foreach (var question in ViewBag.Comments)
+            {
+                foreach (var comment in question.Value)
+                {
+                    <tr>
+                        <td>
+                            <a href="@Url.Action("AnswersForQuestion", "Home", new { id = question.Key.ID })"> @question.Key.Title </a>
+                        </td>
+                        <td>
+                            <p>@comment.Message</p>
+                        </td>
+                    </tr>
+                }
+            }
+        }
+    </table>
+}

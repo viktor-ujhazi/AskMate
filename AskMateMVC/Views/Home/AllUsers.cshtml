@@ -1,0 +1,37 @@
+﻿@model List<UserModel>
+@{
+    ViewData["Title"] = "AllUsers";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<table class="table table-bordered table-responsive table-hover">
+    <tr>
+        <td>
+            <p>User ID</p>
+        </td>
+        <td>
+            <p>User name</p>
+        </td>
+        <td>
+            <p>User's reputation</p>
+        </td>
+    </tr>
+
+    @{
+        foreach (var user in Model)
+        {
+            <tr>
+                <td>
+                    <p>@user.ID</p>
+                </td>
+                <td>
+                    <p>@user.Name</p>
+                </td>
+                <td>
+                    <p>@user.Reputation</p>
+                </td>
+            </tr>
+        }
+    }
+</table>
+

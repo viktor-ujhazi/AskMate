@@ -38,11 +38,13 @@
                 </td>
 
             </tr>
-            <tr>
-                @foreach (var answer in ViewBag.Answers)
+
+            @foreach (var answer in ViewBag.Answers)
+            {
+
+                if (answer.QuestionID == item.ID)
                 {
-                    if (answer.QuestionID == item.ID)
-                    {
+                    <tr>
                         <td></td>
                         <td>
                             Answer
@@ -51,9 +53,10 @@
                             @Html.Raw((answer.Message.ToLower().Replace((string)ViewBag.Search.ToLower(), "<span style='background-color:yellow'>" + ViewBag.Search.ToUpper() + "</span>")))
                         </td>
                         <td></td>
-                    }
+                    </tr>
                 }
-            </tr>
+            }
+
         }
     </tbody>
 </table>

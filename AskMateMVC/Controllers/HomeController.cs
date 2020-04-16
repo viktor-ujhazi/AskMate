@@ -34,10 +34,23 @@ namespace AskMateMVC.Controllers
 
         public IActionResult Index()
         {
+            string currentUser;
+            try
+            {
+                currentUser = HttpContext.User.Claims.First(c => c.Type == ClaimTypes.Name).Value;
+            }
+            catch (System.InvalidOperationException)
+            {
+
+                currentUser = "";
+            }
+
+            ViewData.Add("currentUser", currentUser);
             ViewBag.Answers = _datahandler.GetAnswers();
             ViewBag.Questions = _datahandler.LatestQuestions();
             return View();
         }
+
         [HttpPost]
         public IActionResult Index(string search)
         {
@@ -439,6 +452,25 @@ namespace AskMateMVC.Controllers
 
             _datahandler.AcceptAnswer(answerID, questionID);
             return Redirect($"../Home/AnswersForQuestion/{questionID}");
+        }
+
+        public IActionResult AllUsers()
+        {
+            return View(_datahandler.GetAllUsers());
+        }
+
+        public IActionResult DetailsOfCurrentUser()
+        {
+            //collects all question that the user asked
+            ViewBag.Questions = _datahandler.AllQuestionForUser(_datahandler.GetUserId(User.Identity.Name));
+
+            //collects all answer that the user wrote
+            ViewBag.Answers = _datahandler.AnswersWithQuestions(_datahandler.GetUserId(User.Identity.Name));
+
+            //collects all comments that the user wrote
+            ViewBag.Comments = _datahandler.CommentsWithQuestions(_datahandler.GetUserId(User.Identity.Name));
+
+            return View();
         }
     }
 }
