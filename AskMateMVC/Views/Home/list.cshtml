@@ -42,55 +42,28 @@
                         </a>
 
                     </td>
-                    <td>
-                    <a  href="@Url.Action("EditQuestion", "Home",new {id = question.ID }, null)">
-                        <img src="~/images/Edit.png" style="width: 19px; height:19px" />
-                    </a>
-                </td>
-                <td> @Html.ActionLink("Write answer", "NewAnswer", new { id = question.ID }, null)</td>
-                <td>
-                    <a href="@Url.Action("DeleteQuestion", "Home",new { id = question.ID })">
-                        <img src="~/images/trashcan.png" style="width: 15px; height:15px" />
-                    </a>
-                </td>
-            </tr>
-        }
+                    @if (ViewBag.ActualUserID == question.UserID)
+                    {
+                        <td>
+                            <a href="@Url.Action("EditQuestion", "Home", new { id = question.ID }, null)">
+                                <img src="~/images/Edit.png" style="width: 19px; height:19px" />
+                            </a>
+                        </td>
+                    }
+                    <td> @Html.ActionLink("Write answer", "NewAnswer", new { id = question.ID }, null)</td>
+                    @if (ViewBag.ActualUserID == question.UserID)
+                    {
+                        <td>
+                            <a href="@Url.Action("DeleteQuestion", "Home", new { id = question.ID })">
+                                <img src="~/images/trashcan.png" style="width: 15px; height:15px" />
+                            </a>
+                        </td>
+                    }
+                </tr>
+            }
         </table>
     }
 }
 
 
 
-
-
-
-
-@*<td>@Html.ActionLink("Details", "QuestionDetails", new { id = question.ID }, null)</td>*@
-
-
-
-@*@foreach (var question in Model)
-    {
-        <div style="border:solid">
-            <h2>     @Html.ActionLink(@question.Title, "AnswersForQuestion", new { id = question.ID }, null)</h2>
-            <div>
-                <h3>@question.Message</h3>
-
-                <form action="QuestionDetails">
-                    @Html.ActionLink("Details", "QuestionDetails", new { id = question.ID }, null)
-                </form>
-            </div>
-
-            <form action="EditQuestion">
-                @Html.ActionLink("Edit", "EditQuestion", new { id = question.ID }, null)
-            </form>
-
-            <form>
-                <button type="submit">Delete</button>
-            </form>
-
-            <form>
-                @Html.ActionLink("Write answer", "NewAnswer", new { id = question.ID }, null)
-            </form>
-        </div>
-    }*@
