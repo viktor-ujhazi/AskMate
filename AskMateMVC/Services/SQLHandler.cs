@@ -450,6 +450,7 @@ namespace AskMateMVC.Services
 
         public void RemoveAnswer(int id)
         {
+            int questionID = GetAnswerByID(id).QuestionID;
             using (var conn = new NpgsqlConnection(cs))
             {
                 conn.Open();
@@ -458,7 +459,7 @@ namespace AskMateMVC.Services
                     cmd.ExecuteNonQuery();
                 };
             };
-            int questionID = GetAnswerByID(id).QuestionID;
+            
             IncreaseViewsCorrection(questionID);
         }
 

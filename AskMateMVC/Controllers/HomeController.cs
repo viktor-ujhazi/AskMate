@@ -456,6 +456,7 @@ namespace AskMateMVC.Controllers
             return View(_datahandler.GetAllUsers());
         }
 
+        [Authorize]
         public IActionResult DetailsOfCurrentUser()
         {
             //collects all question that the user asked
