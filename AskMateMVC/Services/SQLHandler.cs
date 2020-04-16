@@ -110,20 +110,11 @@ namespace AskMateMVC.Services
                             ID = (int)reader["user_id"],
                             Name = (string)reader["user_name"],
                             Password = (string)reader["user_password"],
-                            Reputation = (int)reader["user_reputation"]
+                            Reputation = (int)reader["user_reputation"],
+                            TimeOfRegistration = (DateTime)reader["user_registration_date"]
                         };
-                        if (reader["user_reputation"] is DBNull)
-                        {
-                            u.Reputation = 0;
-                        }
-                        else
-                        {
-                            u.Reputation = (int)reader["user_reputation"];
-                        }
-
                         users.Add(u);
                     }
-
                 };
             };
             return users;
@@ -298,9 +289,11 @@ namespace AskMateMVC.Services
                 conn.Open();
                 using (var cmd = new NpgsqlCommand("INSERT INTO users " +
                     "(user_name," +
-                    "user_password, " +
-                    "user_reputation) Values (@user_name,@user_password, @user_reputation)", conn))
+                    "user_password," +
+                    "user_registration_date " +
+                    "user_reputation) Values (@user_name,@user_password,@user_registration_date, @user_reputation)", conn))
                 {
+                    cmd.Parameters.AddWithValue("user_registration_date", model.TimeOfRegistration);
                     cmd.Parameters.AddWithValue("user_name", model.Name);
                     cmd.Parameters.AddWithValue("user_password", model.Password);
                     cmd.Parameters.AddWithValue("user_reputation", model.Reputation);
@@ -492,6 +485,7 @@ namespace AskMateMVC.Services
                     cmd.ExecuteNonQuery();
                 };
             };
+            IncreaseViewsCorrection(id);
 
         }
 
@@ -517,7 +511,7 @@ namespace AskMateMVC.Services
                     cmd.ExecuteNonQuery();
                 };
             };
-            
+
         }
 
         public void IncreaseViews(int id)
@@ -616,7 +610,6 @@ namespace AskMateMVC.Services
                         var reader = command.ExecuteReader();
                         while (reader.Read())
                         {
-
                             QuestionModel q = new QuestionModel
                             {
                                 ID = (int)reader["question_id"],
@@ -638,7 +631,6 @@ namespace AskMateMVC.Services
         }
         public List<QuestionModel> LatestQuestions()
         {
-
             List<QuestionModel> latestQuestions = new List<QuestionModel>();
             var sql = "SELECT * FROM questions ORDER BY question_time DESC LIMIT 5";
             using (var conn = new NpgsqlConnection(cs))
@@ -663,12 +655,9 @@ namespace AskMateMVC.Services
                         };
                         latestQuestions.Add(q);
                     }
-
                 };
             };
             return latestQuestions;
-
-
         }
         public List<QuestionModel> SearchInData(string searchedWord)
         {
@@ -743,7 +732,6 @@ namespace AskMateMVC.Services
                 };
             };
             return resultAnswers;
-
         }
         public List<CommentModel> GetCommentsToQuestion(int id)
         {
@@ -1127,15 +1115,16 @@ namespace AskMateMVC.Services
             using (NpgsqlConnection cn = new NpgsqlConnection(cs))
             {
                 cn.Open();
-                using(NpgsqlCommand cmd=new NpgsqlCommand($"SELECT * FROM users",cn))
+                using (NpgsqlCommand cmd = new NpgsqlCommand($"SELECT * FROM users", cn))
                 {
                     var reader = cmd.ExecuteReader();
-                    while(reader.Read())
+                    while (reader.Read())
                     {
                         int id = Convert.ToInt32(reader["user_id"]);
                         string name = reader["user_name"].ToString();
                         int reputation = Convert.ToInt32(reader["user_reputation"]);
-                        listOfUsers.Add(new UserModel(id, name, reputation));
+                        DateTime time = Convert.ToDateTime(reader["user_registration_date"]);
+                        listOfUsers.Add(new UserModel(id, name, reputation, time));
                     }
                 };
             };
@@ -1158,7 +1147,7 @@ namespace AskMateMVC.Services
             return userID;
         }
 
-        
+
         public List<QuestionModel> AllQuestionForUser(int id)
         {
             List<QuestionModel> listOfQuestions = new List<QuestionModel>();
@@ -1176,10 +1165,10 @@ namespace AskMateMVC.Services
                         int userId = Convert.ToInt32(reader["user_id"]);
                         int voteNumber = Convert.ToInt32(reader["question_votenumber"]);
                         string title = reader["question_title"].ToString();
-                        string message=reader["question_message"].ToString();
+                        string message = reader["question_message"].ToString();
                         string image = reader["question_imageurl"].ToString();
-                        try 
-                        { 
+                        try
+                        {
                             int acceptAnswerID = Convert.ToInt32(reader["accept_answer_id"]);
                             listOfQuestions.Add(new QuestionModel(questionId, time, viewNumber, userId,
                             voteNumber, title, message, image, acceptAnswerID));
@@ -1219,7 +1208,7 @@ namespace AskMateMVC.Services
                         string image = reader["answer_image"].ToString();
 
                         listOfAnswers.Add(new AnswerModel(answerId, timeOfAnswer, userID, voteNumber,
-                            questionID, message, image));   
+                            questionID, message, image));
                     }
                 };
             };
@@ -1241,7 +1230,7 @@ namespace AskMateMVC.Services
                     {
                         int commentId = Convert.ToInt32(reader["comment_id"]);
                         int answerId;
-                        try 
+                        try
                         {
                             answerId = Convert.ToInt32(reader["answer_id"]);
                         }
@@ -1255,8 +1244,8 @@ namespace AskMateMVC.Services
                         DateTime submissionTime = Convert.ToDateTime(reader["comment_time"]);
                         int editNumber = Convert.ToInt32(reader["edited_number"]);
 
-                        listOfComments.Add(new CommentModel(commentId,answerId,userId,questionId,
-                            message,submissionTime,editNumber));
+                        listOfComments.Add(new CommentModel(commentId, answerId, userId, questionId,
+                            message, submissionTime, editNumber));
                     }
                 };
             };
@@ -1264,24 +1253,24 @@ namespace AskMateMVC.Services
         }
 
 
-        public Dictionary<QuestionModel,List<AnswerModel>> AnswersWithQuestions(int id)
+        public Dictionary<QuestionModel, List<AnswerModel>> AnswersWithQuestions(int id)
         {
             Dictionary<QuestionModel, List<AnswerModel>> result = new Dictionary<QuestionModel, List<AnswerModel>>();
 
             List<QuestionModel> allQuestion = GetQuestions();
             List<AnswerModel> answersForUser = AllAnswerForUser(id);
 
-            foreach(var question in allQuestion)
+            foreach (var question in allQuestion)
             {
                 List<AnswerModel> answersForQuestion = new List<AnswerModel>();
                 foreach (var answer in answersForUser)
                 {
-                    if(answer.QuestionID==question.ID)
+                    if (answer.QuestionID == question.ID)
                     {
                         answersForQuestion.Add(answer);
                     }
                 }
-                if (answersForQuestion.Count>0)
+                if (answersForQuestion.Count > 0)
                     result[question] = answersForQuestion;
             }
 
@@ -1306,7 +1295,7 @@ namespace AskMateMVC.Services
                         commentsForQuestion.Add(comment);
                     }
                 }
-                if(commentsForQuestion.Count>0)
+                if (commentsForQuestion.Count > 0)
                     result[question] = commentsForQuestion;
             }
 

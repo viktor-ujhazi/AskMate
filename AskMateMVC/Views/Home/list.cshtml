@@ -42,6 +42,7 @@
                         </a>
 
                     </td>
+                    <td> @Html.ActionLink("Write answer", "NewAnswer", new { id = question.ID }, null)</td>
                     @if (ViewBag.ActualUserID == question.UserID)
                     {
                         <td>
@@ -49,10 +50,6 @@
                                 <img src="~/images/Edit.png" style="width: 19px; height:19px" />
                             </a>
                         </td>
-                    }
-                    <td> @Html.ActionLink("Write answer", "NewAnswer", new { id = question.ID }, null)</td>
-                    @if (ViewBag.ActualUserID == question.UserID)
-                    {
                         <td>
                             <a href="@Url.Action("DeleteQuestion", "Home", new { id = question.ID })">
                                 <img src="~/images/trashcan.png" style="width: 15px; height:15px" />
