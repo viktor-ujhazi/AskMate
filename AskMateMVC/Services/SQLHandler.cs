@@ -110,20 +110,11 @@ namespace AskMateMVC.Services
                             ID = (int)reader["user_id"],
                             Name = (string)reader["user_name"],
                             Password = (string)reader["user_password"],
-                            Reputation = (int)reader["user_reputation"]
+                            Reputation = (int)reader["user_reputation"],
+                            TimeOfRegistration = (DateTime)reader["user_registration_date"]
                         };
-                        if (reader["user_reputation"] is DBNull)
-                        {
-                            u.Reputation = 0;
-                        }
-                        else
-                        {
-                            u.Reputation = (int)reader["user_reputation"];
-                        }
-
                         users.Add(u);
                     }
-
                 };
             };
             return users;
@@ -298,9 +289,11 @@ namespace AskMateMVC.Services
                 conn.Open();
                 using (var cmd = new NpgsqlCommand("INSERT INTO users " +
                     "(user_name," +
-                    "user_password, " +
-                    "user_reputation) Values (@user_name,@user_password, @user_reputation)", conn))
+                    "user_password," +
+                    "user_registration_date " +
+                    "user_reputation) Values (@user_name,@user_password,@user_registration_date, @user_reputation)", conn))
                 {
+                    cmd.Parameters.AddWithValue("user_registration_date", model.TimeOfRegistration);
                     cmd.Parameters.AddWithValue("user_name", model.Name);
                     cmd.Parameters.AddWithValue("user_password", model.Password);
                     cmd.Parameters.AddWithValue("user_reputation", model.Reputation);
@@ -1114,7 +1107,8 @@ namespace AskMateMVC.Services
                         int id = Convert.ToInt32(reader["user_id"]);
                         string name = reader["user_name"].ToString();
                         int reputation = Convert.ToInt32(reader["user_reputation"]);
-                        listOfUsers.Add(new UserModel(id, name, reputation));
+                        DateTime time = Convert.ToDateTime(reader["user_registration_date"]);
+                        listOfUsers.Add(new UserModel(id, name, reputation, time));
                     }
                 };
             };
