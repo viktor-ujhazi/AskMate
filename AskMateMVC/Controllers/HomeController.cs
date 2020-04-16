@@ -367,7 +367,7 @@ namespace AskMateMVC.Controllers
         [Authorize]
         public IActionResult QuestionVote(int id, int voteValue, string currentpath)
         {
-            _datahandler.ModifyQuestionVote(id, voteValue);
+            _datahandler.ModifyQuestionVote(id, voteValue, currentpath);
             return Redirect(currentpath);
         }
         [Authorize]

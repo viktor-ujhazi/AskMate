@@ -462,7 +462,7 @@ namespace AskMateMVC.Services
             IncreaseViewsCorrection(questionID);
         }
 
-        public void ModifyQuestionVote(int id, int voteValue)
+        public void ModifyQuestionVote(int id, int voteValue, string currentpath)
         {
             string op = "-";
             int userID = GetUserIDByQuestionID(id);
@@ -485,7 +485,10 @@ namespace AskMateMVC.Services
                     cmd.ExecuteNonQuery();
                 };
             };
-            IncreaseViewsCorrection(id);
+            if (currentpath.Contains("AnswersForQuestion"))
+            {
+                IncreaseViewsCorrection(id);
+            }
 
         }
 

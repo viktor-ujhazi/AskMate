@@ -215,7 +215,7 @@ namespace AskMateMVC.Services
             }
 
         }
-        public void ModifyQuestionVote(int id, int voteValue)
+        public void ModifyQuestionVote(int id, int voteValue, string currentpath)
         {
             var questionToVote = GetQuestionByID(id);
 
