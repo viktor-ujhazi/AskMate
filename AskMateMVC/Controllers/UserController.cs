@@ -50,7 +50,7 @@ namespace AskMateMVC.Controllers
                 return Redirect("InvalidUsername");
             }
 
-            return Redirect($"../Home/Index");
+            return Redirect("Login");
         }
 
         public IActionResult InvalidUsername()
