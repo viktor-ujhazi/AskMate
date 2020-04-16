@@ -7,6 +7,18 @@
 
 
 <h2>Answers For Question</h2>
+@foreach (var user in ViewBag.User)
+{
+    if (user.ID == ViewBag.Question.ID)
+    {
+        username = user.Name;
+        rep = user.Reputation;
+    }
+}
+<p>@ViewBag.Question.ViewNumber</p>
+
+<p>@username</p>
+<p>@rep</p>
 
 <p>
     @foreach (var tag in ViewBag.Tags)
@@ -82,9 +94,9 @@
 <h2>
     Answers: @ViewBag.Ans.Count
 </h2>
-@foreach (var item in ViewBag.Ans)
+@foreach (var answer in ViewBag.Ans)
 {
-    if (ViewBag.Question.AcceptAnswerID == item.ID) { background = "lightgreen"; }
+    if (ViewBag.Question.AcceptAnswerID == answer.ID) { background = "lightgreen"; }
     else { background = "white"; }
 
 
@@ -96,7 +108,7 @@
 
             @foreach (var user in ViewBag.User)
             {
-                if (user.ID == item.UserID)
+                if (user.ID == answer.UserID)
                 {
                     username = user.Name;
                     rep = user.Reputation;
@@ -106,20 +118,20 @@
             <td colspan="15" style="text-align:center">
                 @{
                     if (ViewBag.Question.AcceptAnswerID == 0 && ViewBag.ActualUserID == ViewBag.Question.UserID)
-                    { <a>@Html.ActionLink("Accept answer", "AcceptAnswer", new { questionID = ViewBag.Question.ID, answerID = item.ID, })</a>}
+                    { <a>@Html.ActionLink("Accept answer", "AcceptAnswer", new { questionID = ViewBag.Question.ID, answerID = answer.ID, })</a>}
                 }
             </td>
             <td style="text-align:right">
-                <a style="color:cornflowerblue">time: @item.TimeOfAnswer</a>
+                <a style="color:cornflowerblue">time: @answer.TimeOfAnswer</a>
             </td>
         </tr>
         <tr>
             <td style="width:5%">
-                <a href="@Url.Action("AnswerVote", "Home", new { id = item.ID, voteValue = 1 })">
+                <a href="@Url.Action("AnswerVote", "Home", new { id = answer.ID, voteValue = 1 })">
                     <img src="~/images/upvote.png" style="width: 15px; height:15px" />
                 </a><p></p>
-                <a style="color:cornflowerblue">@item.VoteNumber</a><p></p>
-                <a href="@Url.Action("AnswerVote", "Home", new { id = item.ID, voteValue = 0 })">
+                <a style="color:cornflowerblue">@answer.VoteNumber</a><p></p>
+                <a href="@Url.Action("AnswerVote", "Home", new { id = answer.ID, voteValue = 0 })">
                     <img src="~/images/downvote.png" style="width: 18px;height: 18px" />
                 </a><p></p>
 
@@ -127,18 +139,18 @@
 
 
             <td rowspan="3" colspan="15" style="width:100%; vertical-align:top; word-break:break-word">
-                <a style="font-size:30px">@item.Message</a>
+                <a style="font-size:30px">@answer.Message</a>
 
             </td>
             <td style="width:5%; text-align:right">
 
-                @if (ViewBag.ActualUserID == item.UserID)
+                @if (ViewBag.ActualUserID == answer.UserID)
                 {
 
-                    <a href="@Url.Action("DeleteAnswer", "Home", new { id = item.ID, qid = ViewBag.Question.ID })">
+                    <a href="@Url.Action("DeleteAnswer", "Home", new { id = answer.ID, qid = ViewBag.Question.ID })">
                         <img src="~/images/trashcan.png" style="width: 15px; height:15px" />
                     </a><br />
-                    <a style="width:5%; text-align:right" href="@Url.Action("EditAnswer", "Home", new { id = item.ID }, null)">
+                    <a style="width:5%; text-align:right" href="@Url.Action("EditAnswer", "Home", new { id = answer.ID }, null)">
                         <img src="~/images/Edit.png" style="width: 19px; height:19px" />
                     </a>
                 }
@@ -154,8 +166,8 @@
         <tr>
             <td style="width:5%"></td>
             <td style="text-align:left">
-                <img alt="" src="~/images/@item.Image" width="200" height="200" />
-                @{ if (item.Image.Length > 2)
+                <img alt="" src="~/images/@answer.Image" width="200" height="200" />
+                @{ if (answer.Image.Length > 2)
                     {
                         <a href="~/images/item.Image" target="_Self">
                             View full size
@@ -170,7 +182,7 @@
             <td></td>
             <td style="width:15%; text-align:right">
 
-                <a>@Html.ActionLink("Add Comment", "NewComment", new { id = ViewBag.Question.ID, ansID = item.ID })</a>
+                <a>@Html.ActionLink("Add Comment", "NewComment", new { id = ViewBag.Question.ID, ansID = answer.ID })</a>
             </td>
         </tr>
 
@@ -182,18 +194,31 @@
             <td style="width:100%" colspan="15">
                 @foreach (var comment in ViewBag.CommentQ)
                 {
-                    @if (comment.Answer_ID == item.ID)
-                    {
-                        <div>
-                            @comment.Message || @comment.SubmissionTime
-                            || <a href="@Url.Action("EditComment", "Home",new { id = comment.ID})">
+                    @if (comment.Answer_ID == answer.ID)
+                    {@foreach (var user in ViewBag.User)
+                        {
+                            if (user.ID == comment.UserID)
+                            {
+                                username = user.Name;
+                            }
+                        }
+                    <div>
+                        @comment.Message <a> - user: @username  - time: </a>@comment.SubmissionTime
+
+                        @if (ViewBag.ActualUserID == comment.UserID)
+
+                        {
+                            <a href="@Url.Action("EditComment", "Home", new { id = comment.ID })">
                                 <img src="~/images/Edit.png" style="width: 19px; height:19px" />
                             </a>
-                            || <a href="@Url.Action("DeleteComment", "Home",new { id = comment.ID, qid = ViewBag.Question.ID })">
+                            <a href="@Url.Action("DeleteComment", "Home", new { id = comment.ID, qid = ViewBag.Question.ID })">
                                 <img src="~/images/trashcan.png" style="width: 15px; height:15px" />
                             </a>
-                        </div>
-                    }
+                        }
+                    </div>
+
+
+                }
                 }
             </td>
         </tr>
