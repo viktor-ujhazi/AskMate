@@ -1187,7 +1187,7 @@ namespace AskMateMVC.Services
             using (NpgsqlConnection cn = new NpgsqlConnection(cs))
             {
                 cn.Open();
-                using (NpgsqlCommand cmd = new NpgsqlCommand($"SELECT * FROM questions INNER JOIN answers ON answers.question_id = questions.question_id WHERE questions.user_id = '{id}'", cn))
+                using (NpgsqlCommand cmd = new NpgsqlCommand($"SELECT * FROM answers WHERE user_id = '{id}'", cn))
                 {
                     var reader = cmd.ExecuteReader();
                     while (reader.Read())
