@@ -285,7 +285,8 @@ namespace AskMateMVC.Services
                     cmd.Parameters.AddWithValue("user_id", model.UserID);
                     cmd.Parameters.AddWithValue("message", model.Message);
                     cmd.Parameters.AddWithValue("time", model.SubmissionTime);
-                    
+                    cmd.Parameters.AddWithValue("edit", model.EditedNumber);
+                    cmd.ExecuteNonQuery();
                 };
             };
         }
