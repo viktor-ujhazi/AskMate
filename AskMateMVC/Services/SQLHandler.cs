@@ -464,6 +464,8 @@ namespace AskMateMVC.Services
                     cmd.ExecuteNonQuery();
                 };
             };
+            int questionID = GetAnswerByID(id).QuestionID;
+            IncreaseViewsCorrection(questionID);
         }
 
         public void ModifyQuestionVote(int id, int voteValue)
@@ -964,6 +966,7 @@ namespace AskMateMVC.Services
                 };
 
             }
+            IncreaseViewsCorrection(questionID);
         }
 
         public bool TagAlreadyOrdered(int questionID, string url)
