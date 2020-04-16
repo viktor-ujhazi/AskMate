@@ -5,7 +5,8 @@
 
 @if (ViewBag.Questions.Count > 0)
 {
-    <table class="table table-bordered table-responsive table-hover">
+    <h1>Asked questions:</h1>
+    <table class="table table-bordered table-active">
 
         @foreach (var question in ViewBag.Questions)
         {
@@ -20,7 +21,8 @@
 
 @if (ViewBag.Answers.Count > 0)
 {
-    <table class="table table-bordered table-responsive table-hover">
+    <h1>Wrote answers:</h1>
+    <table class="table table-bordered table-active">
         @{
             foreach (var question in ViewBag.Answers)
             {
@@ -42,7 +44,8 @@
 
 @if (ViewBag.Comments.Count > 0)
 {
-    <table class="table table-bordered table-responsive table-hover">
+    <h1>Wrote comments:</h1>
+    <table class="table table-bordered table-active">
         @{
             foreach (var question in ViewBag.Comments)
             {
