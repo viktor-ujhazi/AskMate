@@ -492,6 +492,7 @@ namespace AskMateMVC.Services
                     cmd.ExecuteNonQuery();
                 };
             };
+            IncreaseViewsCorrection(id);
 
         }
 
