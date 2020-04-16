@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS Comment_s(
 
 CREATE TABLE IF NOT EXISTS Tags(
 	tag_id SERIAL PRIMARY KEY,
-	tag_name TEXT
+	tag_name TEXT UNIQUE
 );
 
 CREATE TABLE IF NOT EXISTS Question_tags(
@@ -57,5 +57,4 @@ CREATE TABLE IF NOT EXISTS Question_tags(
 	tag_id INT REFERENCES Tags(tag_id) ON DELETE CASCADE,
 	PRIMARY KEY (question_id, tag_id)
 );
-
 
