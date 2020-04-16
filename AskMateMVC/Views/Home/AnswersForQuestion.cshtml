@@ -9,12 +9,13 @@
 <h2>Answers For Question</h2>
 @foreach (var user in ViewBag.User)
 {
-    if (user.ID == ViewBag.Question.ID)
+    if (user.ID == ViewBag.Question.UserID)
     {
         username = user.Name;
         rep = user.Reputation;
     }
 }
+
 <table>
     <tr>
         <td><a>user: </a></td>
@@ -25,9 +26,13 @@
         <td><a>rep: </a></td>
         <td>@rep</td>
     </tr>
-    <tr><td></td>
+    <tr>
+        <td></td>
         <td>
-            <a style="width:1000px;word-break:break-word;color:mediumseagreen">Topic: @ViewBag.Question.Title</a>
+            <a rowspan="3" colspan="15" style="font-size:25px; color:mediumseagreen; width:100%; vertical-align:top; word-break:break-word">Topic: @ViewBag.Question.Title</a>
+        </td>
+        <td style="text-align:right">
+            <a style="color:cornflowerblue">time: @ViewBag.Question.TimeOfQuestion</a>
         </td>
     </tr>
     <tr>
@@ -42,7 +47,7 @@
 
         </td>
         <td rowspan="3" colspan="15" style="width:100%; vertical-align:top; word-break:break-word">
-            <a style="width:1000px;word-break:break-word;color:mediumseagreen;">@ViewBag.Question.Message</a>
+            <a style="font-size:36px; width:1000px;word-break:break-word;color:mediumseagreen;">@ViewBag.Question.Message</a>
             <img alt="" src="~/images/@ViewBag.Question.Image" width="200" height="200" />
 
             <a href="~/images/@ViewBag.Question.Image" target="_Self">
@@ -63,12 +68,6 @@
         </td>
     </tr>
 </table>
-
-
-
-
-
-
 <p>
     @foreach (var tag in ViewBag.Tags)
     {
@@ -82,9 +81,41 @@
 </p>
 
 
+<table width="100%" style="border-bottom:groove;border-bottom-width:5px;border-bottom-color:black;">
+    <tr>
+        <td style="width:100%" colspan="15">
+            @foreach (var comment in ViewBag.CommentQ)
+            {
+                @if (comment.Answer_ID == null && comment.Question_ID ==ViewBag.Question.ID)
+                {@foreach (var user in ViewBag.User)
+                    {
+                        if (user.ID == comment.UserID)
+                        {
+                            username = user.Name;
+                        }
+                    }
+                <div>
+                    @comment.Message <a> - user: @username  - time: </a>@comment.SubmissionTime
+
+                    @if (ViewBag.ActualUserID == comment.UserID)
+
+                    {
+                        <a href="@Url.Action("EditComment", "Home", new { id = comment.ID })">
+                            <img src="~/images/Edit.png" style="width: 19px; height:19px" />
+                        </a>
+                        <a href="@Url.Action("DeleteComment", "Home", new { id = comment.ID, qid = ViewBag.Question.ID })">
+                            <img src="~/images/trashcan.png" style="width: 15px; height:15px" />
+                        </a>
+                    }
+                </div>
 
 
+            }
+            }
+        </td>
+    </tr>
 
+</table>
 
 <table width="100%" style="border-top:groove;border-top-width:5px;border-top-color:black;">
     <tr>
@@ -98,30 +129,7 @@
     </tr>
 </table>
 
-@{ if (ViewBag.CommentQ.Count > 0)
-    { <a>Comments</a>} }
-<table>
-    <tr>
-        <td style="text-align:left">
-            @foreach (var comment in ViewBag.CommentQ)
-            {
-                if (comment.Answer_ID == null)
-                {
-                    <div>
-                        @comment.Message || @comment.SubmissionTime
-                        || <a href="@Url.Action("EditComment", "Home",new { id = comment.ID})">
-                            <img src="~/images/Edit.png" style="width: 19px; height:19px" />
-                        </a>
-                        || <a href="@Url.Action("DeleteComment", "Home",new { id = comment.ID, qid = ViewBag.Question.ID })">
-                            <img src="~/images/trashcan.png" style="width: 15px; height:15px" />
-                        </a>
-                    </div>
-                }
-            }
-        </td>
 
-    </tr>
-</table>
 <hr />
 <h2>
     Answers: @ViewBag.Ans.Count
