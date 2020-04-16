@@ -357,10 +357,10 @@ namespace AskMateMVC.Controllers
             }
         }
         [Authorize]
-        public IActionResult QuestionVote(int id, int voteValue)
+        public IActionResult QuestionVote(int id, int voteValue, string currentpath)
         {
             _datahandler.ModifyQuestionVote(id, voteValue);
-            return Redirect($"../List/");
+            return Redirect(currentpath);
         }
         [Authorize]
         public IActionResult AnswerVote(int id, int voteValue)
@@ -452,31 +452,12 @@ namespace AskMateMVC.Controllers
         {
             //collects all question that the user asked
             ViewBag.Questions = _datahandler.AllQuestionForUser(_datahandler.GetUserId(User.Identity.Name));
+
             //collects all answer that the user wrote
             ViewBag.Answers = _datahandler.AnswersWithQuestions(_datahandler.GetUserId(User.Identity.Name));
 
-
-            //var i= _datahandler.AnswersWithQuestions(_datahandler.GetUserId(User.Identity.Name));
-            //foreach(var q in i)
-            //{
-            //    if(q.Value.Count==0)
-            //    {
-            //        Console.WriteLine("YEEY");
-            //    }
-            //}
-
-
             //collects all comments that the user wrote
             ViewBag.Comments = _datahandler.CommentsWithQuestions(_datahandler.GetUserId(User.Identity.Name));
-
-            var j = _datahandler.CommentsWithQuestions(_datahandler.GetUserId(User.Identity.Name));
-            foreach (var q in j)
-            {
-                if (q.Value.Count == 0)
-                {
-                    Console.WriteLine("YEEY");
-                }
-            }
 
             return View();
         }
