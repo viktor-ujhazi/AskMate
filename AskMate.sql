@@ -9,6 +9,7 @@ CREATE TABLE IF NOT EXISTS Users(
 	user_id SERIAL PRIMARY KEY,
 	user_name TEXT UNIQUE,
 	user_password TEXT,
+	user_registration_date TIMESTAMP,
 	user_reputation INT
 );
 

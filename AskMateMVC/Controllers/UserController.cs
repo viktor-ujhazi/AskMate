@@ -39,6 +39,7 @@ namespace AskMateMVC.Controllers
             var user = new UserModel();
             user.Password = _cyberSecurity.EncryptPassword(Password);
             user.Name = Name;
+
             try
             {
                 _datahandler.AddUser(user);
@@ -49,7 +50,7 @@ namespace AskMateMVC.Controllers
                 return Redirect("InvalidUsername");
             }
 
-            return Redirect($"../Home/Index");
+            return Redirect("Login");
         }
 
         public IActionResult InvalidUsername()
@@ -105,7 +106,7 @@ namespace AskMateMVC.Controllers
                 new ClaimsPrincipal(claimsIdentity),
                 authProperties);
 
-            return RedirectToAction("Index", "Home");
+            return RedirectToAction("DetailsOfCurrentUser", "Home");
         }
 
         [Authorize]

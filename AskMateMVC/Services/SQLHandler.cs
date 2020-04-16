@@ -290,7 +290,7 @@ namespace AskMateMVC.Services
                 using (var cmd = new NpgsqlCommand("INSERT INTO users " +
                     "(user_name," +
                     "user_password," +
-                    "user_registration_date " +
+                    "user_registration_date, " +
                     "user_reputation) Values (@user_name,@user_password,@user_registration_date, @user_reputation)", conn))
                 {
                     cmd.Parameters.AddWithValue("user_registration_date", model.TimeOfRegistration);
@@ -450,6 +450,7 @@ namespace AskMateMVC.Services
 
         public void RemoveAnswer(int id)
         {
+            int questionID = GetAnswerByID(id).QuestionID;
             using (var conn = new NpgsqlConnection(cs))
             {
                 conn.Open();
@@ -458,11 +459,11 @@ namespace AskMateMVC.Services
                     cmd.ExecuteNonQuery();
                 };
             };
-            int questionID = GetAnswerByID(id).QuestionID;
+            
             IncreaseViewsCorrection(questionID);
         }
 
-        public void ModifyQuestionVote(int id, int voteValue)
+        public void ModifyQuestionVote(int id, int voteValue, string currentpath)
         {
             string op = "-";
             int userID = GetUserIDByQuestionID(id);
@@ -485,7 +486,10 @@ namespace AskMateMVC.Services
                     cmd.ExecuteNonQuery();
                 };
             };
-            IncreaseViewsCorrection(id);
+            if (currentpath.Contains("AnswersForQuestion"))
+            {
+                IncreaseViewsCorrection(id);
+            }
 
         }
 

@@ -25,7 +25,7 @@ namespace AskMateMVC.Services
         public void EditComment(int id, CommentModel comment);
         public void RemoveAnswer(int id);
         public void RemoveComment(int id);
-        public void ModifyQuestionVote(int id, int voteValue);
+        public void ModifyQuestionVote(int id, int voteValue, string currentpath);
         public void ModifyAnswerVote(int id, int voteValue);
         public void IncreaseViews(int id);
         public List<QuestionModel> MostViewedQuestions();
