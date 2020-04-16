@@ -25,6 +25,36 @@ namespace AskMateMVC.Models
         public string Image { get; set; }   //image: The path to the image for this question
         public int AcceptAnswerID { get; set; } = 0;
 
+        public QuestionModel() { }
+
+        public QuestionModel(int id, DateTime time, int viewNumber,
+            int userID, int voteNumber, string title, string message, string image, int acceptAnswerId)
+        {
+            ID = id;
+            TimeOfQuestion = time;
+            ViewNumber = viewNumber;
+            UserID = userID;
+            VoteNumber = voteNumber;
+            Title = title;
+            Message = message;
+            Image = image;
+            AcceptAnswerID = acceptAnswerId;
+        }
+
+        public QuestionModel(int id, DateTime time, int viewNumber,
+            int userID, int voteNumber, string title, string message, string image)
+        {
+            ID = id;
+            TimeOfQuestion = time;
+            ViewNumber = viewNumber;
+            UserID = userID;
+            VoteNumber = voteNumber;
+            Title = title;
+            Message = message;
+            Image = image;
+        }
+
+
         public override string ToString()
         {
             return ID + "," + TimeOfQuestion + "," + ViewNumber + "," + VoteNumber + "," + "\"" + Title + "\"" + "," + "\"" + Message + "\"" + "," + Image;

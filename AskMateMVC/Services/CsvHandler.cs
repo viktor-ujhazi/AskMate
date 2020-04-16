@@ -410,6 +410,41 @@ namespace AskMateMVC.Services
         {
             throw new NotImplementedException();
         }
+
+        public List<UserModel> GetAllUsers()
+        {
+            throw new NotImplementedException();
+        }
+
+        public int GetUserId(string username)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<QuestionModel> AllQuestionForUser(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<AnswerModel> AllAnswerForUser(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public List<CommentModel> AllCommentForUser(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Dictionary<QuestionModel, List<AnswerModel>> AnswersWithQuestions(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Dictionary<QuestionModel, List<CommentModel>> CommentsWithQuestions(int id)
+        {
+            throw new NotImplementedException();
+        }
     }
 
 }
