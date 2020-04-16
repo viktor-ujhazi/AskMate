@@ -32,11 +32,11 @@
     </tr>
     <tr>
         <td style="width:5%">
-            <a href="@Url.Action("QuestionVote", "Home", new { id = ViewBag.Question.ID, voteValue = 1 })">
+            <a href="@Url.Action("QuestionVote", "Home", new { id = ViewBag.Question.ID, voteValue = 1 , currentpath=@Context.Request.Path})">
                 <img src="~/images/upvote.png" style="width: 15px; height:15px" />
             </a><p></p>
             <a style="color:cornflowerblue">@ViewBag.Question.VoteNumber</a><p></p>
-            <a href="@Url.Action("QuestionVote", "Home", new { id = ViewBag.Question.ID, voteValue = 0 })">
+            <a href="@Url.Action("QuestionVote", "Home", new { id = ViewBag.Question.ID, voteValue = 0 , currentpath=@Context.Request.Path})">
                 <img src="~/images/downvote.png" style="width: 18px;height: 18px" />
             </a><p></p>
 

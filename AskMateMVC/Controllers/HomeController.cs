@@ -355,10 +355,10 @@ namespace AskMateMVC.Controllers
             }
         }
         [Authorize]
-        public IActionResult QuestionVote(int id, int voteValue)
+        public IActionResult QuestionVote(int id, int voteValue, string currentpath)
         {
             _datahandler.ModifyQuestionVote(id, voteValue);
-            return Redirect($"../List/");
+            return Redirect(currentpath);
         }
         [Authorize]
         public IActionResult AnswerVote(int id, int voteValue)

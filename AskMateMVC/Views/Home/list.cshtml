@@ -32,12 +32,12 @@
 
 
                     <td>
-                        <a href="@Url.Action("QuestionVote", "Home",new { id = question.ID, voteValue = 1 })">
+                        <a href="@Url.Action("QuestionVote", "Home",new { id = question.ID, voteValue = 1, currentpath=@Context.Request.Path })">
                             <img src="~/images/upvote.png" style="width: 15px; height:15px" />
                         </a>
                     </td>
                     <td>
-                        <a href="@Url.Action("QuestionVote", "Home",new { id = question.ID, voteValue = 0 })">
+                        <a href="@Url.Action("QuestionVote", "Home",new { id = question.ID, voteValue = 0, currentpath=@Context.Request.Path })">
                             <img src="~/images/downvote.png" style="width: 18px; height:18px" />
                         </a>
 
