@@ -285,6 +285,8 @@ namespace AskMateMVC.Services
                     cmd.Parameters.AddWithValue("user_id", model.UserID);
                     cmd.Parameters.AddWithValue("message", model.Message);
                     cmd.Parameters.AddWithValue("time", model.SubmissionTime);
+                    cmd.Parameters.AddWithValue("edit", model.EditedNumber);
+                    cmd.ExecuteNonQuery();
                 };
             };
         }
@@ -463,6 +465,8 @@ namespace AskMateMVC.Services
                     cmd.ExecuteNonQuery();
                 };
             };
+            int questionID = GetAnswerByID(id).QuestionID;
+            IncreaseViewsCorrection(questionID);
         }
 
         public void ModifyQuestionVote(int id, int voteValue)
@@ -977,6 +981,7 @@ namespace AskMateMVC.Services
                 };
 
             }
+            IncreaseViewsCorrection(questionID);
         }
 
         public bool TagAlreadyOrdered(int questionID, string url)
