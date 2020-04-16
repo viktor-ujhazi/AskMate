@@ -96,6 +96,7 @@ namespace AskMateMVC.Controllers
             {
                 return View("NewQuestion");
             }
+
         }
         [Authorize]
         public IActionResult NewComment(int id, int ansID = 0)
@@ -459,6 +460,7 @@ namespace AskMateMVC.Controllers
         [Authorize]
         public IActionResult DetailsOfCurrentUser()
         {
+
             //collects all question that the user asked
             ViewBag.Questions = _datahandler.AllQuestionForUser(_datahandler.GetUserId(User.Identity.Name));
 
