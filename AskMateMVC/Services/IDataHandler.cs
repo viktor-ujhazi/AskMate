@@ -40,7 +40,7 @@ namespace AskMateMVC.Services
         public List<TagModel> GetTags();
         public bool TagAlreadyOrdered(int questionID, string url);
         public Dictionary<string, int> GetTagsWithCount();
-        public bool IsValidUser(string username, string password);
+        
         public void AcceptAnswer(int answerID, int questionID);
         public int GetUserIdForUsername(string username);
         public List<UserModel> GetAllUsers();
@@ -50,5 +50,6 @@ namespace AskMateMVC.Services
         public List<CommentModel> AllCommentForUser(int id);
         public Dictionary<QuestionModel, List<AnswerModel>> AnswersWithQuestions(int id);
         public Dictionary<QuestionModel, List<CommentModel>> CommentsWithQuestions(int id);
+        public void IncreaseViewsCorrection(int id);
     }
 }

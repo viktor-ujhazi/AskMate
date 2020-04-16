@@ -17,10 +17,12 @@ namespace AskMateMVC.Controllers
     {
 
         private readonly IDataHandler _datahandler;
+        private readonly ICyberSecurityProvider _cyberSecurity;
 
-        public UserController(IDataHandler datahandler)
+        public UserController(IDataHandler datahandler, ICyberSecurityProvider cyberSecurity)
         {
             _datahandler = datahandler;
+            _cyberSecurity = cyberSecurity;
         }
         public IActionResult Index()
         {
@@ -32,8 +34,11 @@ namespace AskMateMVC.Controllers
             return View();
         }
         [HttpPost]
-        public IActionResult NewUser(UserModel user)
+        public IActionResult NewUser([FromForm] string Name, [FromForm] string Password)
         {
+            var user = new UserModel();
+            user.Password = _cyberSecurity.EncryptPassword(Password);
+            user.Name = Name;
             try
             {
                 _datahandler.AddUser(user);
@@ -60,7 +65,7 @@ namespace AskMateMVC.Controllers
         [HttpPost]
         public async Task<ActionResult> LoginAsync([FromForm] string username, [FromForm] string password)
         {
-            if (!_datahandler.IsValidUser(username, password))
+            if (!_cyberSecurity.IsValidUser(username, password))
             {
                 return RedirectToAction("Index", "Home");
             }
@@ -98,6 +103,7 @@ namespace AskMateMVC.Controllers
                 CookieAuthenticationDefaults.AuthenticationScheme,
                 new ClaimsPrincipal(claimsIdentity),
                 authProperties);
+            Startup.isLoggedIn = true;
             return RedirectToAction("Index", "Home");
         }
 
@@ -106,6 +112,7 @@ namespace AskMateMVC.Controllers
         public async Task<IActionResult> LogoutAsync()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            Startup.isLoggedIn = false;
             return RedirectToAction("Index", "Home");
         }
     }

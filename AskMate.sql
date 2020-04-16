@@ -59,5 +59,3 @@ CREATE TABLE IF NOT EXISTS Question_tags(
 );
 
 
-Insert into users (user_name, user_password, user_reputation)
-Values ('Mark', 'admin',1);

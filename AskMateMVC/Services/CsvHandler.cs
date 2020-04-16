@@ -445,6 +445,11 @@ namespace AskMateMVC.Services
         {
             throw new NotImplementedException();
         }
+
+        public void IncreaseViewsCorrection(int id)
+        {
+            throw new NotImplementedException();
+        }
     }
 
 }

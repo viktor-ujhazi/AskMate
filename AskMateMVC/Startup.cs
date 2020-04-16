@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -15,7 +16,7 @@ namespace AskMateMVC
 {
     public class Startup
     {
-
+        public static bool isLoggedIn = false;
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -28,7 +29,7 @@ namespace AskMateMVC
         {
 
             services.AddControllersWithViews();
-            //services.AddSingleton(typeof(IDataHandler), new CsvHandler());
+            services.AddSingleton(typeof(ICyberSecurityProvider), new PasswordEncryption());
             services.AddSingleton(typeof(IDataHandler), new SQLHandler());
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie
             (CookieAuthenticationDefaults.AuthenticationScheme, options =>

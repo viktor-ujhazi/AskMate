@@ -14,6 +14,7 @@ using System.IO;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
 
 namespace AskMateMVC.Controllers
 {
@@ -22,11 +23,14 @@ namespace AskMateMVC.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IDataHandler _datahandler;
 
+
         public HomeController(ILogger<HomeController> logger, IDataHandler datahandler)
         {
             _logger = logger;
             _datahandler = datahandler;
         }
+
+
 
         public IActionResult Index()
         {
@@ -359,9 +363,11 @@ namespace AskMateMVC.Controllers
         [Authorize]
         public IActionResult AnswerVote(int id, int voteValue)
         {
-            
+            int questionID = _datahandler.GetAnswerByID(id).QuestionID;
+
+            _datahandler.IncreaseViewsCorrection(questionID);
             _datahandler.ModifyAnswerVote(id, voteValue);
-            return Redirect($"../AnswersForQuestion/{_datahandler.GetAnswerByID(id).QuestionID}");
+            return Redirect($"../AnswersForQuestion/{questionID}");
         }
 
         [Authorize]
@@ -430,7 +436,7 @@ namespace AskMateMVC.Controllers
         [Authorize]
         public IActionResult AcceptAnswer(int answerID, int questionID)
         {
-            
+
             _datahandler.AcceptAnswer(answerID, questionID);
             return Redirect($"../Home/AnswersForQuestion/{questionID}");
         }
@@ -446,9 +452,30 @@ namespace AskMateMVC.Controllers
             ViewBag.Questions = _datahandler.AllQuestionForUser(_datahandler.GetUserId(User.Identity.Name));
             //collects all answer that the user wrote
             ViewBag.Answers = _datahandler.AnswersWithQuestions(_datahandler.GetUserId(User.Identity.Name));
+
+
+            //var i= _datahandler.AnswersWithQuestions(_datahandler.GetUserId(User.Identity.Name));
+            //foreach(var q in i)
+            //{
+            //    if(q.Value.Count==0)
+            //    {
+            //        Console.WriteLine("YEEY");
+            //    }
+            //}
+            
+
             //collects all comments that the user wrote
             ViewBag.Comments = _datahandler.CommentsWithQuestions(_datahandler.GetUserId(User.Identity.Name));
-            
+
+            var j = _datahandler.CommentsWithQuestions(_datahandler.GetUserId(User.Identity.Name));
+            foreach (var q in j)
+            {
+                if (q.Value.Count == 0)
+                {
+                    Console.WriteLine("YEEY");
+                }
+            }
+
             return View();
         }
     }
