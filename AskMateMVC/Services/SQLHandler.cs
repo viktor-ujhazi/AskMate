@@ -1104,5 +1104,197 @@ namespace AskMateMVC.Services
                 };
             };
         }
+
+        public List<UserModel> GetAllUsers()
+        {
+            List<UserModel> listOfUsers = new List<UserModel>();
+            using (NpgsqlConnection cn = new NpgsqlConnection(cs))
+            {
+                cn.Open();
+                using(NpgsqlCommand cmd=new NpgsqlCommand($"SELECT * FROM users",cn))
+                {
+                    var reader = cmd.ExecuteReader();
+                    while(reader.Read())
+                    {
+                        int id = Convert.ToInt32(reader["user_id"]);
+                        string name = reader["user_name"].ToString();
+                        int reputation = Convert.ToInt32(reader["user_reputation"]);
+                        listOfUsers.Add(new UserModel(id, name, reputation));
+                    }
+                };
+            };
+            return listOfUsers;
+        }
+
+        public int GetUserId(string username)
+        {
+            int userID;
+            using (NpgsqlConnection cn = new NpgsqlConnection(cs))
+            {
+                cn.Open();
+                using (NpgsqlCommand cmd = new NpgsqlCommand($"SELECT * FROM users WHERE user_name LIKE '{username}'", cn))
+                {
+                    var reader = cmd.ExecuteReader();
+                    reader.Read();
+                    userID = Convert.ToInt32(reader["user_id"]);
+                };
+            };
+            return userID;
+        }
+
+        
+        public List<QuestionModel> AllQuestionForUser(int id)
+        {
+            List<QuestionModel> listOfQuestions = new List<QuestionModel>();
+            using (NpgsqlConnection cn = new NpgsqlConnection(cs))
+            {
+                cn.Open();
+                using (NpgsqlCommand cmd = new NpgsqlCommand($"SELECT * FROM questions WHERE user_id = '{id}'", cn))
+                {
+                    var reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        int questionId = Convert.ToInt32(reader["question_id"]);
+                        DateTime time = Convert.ToDateTime(reader["question_time"]);
+                        int viewNumber = Convert.ToInt32(reader["question_viewnumber"]);
+                        int userId = Convert.ToInt32(reader["user_id"]);
+                        int voteNumber = Convert.ToInt32(reader["question_votenumber"]);
+                        string title = reader["question_title"].ToString();
+                        string message=reader["question_message"].ToString();
+                        string image = reader["question_imageurl"].ToString();
+                        try 
+                        { 
+                            int acceptAnswerID = Convert.ToInt32(reader["accept_answer_id"]);
+                            listOfQuestions.Add(new QuestionModel(questionId, time, viewNumber, userId,
+                            voteNumber, title, message, image, acceptAnswerID));
+                        }
+                        catch
+                        {
+                            listOfQuestions.Add(new QuestionModel(questionId, time, viewNumber, userId,
+                            voteNumber, title, message, image));
+                        }
+                    }
+                };
+            };
+            return listOfQuestions;
+        }
+
+
+
+
+        public List<AnswerModel> AllAnswerForUser(int id)
+        {
+            List<AnswerModel> listOfAnswers = new List<AnswerModel>();
+
+            using (NpgsqlConnection cn = new NpgsqlConnection(cs))
+            {
+                cn.Open();
+                using (NpgsqlCommand cmd = new NpgsqlCommand($"SELECT * FROM questions INNER JOIN answers ON answers.question_id = questions.question_id WHERE questions.user_id = '{id}'", cn))
+                {
+                    var reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        int answerId = Convert.ToInt32(reader["answer_id"]);
+                        DateTime timeOfAnswer = Convert.ToDateTime(reader["answer_time"]);
+                        int userID = Convert.ToInt32(reader["user_id"]);
+                        int voteNumber = Convert.ToInt32(reader["answer_votenumber"]);
+                        int questionID = Convert.ToInt32(reader["question_id"]);
+                        string message = reader["answer_message"].ToString();
+                        string image = reader["answer_image"].ToString();
+
+                        listOfAnswers.Add(new AnswerModel(answerId, timeOfAnswer, userID, voteNumber,
+                            questionID, message, image));   
+                    }
+                };
+            };
+            return listOfAnswers;
+        }
+
+
+        public List<CommentModel> AllCommentForUser(int id)
+        {
+            List<CommentModel> listOfComments = new List<CommentModel>();
+
+            using (NpgsqlConnection cn = new NpgsqlConnection(cs))
+            {
+                cn.Open();
+                using (NpgsqlCommand cmd = new NpgsqlCommand($"SELECT * FROM comment_s WHERE user_id = '{id}'", cn))
+                {
+                    var reader = cmd.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        int commentId = Convert.ToInt32(reader["comment_id"]);
+                        int answerId;
+                        try 
+                        {
+                            answerId = Convert.ToInt32(reader["answer_id"]);
+                        }
+                        catch
+                        {
+                            answerId = 0;
+                        }
+                        int userId = Convert.ToInt32(reader["user_id"]);
+                        int questionId = Convert.ToInt32(reader["question_id"]);
+                        string message = reader["comment_message"].ToString();
+                        DateTime submissionTime = Convert.ToDateTime(reader["comment_time"]);
+                        int editNumber = Convert.ToInt32(reader["edited_number"]);
+
+                        listOfComments.Add(new CommentModel(commentId,answerId,userId,questionId,
+                            message,submissionTime,editNumber));
+                    }
+                };
+            };
+            return listOfComments;
+        }
+
+
+        public Dictionary<QuestionModel,List<AnswerModel>> AnswersWithQuestions(int id)
+        {
+            Dictionary<QuestionModel, List<AnswerModel>> result = new Dictionary<QuestionModel, List<AnswerModel>>();
+
+            List<QuestionModel> allQuestion = GetQuestions();
+            List<AnswerModel> answersForUser = AllAnswerForUser(id);
+
+            foreach(var question in allQuestion)
+            {
+                List<AnswerModel> answersForQuestion = new List<AnswerModel>();
+                foreach (var answer in answersForUser)
+                {
+                    if(answer.QuestionID==question.ID)
+                    {
+                        answersForQuestion.Add(answer);
+                    }
+                }
+                if (answersForQuestion != null)
+                    result[question] = answersForQuestion;
+            }
+
+            return result;
+        }
+
+
+        public Dictionary<QuestionModel, List<CommentModel>> CommentsWithQuestions(int id)
+        {
+            Dictionary<QuestionModel, List<CommentModel>> result = new Dictionary<QuestionModel, List<CommentModel>>();
+
+            List<QuestionModel> allQuestion = GetQuestions();
+            List<CommentModel> commentsForUser = AllCommentForUser(id);
+
+            foreach (var question in allQuestion)
+            {
+                List<CommentModel> commentsForQuestion = new List<CommentModel>();
+                foreach (var comment in commentsForUser)
+                {
+                    if (comment.Question_ID == question.ID)
+                    {
+                        commentsForQuestion.Add(comment);
+                    }
+                }
+                if(commentsForQuestion!=null)
+                    result[question] = commentsForQuestion;
+            }
+
+            return result;
+        }
     }
 }

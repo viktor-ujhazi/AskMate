@@ -18,5 +18,18 @@ namespace AskMateMVC.Models
         public DateTime SubmissionTime { get; set; } = DateTime.Now;
         public int EditedNumber { get; set; }
 
+
+        public CommentModel() { }
+
+        public CommentModel(int id, int answerID, int userID, int question_id, string message,  DateTime submissionTime, int editedNumber)
+        {
+            ID = id;
+            Answer_ID = answerID;
+            UserID = userID;
+            Question_ID = question_id;
+            Message = message;
+            SubmissionTime = submissionTime;
+            EditedNumber = editedNumber;
+        }
     }
 }

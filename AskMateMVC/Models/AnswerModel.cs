@@ -18,6 +18,19 @@ namespace AskMateMVC.Models
         public string Message { get; set; } = null; //message: The answer text
         public string Image { get; set; }   //image: the path to the image for this answer
 
+
+        public AnswerModel() { }
+        public AnswerModel(int id,DateTime timeOfAnswer,int userID, int voteNumber,int questionID,string message,string image)
+        {
+            ID = id;
+            TimeOfAnswer = timeOfAnswer;
+            UserID = userID;
+            VoteNumber = voteNumber;
+            QuestionID = questionID;
+            Message = message;
+            Image = image;
+        }
+
         public override string ToString()
         {
             return ID + "," + TimeOfAnswer + "," + VoteNumber + "," + QuestionID + "," + "\"" + Message + "\"" + "," + Image;

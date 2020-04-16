@@ -7,46 +7,6 @@
 <hr />
 <div class="row">
     <div class="col-md-4">
-        @*@int a=0;
-             @Html.DropDownList("Select Tags", new List<SelectListItem>
-        {
-                     foreach (var i in Model)
-                 {
-                     new SelectListItem { Text=i.Url,Value=a}
-                     }
-             })*@
-
-
-
-        @*<form asp-action="SelectFromTags">
-        <input type="hidden" id="questionId" name="questionId" value=@ViewBag.questionId runat="server" />
-        @*Html.DropDownListFor(x => x.Url, new SelectList(ViewBag.tags, "ID", "Url"))*@
-
-
-        @*@Html.DropDownList("tag", (IEnumerable<SelectListItem>)ViewBag.Tag)
-        <input type="submit" value="Select" class="btn btn-primary" />
-
-        @Html.ActionLink("Add", "SelectFromTags", new { tag = operation })*@
-
-
-
-
-        @*  <div class="form-group">
-            <input type="hidden" id="questionId" name="questionId" value=@ViewBag.questionId runat="server" />
-
-            @Html.DropDownList("tag", (IEnumerable<SelectListItem>)ViewBag.Tag)
-            <input type="submit" id="tagN" name="tagN" value="Select" class="btn btn-primary" />
-
-            @Html.ActionLink("Add", "SelectFromTags", new { Url_i = tagN })
-        </div> *@
-
-
-
-
-
-        @*<form asp-action="AddingTag">
-        </form>*@
-
         <form asp-action="AddingTag">
             <div class="form-group">
                 <input type="hidden" id="questionId" name="questionId" value=@ViewBag.questionId runat="server">

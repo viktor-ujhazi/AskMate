@@ -11,5 +11,14 @@ namespace AskMateMVC.Models
         public string Name { get; set; }
         public string Password { get; set; }
         public int Reputation { get; set; }
+
+        public UserModel() { }
+        public UserModel(int id,string name,int reputation)
+        {
+            ID = id;
+            Name = name;
+            Password = "";
+            Reputation = reputation;
+        }
     }
 }
